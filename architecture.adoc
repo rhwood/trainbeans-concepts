@@ -1,0 +1,59 @@
+# TrainBeans Architecture
+
+TrainBeans is a modular set of libraries and reference application for enhancing a model railraod.
+
+[plantuml, intent]
+....
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+LAYOUT_AS_SKETCH()
+
+Person(user, "User")
+System(tb_app, "TrainBeans App")
+System_Ext(pmr, "Model Railroad")
+
+Rel(user, tb_app, "Uses")
+Rel(tb_app, pmr, "Enhances")
+....
+
+The above concept translates roughly into the following (note that persistance and configuration UIs and mechanisms are not shown):
+
+[plantuml, high-level]
+....
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+LAYOUT_AS_SKETCH()
+
+Person(user, "User", "Configures and uses apps")
+Boundary(tb_app, "TrainBeans App") {
+    System(ui, "User Interface")
+    System(IRM, "Internal Model")
+    SystemDb(storage, "Storage")
+    System(mrConn, "Machine Interface(s)")
+    System(ipc, "Machine Interface(s)")
+}
+Boundary(pmr, "Model Railroad") {
+    System_Ext(dcc, "Command Control", "DCC, OpenLCB, CMRI")
+}
+System_Ext(oa, "Other App(s)")
+
+Rel(user, ui, "Uses")
+
+Rel(ui, IRM, "Manipulates")
+Rel(IRM, ui, "Updates")
+Rel(mrConn, IRM, "Manipulates")
+Rel(IRM, mrConn, "Updates")
+Rel(ipc, IRM, "Manipulates")
+Rel(IRM, ipc, "Updates")
+Rel(IRM, storage, "Updates")
+Rel(storage, IRM, "Initializes")
+
+Rel(mrConn, dcc, "Sends")
+Rel(dcc, mrConn, "Receives")
+Rel(ipc, oa, "Sends")
+Rel(oa, ipc, "Receives")
+....
+
+
