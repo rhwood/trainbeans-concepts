@@ -27,6 +27,6 @@ public interface DelegatingElement extends Element {
 
     @CheckForNull
     public <T extends DelegatingElement> Delegate<T> getDelegate();
-    
+
     public <T extends DelegatingElement> void setDelegate(@NullAllowed Delegate<T> delegate);
 }

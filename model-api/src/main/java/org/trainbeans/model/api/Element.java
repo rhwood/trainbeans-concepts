@@ -37,6 +37,7 @@ public interface Element {
      * @param name the new name
      * @throws IllegalArgumentException if another element in the same model has
      * the same name or the name is blank (empty or all white space characters)
+     * and the Element does not have a {@link Delegate}.
      */
     public void setName(@NonNull String name);
 }

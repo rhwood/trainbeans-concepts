@@ -22,7 +22,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * 
  * @author rhwood
  */
-public interface Delegate<T extends DelegatingElement> {
+public interface Delegate<T extends DelegatingElement> extends Element {
 
     public void setDelagator(@NonNull T delagator);
 
