@@ -16,9 +16,11 @@
 package org.trainbeans.model.api;
 
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
  * An element in the internal model of a model railroad
+ *
  * @author rhwood
  */
 public interface Element {
@@ -36,8 +38,8 @@ public interface Element {
      *
      * @param name the new name
      * @throws IllegalArgumentException if another element in the same model has
-     * the same name or the name is blank (empty or all white space characters)
-     * and the Element does not have a {@link Delegate}.
+     * the same name or the name is null or blank (empty or all white space
+     * characters) and the Element does not have a {@link Delegate}.
      */
-    public void setName(@NonNull String name);
+    public void setName(@NullAllowed String name);
 }
