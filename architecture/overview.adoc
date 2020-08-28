@@ -31,6 +31,7 @@ Boundary(tb_app, "TrainBeans App") {
     System(ui, "User Interface")
     System(IRM, "Internal Model")
     SystemDb(storage, "Storage")
+    System(throttle, "Throttle(s)")
     System(mrConn, "Machine Interface(s)")
     System(ipc, "Machine Interface(s)")
 }
