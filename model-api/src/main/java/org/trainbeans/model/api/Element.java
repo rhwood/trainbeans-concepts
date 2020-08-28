@@ -17,13 +17,14 @@ package org.trainbeans.model.api;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.trainbeans.beans.PropertyChangeProvider;
 
 /**
  * An element in the internal model of a model railroad
  *
  * @author rhwood
  */
-public interface Element {
+public interface Element extends PropertyChangeProvider {
 
     /**
      * Get the name of the element.

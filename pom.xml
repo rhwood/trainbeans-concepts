@@ -46,6 +46,7 @@
         <module>application</module>
         <module>model-api</module>
         <module>model</module>
+        <module>beans</module>
     </modules>
 
     <properties>
