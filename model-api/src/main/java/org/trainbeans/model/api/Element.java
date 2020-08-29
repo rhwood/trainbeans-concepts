@@ -15,23 +15,21 @@
  */
 package org.trainbeans.model.api;
 
-import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.trainbeans.beans.PropertyChangeProvider;
+import org.trainbeans.beans.VetoableChangeProvider;
 
 /**
  * An element in the internal model of a model railroad
  *
  * @author rhwood
  */
-public interface Element extends PropertyChangeProvider {
+public interface Element extends PropertyChangeProvider, VetoableChangeProvider {
 
     /**
      * Get the name of the element.
      *
      * @return the name
      */
-    @NonNull
     public String getName();
 
     /**
@@ -42,5 +40,6 @@ public interface Element extends PropertyChangeProvider {
      * the same name or the name is null or blank (empty or all white space
      * characters) and the Element does not have a {@link Delegate}.
      */
-    public void setName(@NullAllowed String name);
+    // TODO: should this throw an IllegalStateException if vetoed?
+    public void setName(String name);
 }

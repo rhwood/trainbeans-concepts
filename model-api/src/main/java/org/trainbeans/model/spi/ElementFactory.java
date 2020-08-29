@@ -15,8 +15,6 @@
  */
 package org.trainbeans.model.spi;
 
-import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.util.Lookup;
 import org.trainbeans.model.api.Element;
 
@@ -28,13 +26,13 @@ import org.trainbeans.model.api.Element;
  */
 public interface ElementFactory<T extends Element> {
 
-    @NonNull
     public Class<T> getElementClass();
 
     /**
      * Create an element with the given name. If this Factory supports a
-     * {@link DelegatingElement} and the lookup contains a {@link Delegate}, the
-     * element will use that Delegate.
+     * {@link org.trainbeans.model.api.DelegatingElement} and the lookup
+     * contains a {@link org.trainbeans.model.api.Delegate}, the element will
+     * use that Delegate.
      *
      * @param name the name of the element
      * @param lookup a container of additional services
@@ -42,6 +40,5 @@ public interface ElementFactory<T extends Element> {
      * @throws IllegalArgumentException if name is blank and the lookup does not
      * contain a Delegate
      */
-    @NonNull
-    public T create(@NonNull String name, @NullAllowed Lookup lookup);
+    public T create(String name, Lookup lookup);
 }

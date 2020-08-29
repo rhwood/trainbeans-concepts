@@ -15,9 +15,6 @@
  */
 package org.trainbeans.model.api;
 
-import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.annotations.common.NullAllowed;
-
 /**
  * An {@link Element} that can have a {@link Delegate} assigned to it.
  * 
@@ -25,8 +22,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
  */
 public interface DelegatingElement extends Element {
 
-    @CheckForNull
     public <T extends DelegatingElement> Delegate<T> getDelegate();
 
-    public <T extends DelegatingElement> void setDelegate(@NullAllowed Delegate<T> delegate);
+    public <T extends DelegatingElement> void setDelegate(Delegate<T> delegate);
 }

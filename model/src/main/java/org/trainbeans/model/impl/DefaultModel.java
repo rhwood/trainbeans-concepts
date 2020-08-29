@@ -1,7 +1,17 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2020 rhwood.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.trainbeans.model.impl;
 
@@ -10,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import org.openide.util.Lookup;
 import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Model;
@@ -22,7 +33,7 @@ import org.trainbeans.model.spi.ElementFactory;
 public class DefaultModel implements Model {
 
     private final Map<Class<? extends Element>, ElementFactory<? extends Element>> factories = new HashMap<>();
-    private final Map<Class<? extends Element>, SortedMap<String, ? extends Element>> elements = new HashMap<>();
+    private final SortedMap<String, Element> elements = new TreeMap<>();
 
     public DefaultModel(Lookup lookup) {
         lookup.lookupAll(ElementFactory.class).forEach(factory -> factories.put(factory.getElementClass(), factory));
@@ -30,7 +41,7 @@ public class DefaultModel implements Model {
     
     @Override
     public <T extends Element> T create(Class<T> type, String name, Lookup lookup) {
-        if (elements.get(type).containsKey(name)) {
+        if (elements.get(name) != null) {
             throw new IllegalArgumentException();
         }
         if (factories.get(type) == null) {
@@ -44,16 +55,15 @@ public class DefaultModel implements Model {
     @Override
     public <T extends Element> Set<T> getAll(Class<T> type) {
         Set<T> set = new HashSet<>();
-        if (elements.containsKey(type)) {
-            elements.get(type).values().stream().map(v -> (T) v).forEach(set::add);
-        }
+        elements.values().stream().filter(type::isInstance).map(v -> (T) v).forEach(set::add);
         return set;
     }
 
     @Override
     public <T extends Element> T get(Class<T> type, String name) {
-        if (elements.containsKey(type)) {
-            return (T) elements.get(type).get(name);
+        Element element = elements.get(name);
+        if (type.isInstance(element)) {
+            return (T) element;
         }
         return null;
     }
@@ -65,14 +75,13 @@ public class DefaultModel implements Model {
     }
 
     @Override
-    public <T extends Element> void put(T element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void put(Element element) {
+        elements.put(element.getName(), element);
     }
 
     @Override
-    public <T extends Element> void remove(T element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void remove(Element element) {
+        elements.remove(element.getName());
     }
-
     
 }

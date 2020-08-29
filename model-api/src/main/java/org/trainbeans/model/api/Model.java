@@ -16,9 +16,6 @@
 package org.trainbeans.model.api;
 
 import java.util.Set;
-import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.util.Lookup;
 
 /**
@@ -40,8 +37,7 @@ public interface Model {
      * @throws IllegalArgumentException if no
      * {@link org.trainbeans.model.spi.ElementFactory} for type exists in model
      */
-    @NonNull
-    public default <T extends Element> T create(@NonNull Class<T> type, @NonNull String name) {
+    public default <T extends Element> T create(Class<T> type, String name) {
         return create(type, name, null);
     }
 
@@ -59,8 +55,7 @@ public interface Model {
      * exists; if name is blank and lookup does not contain a Delegate; if no
      * {@link org.trainbeans.model.spi.ElementFactory} for type exists in model
      */
-    @NonNull
-    public <T extends Element> T create(@NonNull Class<T> type, @NonNull String name, @NullAllowed Lookup lookup);
+    public <T extends Element> T create(Class<T> type, String name, Lookup lookup);
 
     /**
      * Get all elements of a specific type from the model.
@@ -70,8 +65,7 @@ public interface Model {
      * @return a set of elements; this set is empty if there are no matching
      * elements
      */
-    @NonNull
-    public <T extends Element> Set<T> getAll(@NonNull Class<T> type);
+    public <T extends Element> Set<T> getAll(Class<T> type);
 
     /**
      * Get an element of a specific type from the model.
@@ -81,8 +75,7 @@ public interface Model {
      * @param name the name of the element
      * @return the matching element or null if there is no such element
      */
-    @CheckForNull
-    public <T extends Element> T get(@NonNull Class<T> type, @NonNull String name);
+    public <T extends Element> T get(Class<T> type, String name);
 
     /**
      * Get an element of a specific type from the model, creating it if needed.
@@ -94,8 +87,7 @@ public interface Model {
      * @throws IllegalArgumentException if an element of type with name already
      * exists
      */
-    @NonNull
-    public <T extends Element> T getOrCreate(@NonNull Class<T> type, @NonNull String name);
+    public <T extends Element> T getOrCreate(Class<T> type, String name);
 
     /**
      * Put an existing element into the model.
@@ -105,7 +97,7 @@ public interface Model {
      * @throws IllegalArgumentException if an element of the same type with the
      * same name already exists
      */
-    public <T extends Element> void put(@NonNull T element);
+    public <T extends Element> void put(T element);
 
     /**
      * Remove an element from the model. It is not an error if the element does
@@ -115,5 +107,5 @@ public interface Model {
      * @param <T> the type of element
      * @param element the element to remove
      */
-    public <T extends Element> void remove(@NullAllowed T element);
+    public <T extends Element> void remove(T element);
 }

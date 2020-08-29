@@ -15,8 +15,6 @@
  */
 package org.trainbeans.model.api;
 
-import org.netbeans.api.annotations.common.NonNull;
-
 /**
  * A delegate for connecting an element to a model.
  * 
@@ -24,8 +22,7 @@ import org.netbeans.api.annotations.common.NonNull;
  */
 public interface Delegate<T extends DelegatingElement> extends Element {
 
-    public void setDelagator(@NonNull T delagator);
+    public void setDelagator(T delagator);
 
-    @NonNull
     public T getDelagator();
 }
