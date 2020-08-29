@@ -28,3 +28,6 @@ hs_err_pid*
 .classpath
 .factorypath
 .settings
+
+# NetBeans Branding directories end with .jar, so allow
+!**/*.jar/
