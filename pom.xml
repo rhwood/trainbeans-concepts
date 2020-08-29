@@ -42,8 +42,8 @@
     </build>
 
     <modules>
-        <module>branding</module>
-        <module>application</module>
+        <module>app/branding</module>
+        <module>app/application</module>
         <module>model-api</module>
         <module>model</module>
         <module>beans</module>
