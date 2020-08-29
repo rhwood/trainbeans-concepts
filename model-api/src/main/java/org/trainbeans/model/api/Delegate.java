@@ -17,12 +17,23 @@ package org.trainbeans.model.api;
 
 /**
  * A delegate for connecting an element to a model.
- * 
+ *
  * @author rhwood
+ * @param <T> the type of Element this Delegate supports
  */
 public interface Delegate<T extends DelegatingElement> extends Element {
 
+    /**
+     * Set the Element this is a delegate for.
+     *
+     * @param delagator the element
+     */
     public void setDelagator(T delagator);
 
+    /**
+     * Get the Element this is a delegate for.
+     * 
+     * @return the element or null if this Delegate is not being delegated to
+     */
     public T getDelagator();
 }

@@ -23,6 +23,7 @@ import org.trainbeans.model.api.Element;
  * {@link org.trainbeans.model.api.Model}.
  *
  * @author rhwood
+ * @param <T> the Element type this ElementFactory supports
  */
 public interface ElementFactory<T extends Element> {
 

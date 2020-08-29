@@ -15,15 +15,22 @@
  */
 package org.trainbeans.model.api;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 import java.util.Set;
 import org.openide.util.Lookup;
+import org.trainbeans.beans.PropertyChangeProvider;
 
 /**
  * A Model is the internal model of an external Model Railroad.
  *
+ * A Model has one constraint against the Elements it contains: no two Elements
+ * may have the same name.
+ *
  * @author Randall Wood
  */
-public interface Model {
+public interface Model extends PropertyChangeProvider, VetoableChangeListener {
 
     /**
      * Create an element in the model.
@@ -75,6 +82,7 @@ public interface Model {
      * @param name the name of the element
      * @return the matching element or null if there is no such element
      */
+    // TODO should the type be removed from this API?
     public <T extends Element> T get(Class<T> type, String name);
 
     /**
@@ -108,4 +116,11 @@ public interface Model {
      * @param element the element to remove
      */
     public <T extends Element> void remove(T element);
+
+    @Override
+    public default void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
+        if (evt.getPropertyName().equals("name") && get(Element.class, evt.getNewValue().toString()) != null) {
+            throw new PropertyVetoException("Element with name \"" + evt.getNewValue() + "\" already exists.", evt);
+        }
+    }
 }

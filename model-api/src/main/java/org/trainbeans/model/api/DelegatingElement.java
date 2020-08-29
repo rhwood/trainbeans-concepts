@@ -16,13 +16,32 @@
 package org.trainbeans.model.api;
 
 /**
- * An {@link Element} that can have a {@link Delegate} assigned to it.
- * 
+ * An {@link Element} that can have a {@link Delegate} assigned to it. Some
+ * properties that must not be null in Elements can be null in a
+ * DelegatingElement since the Delegate may provide the values for those
+ * properties.
+ *
  * @author rhwood
  */
 public interface DelegatingElement extends Element {
 
+    /**
+     * Get the delegate for this element.
+     *
+     * @param <T> the type of element that the Delegate can support
+     * @return the delegate or null if there is no delegate
+     */
     public <T extends DelegatingElement> Delegate<T> getDelegate();
 
+    /**
+     * Set the delegate for this element.
+     *
+     * @param <T> the type of element that the Delegate can support
+     * @param delegate the delegate or null if removing a delegate
+     */
+    // TODO what should this throw if the Delegate is the wrong class?
+    //      inheritance rules for generics mean that I can't make T meaningfully
+    //      specific in concrete implementations, so should this just have a
+    //      runtime exception and no generics for this method?
     public <T extends DelegatingElement> void setDelegate(Delegate<T> delegate);
 }
