@@ -18,6 +18,7 @@ package org.trainbeans.model.api;
 /**
  *
  * @author rhwood
+ * @param <T> the type of Element being delegated
  */
 public interface StatefulDelegate<T extends DelegatingElement & StatefulElement> extends Delegate, StatefulElement {
     

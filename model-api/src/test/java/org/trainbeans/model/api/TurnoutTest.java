@@ -15,19 +15,32 @@
  */
 package org.trainbeans.model.api;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.openide.util.Lookup;
 
 /**
  *
  * @author rhwood
  */
-public final class Turnout extends AbstractDelegatingStatefulElement<TurnoutElement, TurnoutDelegate> {
-    
-    public static final int CLOSED = State.OFF;
-    public static final int THROWN = State.ON;
+public class TurnoutTest extends AbstractDelegatingStatefulElementTest<Turnout, TurnoutDelegate> {
 
-    public Turnout(String name, Lookup lookup) {
-        super(name, lookup);
+    @BeforeEach
+    public void setUp() {
+        element = new Turnout("test", Lookup.EMPTY);
+        delegate = new TestTurnoutDelegate();
     }
 
+    @AfterEach
+    public void tearDown() {
+        // nothing to do
+    }
+
+    private static class TestTurnoutDelegate extends AbstractStatefulDelegate<TurnoutElement> implements TurnoutDelegate {
+
+        @Override
+        protected boolean isValidName(String name) {
+            return true;
+        }
+    }
 }

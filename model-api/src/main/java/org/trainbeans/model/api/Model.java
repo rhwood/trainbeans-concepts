@@ -120,6 +120,7 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
     @Override
     public default void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
         if (evt.getPropertyName().equals("name") && get(Element.class, evt.getNewValue().toString()) != null) {
+            // TODO: support I18N
             throw new PropertyVetoException("Element with name \"" + evt.getNewValue() + "\" already exists.", evt);
         }
     }

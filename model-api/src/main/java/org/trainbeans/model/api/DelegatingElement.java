@@ -15,17 +15,22 @@
  */
 package org.trainbeans.model.api;
 
+import java.beans.PropertyChangeListener;
+
 /**
  * An {@link Element} that can have a {@link Delegate} assigned to it.Some
- properties that must not be null in Elements can be null in a
- DelegatingElement since the Delegate may provide the values for those
- properties.
+ * properties that must not be null in Elements can be null in a
+ * DelegatingElement since the Delegate may provide the values for those
+ * properties.
+ *
+ * Implementations of this interface must listen to changes in their delegate,
+ * and propagate those changes as if they were their own.
  *
  * @author rhwood
  * @param <E> the type of element supported by the delegate
  * @param <D> the type of delegate
  */
-public interface DelegatingElement<E extends DelegatingElement, D extends Delegate<E>> extends Element {
+public interface DelegatingElement<E extends DelegatingElement, D extends Delegate<E>> extends Element, PropertyChangeListener {
 
     /**
      * Get the delegate for this element.

@@ -32,8 +32,19 @@ public interface StatefulElement extends Element {
 
     /**
      * Set the state.
-     * 
+     *
      * @param state the state to set
      */
     public void setState(int state);
+
+    /**
+     * Get the the state that was last set. This may differ from
+     * {@link #getState()} if a delegate has set the state of an external
+     * element and awaiting confirmation that the state was set correctly. If no
+     * delegate is present, this should always be the same as
+     * {@link #getState()}.
+     *
+     * @return the requested set
+     */
+    public int getRequestedState();
 }
