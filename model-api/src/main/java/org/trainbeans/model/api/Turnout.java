@@ -19,7 +19,7 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public final class Turnout extends AbstractDelegatingStatefulElement<Turnout, TurnoutDelegate> implements DelegatingElement, StatefulElement {
+public final class Turnout extends AbstractDelegatingStatefulElement<Turnout, TurnoutDelegate> {
     
     public static final int CLOSED = State.OFF;
     public static final int THROWN = State.ON;

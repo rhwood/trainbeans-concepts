@@ -42,7 +42,7 @@ public abstract class AbstractStatefulDelegate<E extends DelegatingElement & Sta
     }
 
     @Override
-    public DelegatingElement getDelagator() {
+    public E getDelagator() {
         return delagator;
     }
 
