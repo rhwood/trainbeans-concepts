@@ -19,6 +19,6 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public interface TurnoutDelegate extends StatefulDelegate<TurnoutElement> {
+public interface TurnoutDelegate extends StatefulDelegate<Turnout> {
     
 }

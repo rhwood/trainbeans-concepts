@@ -17,7 +17,6 @@ package org.trainbeans.model.api;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -36,7 +35,7 @@ public class TurnoutTest extends AbstractDelegatingStatefulElementTest<Turnout, 
         // nothing to do
     }
 
-    private static class TestTurnoutDelegate extends AbstractStatefulDelegate<TurnoutElement> implements TurnoutDelegate {
+    private static class TestTurnoutDelegate extends AbstractStatefulDelegate<Turnout> implements TurnoutDelegate {
 
         @Override
         protected boolean isValidName(String name) {
