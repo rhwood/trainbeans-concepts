@@ -15,8 +15,6 @@
  */
 package org.trainbeans.model.api;
 
-import org.openide.util.Lookup;
-
 /**
  *
  * @author rhwood
@@ -25,9 +23,5 @@ public final class Turnout extends AbstractDelegatingStatefulElement<TurnoutElem
     
     public static final int CLOSED = State.OFF;
     public static final int THROWN = State.ON;
-
-    public Turnout(String name, Lookup lookup) {
-        super(name, lookup);
-    }
 
 }

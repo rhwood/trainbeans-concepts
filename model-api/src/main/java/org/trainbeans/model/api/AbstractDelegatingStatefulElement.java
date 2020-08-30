@@ -32,11 +32,6 @@ public class AbstractDelegatingStatefulElement<E extends DelegatingElement & Sta
     D delegate = null;
     private String name;
 
-    protected AbstractDelegatingStatefulElement(String name, Lookup lookup) {
-        setDelegate(lookup.lookup(Delegate.class));
-        setName(name);
-    }
-
     @Override
     public D getDelegate() {
         return delegate;

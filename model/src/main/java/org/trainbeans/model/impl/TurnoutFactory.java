@@ -13,34 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.api;
+package org.trainbeans.model.impl;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
+import org.trainbeans.model.api.Turnout;
+import org.trainbeans.model.api.TurnoutDelegate;
+import org.trainbeans.model.spi.ElementFactory;
 
 /**
  *
  * @author rhwood
  */
-public class TurnoutTest extends AbstractDelegatingStatefulElementTest<Turnout, TurnoutDelegate> {
+@ServiceProvider(service = ElementFactory.class)
+public class TurnoutFactory implements ElementFactory<Turnout> {
 
-    @BeforeEach
-    public void setUp() {
-        element = new Turnout();
-        delegate = new TestTurnoutDelegate();
+    @Override
+    public Class<Turnout> getElementClass() {
+        return Turnout.class;
     }
 
-    @AfterEach
-    public void tearDown() {
-        // nothing to do
+    @Override
+    public Turnout create(String name, Lookup lookup) {
+        Turnout turnout = new Turnout();
+        turnout.setDelegate(lookup.lookup(TurnoutDelegate.class));
+        turnout.setName(name);
+        return turnout;
     }
-
-    private static class TestTurnoutDelegate extends AbstractStatefulDelegate<TurnoutElement> implements TurnoutDelegate {
-
-        @Override
-        protected boolean isValidName(String name) {
-            return true;
-        }
-    }
+    
 }
