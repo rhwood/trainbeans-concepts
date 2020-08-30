@@ -17,7 +17,6 @@ package org.trainbeans.model.impl;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,6 +86,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
             throw new IllegalArgumentException();
         }
         element.addVetoableChangeListener("name", this);
+        element.addPropertyChangeListener("name", this);
         elements.put(element.getName(), element);
     }
 
@@ -94,6 +94,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     public void remove(Element element) {
         elements.remove(element.getName());
         element.removeVetoableChangeListener("name", this);
+        element.removePropertyChangeListener("name", this);
     }
 
     @Override
