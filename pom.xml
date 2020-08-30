@@ -10,6 +10,24 @@
 
     <name>TrainBeans Parent</name>
 
+    <properties>
+        <netbeans.version>RELEASE120-1</netbeans.version>
+        <brandingToken>trainbeans</brandingToken>
+        <!-- dependency versions -->
+        <junit.version>5.6.0</junit.version>
+        <!-- sonarlint -->
+        <sonar.organization>rhwood</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+
+    <modules>
+        <module>app/branding</module>
+        <module>app/application</module>
+        <module>model-api</module>
+        <module>model</module>
+        <module>beans</module>
+    </modules>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -57,6 +75,17 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.7.0.1746</version>
+                <configuration>
+                    <goalPrefix>sonar</goalPrefix>
+                </configuration>
+                <inherited>false</inherited>
+            </plugin>
+        </plugins>
     </build>
 
     <!-- only test scope dependencies should be in the parent POM -->
@@ -88,18 +117,4 @@
         </dependency>
     </dependencies>
 
-    <modules>
-        <module>app/branding</module>
-        <module>app/application</module>
-        <module>model-api</module>
-        <module>model</module>
-        <module>beans</module>
-    </modules>
-
-    <properties>
-        <netbeans.version>RELEASE120-1</netbeans.version>
-        <brandingToken>trainbeans</brandingToken>
-        <!-- dependency versions -->
-        <junit.version>5.6.0</junit.version>
-    </properties>
 </project>

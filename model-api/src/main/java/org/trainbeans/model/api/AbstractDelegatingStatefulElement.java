@@ -17,7 +17,6 @@ package org.trainbeans.model.api;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
-import org.openide.util.Lookup;
 import org.trainbeans.beans.VetoableBean;
 
 /**

@@ -26,106 +26,106 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author rhwood
  */
-public class BeanTest {
+class BeanTest {
 
     private Bean bean;
     private PropertyChangeListener listener;
     private int heard;
     
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         bean = new Bean();
         heard = 0;
         listener = (PropertyChangeEvent evt) -> heard++;
     }
     
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         // nothing to do
     }
 
     @Test
-    public void testAddPropertyChangeListener_PropertyChangeListener() {
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(0);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+    void testAddPropertyChangeListener_PropertyChangeListener() {
+        assertThat(bean.getPropertyChangeListeners()).isEmpty();
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
         bean.addPropertyChangeListener(listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(1);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(1);
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
         bean.addPropertyChangeListener(listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(2);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(2);
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
     }
 
     @Test
-    public void testAddPropertyChangeListener_String_PropertyChangeListener() {
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(0);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+    void testAddPropertyChangeListener_String_PropertyChangeListener() {
+        assertThat(bean.getPropertyChangeListeners()).isEmpty();
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
         bean.addPropertyChangeListener("foo", listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(1);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(1);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(1);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(1);
         bean.addPropertyChangeListener("foo", listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(2);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(2);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(2);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
     }
 
     @Test
-    public void testRemovePropertyChangeListener_PropertyChangeListener() {
+    void testRemovePropertyChangeListener_PropertyChangeListener() {
         bean.addPropertyChangeListener("foo", listener);
         bean.addPropertyChangeListener("foo", listener);
         bean.addPropertyChangeListener(listener);
         bean.addPropertyChangeListener(listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(4);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(2);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(4);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
         bean.removePropertyChangeListener(listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(3);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(2);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(3);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
         bean.removePropertyChangeListener(listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(2);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(2);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(2);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
     }
 
     @Test
-    public void testRemovePropertyChangeListener_String_PropertyChangeListener() {
+    void testRemovePropertyChangeListener_String_PropertyChangeListener() {
         bean.addPropertyChangeListener("foo", listener);
         bean.addPropertyChangeListener("foo", listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(2);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(2);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(2);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
         bean.removePropertyChangeListener("foo", listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(1);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(1);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(1);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(1);
         bean.removePropertyChangeListener("foo", listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(0);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+        assertThat(bean.getPropertyChangeListeners()).isEmpty();
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
     }
 
     @Test
-    public void testGetPropertyChangeListeners() {
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(0);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+    void testGetPropertyChangeListeners() {
+        assertThat(bean.getPropertyChangeListeners()).isEmpty();
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
         bean.addPropertyChangeListener(listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(1);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(1);
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
         bean.removePropertyChangeListener(listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(0);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+        assertThat(bean.getPropertyChangeListeners()).isEmpty();
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
     }
 
     @Test
-    public void testGetPropertyChangeListeners_String() {
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(0);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+    void testGetPropertyChangeListeners_String() {
+        assertThat(bean.getPropertyChangeListeners()).isEmpty();
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
         bean.addPropertyChangeListener("foo", listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(1);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(1);
+        assertThat(bean.getPropertyChangeListeners()).hasSize(1);
+        assertThat(bean.getPropertyChangeListeners("foo")).hasSize(1);
         bean.removePropertyChangeListener("foo", listener);
-        assertThat(bean.getPropertyChangeListeners().length).isEqualTo(0);
-        assertThat(bean.getPropertyChangeListeners("foo").length).isEqualTo(0);
+        assertThat(bean.getPropertyChangeListeners()).isEmpty();
+        assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
     }
 
     @Test
-    public void testFirePropertyChange_PropertyChangeEvent() {
+    void testFirePropertyChange_PropertyChangeEvent() {
         bean.addPropertyChangeListener(listener);
-        assertThat(heard).isEqualTo(0);
+        assertThat(heard).isZero();
         // differing objects get fired
         bean.firePropertyChange(new PropertyChangeEvent(bean, "foo", new Object(), new Object()));
         assertThat(heard).isEqualTo(1);
@@ -139,9 +139,9 @@ public class BeanTest {
     }
 
     @Test
-    public void testFirePropertyChange_3args_1() {
+    void testFirePropertyChange_3args_1() {
         bean.addPropertyChangeListener(listener);
-        assertThat(heard).isEqualTo(0);
+        assertThat(heard).isZero();
         // differing objects get fired
         bean.firePropertyChange("foo", new Object(), new Object());
         assertThat(heard).isEqualTo(1);
@@ -155,9 +155,9 @@ public class BeanTest {
     }
 
     @Test
-    public void testFirePropertyChange_3args_2() {
+    void testFirePropertyChange_3args_2() {
         bean.addPropertyChangeListener(listener);
-        assertThat(heard).isEqualTo(0);
+        assertThat(heard).isZero();
         // differing numbers get fired
         bean.firePropertyChange("foo", 0, 1);
         assertThat(heard).isEqualTo(1);
@@ -167,9 +167,9 @@ public class BeanTest {
     }
 
     @Test
-    public void testFirePropertyChange_3args_3() {
+    void testFirePropertyChange_3args_3() {
         bean.addPropertyChangeListener(listener);
-        assertThat(heard).isEqualTo(0);
+        assertThat(heard).isZero();
         // differing booleans get fired
         bean.firePropertyChange("foo", true, false);
         assertThat(heard).isEqualTo(1);
@@ -179,9 +179,9 @@ public class BeanTest {
     }
 
     @Test
-    public void testFireIndexedPropertyChange_4args_1() {
+    void testFireIndexedPropertyChange_4args_1() {
         bean.addPropertyChangeListener(listener);
-        assertThat(heard).isEqualTo(0);
+        assertThat(heard).isZero();
         // differing objects get fired
         bean.fireIndexedPropertyChange("foo", 0, new Object(), new Object());
         assertThat(heard).isEqualTo(1);
@@ -195,9 +195,9 @@ public class BeanTest {
     }
 
     @Test
-    public void testFireIndexedPropertyChange_4args_2() {
+    void testFireIndexedPropertyChange_4args_2() {
         bean.addPropertyChangeListener(listener);
-        assertThat(heard).isEqualTo(0);
+        assertThat(heard).isZero();
         // differing integers get fired
         bean.fireIndexedPropertyChange("foo", 0, 1, 2);
         assertThat(heard).isEqualTo(1);
@@ -207,9 +207,9 @@ public class BeanTest {
     }
 
     @Test
-    public void testFireIndexedPropertyChange_4args_3() {
+    void testFireIndexedPropertyChange_4args_3() {
         bean.addPropertyChangeListener(listener);
-        assertThat(heard).isEqualTo(0);
+        assertThat(heard).isZero();
         // differing booleans get fired
         bean.fireIndexedPropertyChange("foo", 0, true, false);
         assertThat(heard).isEqualTo(1);

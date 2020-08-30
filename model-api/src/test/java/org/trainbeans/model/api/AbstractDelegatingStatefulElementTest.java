@@ -32,14 +32,14 @@ public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDe
     D delegate;
 
     @Test
-    public void testGetDelegate() {
+    void testGetDelegate() {
         assertThat(element.getDelegate()).isNull();
         element.setDelegate(delegate);
         assertThat(element.getDelegate()).isEqualTo(delegate);
     }
 
     @Test
-    public void testSetDelegate() {
+    void testSetDelegate() {
         element.setDelegate(delegate);
         assertThat(element.getDelegate()).isEqualTo(delegate);
         element.setDelegate(null);
@@ -47,7 +47,7 @@ public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDe
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         element.setDelegate(delegate);
         element.setName(null);
         assertThat(element.getName()).isEqualTo(delegate.getName());
@@ -56,7 +56,7 @@ public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDe
     }
 
     @Test
-    public void testSetName() {
+    void testSetName() {
         element.setDelegate(null);
         assertThatThrownBy(() -> element.setName(null)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> element.setName("")).isInstanceOf(IllegalArgumentException.class);
@@ -70,11 +70,11 @@ public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDe
     }
 
     @Test
-    public void testGetState() {
+    void testGetState() {
     }
 
     @Test
-    public void testSetState() {
+    void testSetState() {
     }
     
 }
