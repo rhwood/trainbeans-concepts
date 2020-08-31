@@ -82,7 +82,6 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @param name the name of the element
      * @return the matching element or null if there is no such element
      */
-    // TODO should the type be removed from this API?
     public <T extends Element> T get(Class<T> type, String name);
 
     /**
