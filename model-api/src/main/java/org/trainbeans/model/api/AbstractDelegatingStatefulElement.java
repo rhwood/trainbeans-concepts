@@ -25,7 +25,7 @@ import org.trainbeans.beans.VetoableBean;
  * @param <E> type of element
  * @param <D> type of delegate
  */
-public class AbstractDelegatingStatefulElement<E extends DelegatingElement & StatefulElement, D extends StatefulDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, StatefulElement {
+public abstract class AbstractDelegatingStatefulElement<E extends DelegatingElement & StatefulElement, D extends StatefulDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, StatefulElement {
 
     int state = State.UNKNOWN;
     D delegate = null;

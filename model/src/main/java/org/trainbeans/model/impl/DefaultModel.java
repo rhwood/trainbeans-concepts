@@ -60,7 +60,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     @Override
     public <T extends Element> Set<T> getAll(Class<T> type) {
         Set<T> set = new HashSet<>();
-        // TODO should this be cached?
+        // TODO cache these results
         elements.values().stream().filter(type::isInstance).map(v -> (T) v).forEach(set::add);
         return set;
     }
