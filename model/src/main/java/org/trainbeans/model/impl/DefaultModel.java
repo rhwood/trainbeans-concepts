@@ -39,6 +39,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     private final Map<Class<? extends Element>, ElementFactory<? extends Element>> factories = new HashMap<>();
     // TODO should I use a BidiSortedMap from Apache Commons Collections here?
     private final SortedMap<String, Element> elements = new TreeMap<>();
+    private final Map<Class<? extends Element>, Set<? extends Element>> cache = new HashMap<>();
 
     public DefaultModel(Lookup lookup) {
         lookup.lookupAll(ElementFactory.class).forEach(factory -> factories.put(factory.getElementClass(), factory));
@@ -59,10 +60,14 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
 
     @Override
     public <T extends Element> Set<T> getAll(Class<T> type) {
-        Set<T> set = new HashSet<>();
-        // TODO cache these results
-        elements.values().stream().filter(type::isInstance).map(v -> (T) v).forEach(set::add);
-        return set;
+        if (cache.containsKey(type)) {
+            return (Set<T>) cache.get(type);
+        } else {
+            Set<T> set = new HashSet<>();
+            elements.values().stream().filter(type::isInstance).forEach(e -> set.add((T) e));
+            cache.put(type, set);
+            return set;
+        }
     }
 
     @Override
@@ -88,6 +93,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
         element.addVetoableChangeListener("name", this);
         element.addPropertyChangeListener("name", this);
         elements.put(element.getName(), element);
+        cache.clear();
     }
 
     @Override
