@@ -19,7 +19,7 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public final class Turnout extends AbstractDelegatingGraphableStatefulElement<Turnout, Track, TurnoutDelegate> implements DelegatingElement, StatefulElement, Graphable<Track> {
+public final class Turnout extends AbstractDelegatingGraphableStatefulElement<Turnout, Track, TurnoutDelegate> {
     
     public static final int CLOSED = State.OFF;
     public static final int THROWN = State.ON;

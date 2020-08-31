@@ -17,7 +17,6 @@ package org.trainbeans.model.api;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
-import org.openide.util.Lookup;
 import org.trainbeans.beans.VetoableBean;
 
 /**
@@ -26,7 +25,7 @@ import org.trainbeans.beans.VetoableBean;
  * @param <E> type of element
  * @param <D> type of delegate
  */
-public class AbstractDelegatingStatefulElement<E extends DelegatingElement & StatefulElement, D extends StatefulDelegate<E>> extends VetoableBean implements DelegatingElement, StatefulElement {
+public class AbstractDelegatingStatefulElement<E extends DelegatingElement & StatefulElement, D extends StatefulDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, StatefulElement {
 
     int state = State.UNKNOWN;
     D delegate = null;
@@ -38,12 +37,12 @@ public class AbstractDelegatingStatefulElement<E extends DelegatingElement & Sta
     }
 
     @Override
-    public final void setDelegate(Delegate newDelegate) {
+    public final void setDelegate(D newDelegate) {
         D oldDelegate = delegate;
         if (oldDelegate != null) {
             oldDelegate.removePropertyChangeListener(this);
         }
-        delegate = (D) newDelegate;
+        delegate = newDelegate;
         if (delegate != null) {
             delegate.removePropertyChangeListener(this);
         }

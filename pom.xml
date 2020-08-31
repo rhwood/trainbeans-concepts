@@ -10,6 +10,25 @@
 
     <name>TrainBeans Parent</name>
 
+    <properties>
+        <netbeans.version>RELEASE120-1</netbeans.version>
+        <brandingToken>trainbeans</brandingToken>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- dependency versions -->
+        <junit.version>5.6.0</junit.version>
+        <!-- sonarlint -->
+        <sonar.organization>rhwood</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+
+    <modules>
+        <module>app/branding</module>
+        <module>app/application</module>
+        <module>model-api</module>
+        <module>model</module>
+        <module>beans</module>
+    </modules>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -55,9 +74,65 @@
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.9.1</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>                
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.7.0.1746</version>
+                <configuration>
+                    <goalPrefix>sonar</goalPrefix>
+                </configuration>
+                <inherited>false</inherited>
+            </plugin>
+        </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report-aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <!-- only test scope dependencies should be in the parent POM -->
     <dependencies>
@@ -88,18 +163,4 @@
         </dependency>
     </dependencies>
 
-    <modules>
-        <module>app/branding</module>
-        <module>app/application</module>
-        <module>model-api</module>
-        <module>model</module>
-        <module>beans</module>
-    </modules>
-
-    <properties>
-        <netbeans.version>RELEASE120-1</netbeans.version>
-        <brandingToken>trainbeans</brandingToken>
-        <!-- dependency versions -->
-        <junit.version>5.6.0</junit.version>
-    </properties>
 </project>

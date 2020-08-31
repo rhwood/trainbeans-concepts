@@ -25,13 +25,13 @@ import org.junit.jupiter.api.BeforeEach;
 public class TurnoutTest extends AbstractDelegatingStatefulElementTest<Turnout, TurnoutDelegate> {
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         element = new Turnout();
         delegate = new TestTurnoutDelegate();
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         // nothing to do
     }
 
