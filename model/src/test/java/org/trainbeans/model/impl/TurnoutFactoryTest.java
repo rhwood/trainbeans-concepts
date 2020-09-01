@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
-import org.trainbeans.model.api.AbstractStatefulDelegate;
+import org.trainbeans.model.api.AbstractDiscreteStateDelegate;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.api.TurnoutDelegate;
 
@@ -65,7 +65,7 @@ public class TurnoutFactoryTest {
         assertThat(factory.create("test", lookup).getName()).isEqualTo("test");
     }
     
-    private static class TestTurnoutDelegate extends AbstractStatefulDelegate<Turnout> implements TurnoutDelegate {
+    private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
 
         @Override
         protected boolean isValidName(String name) {

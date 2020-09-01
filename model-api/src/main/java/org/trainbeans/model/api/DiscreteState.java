@@ -19,14 +19,6 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public class State {
+public interface DiscreteState {
 
-    public static final int CONFLICTED = -1;
-    public static final int UNKNOWN = 0;
-    public static final int OFF = 1;
-    public static final int ON = 2;
-
-    private State() {
-        // prevent instantiation
-    }
 }

@@ -25,9 +25,9 @@ import org.trainbeans.beans.VetoableBean;
  * @param <E> type of element
  * @param <D> type of delegate
  */
-public class AbstractDelegatingStatefulElement<E extends DelegatingElement & StatefulElement, D extends StatefulDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, StatefulElement {
+public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, DiscreteStateElement {
 
-    int state = State.UNKNOWN;
+    DiscreteState state;
     D delegate = null;
     private String name;
 
@@ -73,18 +73,18 @@ public class AbstractDelegatingStatefulElement<E extends DelegatingElement & Sta
     }
 
     @Override
-    public int getState() {
+    public DiscreteState getState() {
         return delegate != null ? delegate.getState() : state;
     }
 
     @Override
-    public int getRequestedState() {
+    public DiscreteState getRequestedState() {
         return delegate != null ? delegate.getRequestedState() : state;
     }
 
     @Override
-    public void setState(int newState) {
-        int oldState = state;
+    public void setState(DiscreteState newState) {
+        DiscreteState oldState = state;
         state = newState;
         if (delegate != null) {
             delegate.setState(newState);
