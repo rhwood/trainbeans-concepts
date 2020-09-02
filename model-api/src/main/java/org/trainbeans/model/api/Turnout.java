@@ -19,9 +19,12 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public final class Turnout extends AbstractDelegatingGraphableStatefulElement<Turnout, Track, TurnoutDelegate> {
-    
-    public static final int CLOSED = State.OFF;
-    public static final int THROWN = State.ON;
+public final class Turnout extends AbstractDelegatingDiscreteStateElement<Turnout, TurnoutDelegate> {
 
+    public enum State implements DiscreteState {
+        UNKNOWN,
+        CONFLICTED,
+        CLOSED,
+        THROWN
+    }
 }

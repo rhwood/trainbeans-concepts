@@ -22,11 +22,11 @@ import org.trainbeans.beans.VetoableBean;
  * @author rhwood
  * @param <E> the type of supported element
  */
-public abstract class AbstractStatefulDelegate<E extends DelegatingElement & StatefulElement> extends VetoableBean implements StatefulDelegate<E> {
+public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement & DiscreteStateElement> extends VetoableBean implements DiscreteStateDelegate<E> {
 
     private E delagator;
     private String name;
-    private int state;
+    private DiscreteState state;
 
     /**
      * Test if the provided name is valid in this context.
@@ -63,19 +63,19 @@ public abstract class AbstractStatefulDelegate<E extends DelegatingElement & Sta
     }
 
     @Override
-    public int getState() {
+    public DiscreteState getState() {
         return state;
     }
 
     @Override
-    public void setState(int newState) {
-        int oldState = state;
+    public void setState(DiscreteState newState) {
+        DiscreteState oldState = state;
         state = newState;
         firePropertyChange("state", oldState, newState);
     }
     
     @Override
-    public int getRequestedState() {
+    public DiscreteState getRequestedState() {
         return getState();
     }
 
