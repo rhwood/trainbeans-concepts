@@ -21,21 +21,21 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public interface StatefulElement extends Element {
+public interface DiscreteStateElement extends Element {
 
     /**
      * Get the state.
      *
      * @return
      */
-    public int getState();
+    public DiscreteState getState();
 
     /**
      * Set the state.
      *
      * @param state the state to set
      */
-    public void setState(int state);
+    public void setState(DiscreteState state);
 
     /**
      * Get the the state that was last set. This may differ from
@@ -46,5 +46,5 @@ public interface StatefulElement extends Element {
      *
      * @return the requested set
      */
-    public int getRequestedState();
+    public DiscreteState getRequestedState();
 }

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  * @param <E> the type of element in the test
  * @param <D> the type of delegate in the test
  */
-public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDelegatingStatefulElement, D extends StatefulDelegate> {
+public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDelegatingDiscreteStateElement, D extends DiscreteStateDelegate> {
 
     E element;
     D delegate;

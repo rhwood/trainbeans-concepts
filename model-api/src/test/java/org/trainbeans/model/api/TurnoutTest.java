@@ -35,7 +35,7 @@ public class TurnoutTest extends AbstractDelegatingStatefulElementTest<Turnout, 
         // nothing to do
     }
 
-    private static class TestTurnoutDelegate extends AbstractStatefulDelegate<Turnout> implements TurnoutDelegate {
+    private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
 
         @Override
         protected boolean isValidName(String name) {
