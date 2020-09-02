@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public abstract class AbstractDelegatingGraphableStatefulElement<E extends DelegatingElement & StatefulElement, G extends Element, D extends StatefulDelegate<E>> extends AbstractDelegatingStatefulElement<E, D> implements Graphable<G> {
+public abstract class AbstractDelegatingGraphableDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, G extends Element, D extends DiscreteStateDelegate<E>> extends AbstractDelegatingDiscreteStateElement<E, D> implements Graphable<G> {
 
     ArrayList<G> connections = new ArrayList<>();
 
