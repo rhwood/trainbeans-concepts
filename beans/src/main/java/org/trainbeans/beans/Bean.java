@@ -25,68 +25,162 @@ import java.beans.PropertyChangeSupport;
  */
 public class Bean implements PropertyChangeProvider {
 
-    private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    /**
+     * Supporting class that manages {@link PropertyChangeListeners} and
+     * {@link PropertyChangeEvent} propagation.
+     */
+    private final PropertyChangeSupport propertyChangeSupport =
+            new PropertyChangeSupport(this);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(
+            final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+    public void addPropertyChangeListener(final String propertyName,
+            final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(
+            final PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    public void removePropertyChangeListener(final String propertyName,
+            final PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName,
+                listener);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PropertyChangeListener[] getPropertyChangeListeners() {
         return propertyChangeSupport.getPropertyChangeListeners();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+    public PropertyChangeListener[] getPropertyChangeListeners(
+            final String propertyName) {
         return propertyChangeSupport.getPropertyChangeListeners(propertyName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean hasListeners(String propertyName) {
+    public boolean hasListeners(final String propertyName) {
         return propertyChangeSupport.hasListeners(propertyName);
     }
 
-    protected void firePropertyChange(PropertyChangeEvent event) {
+    /**
+     * Notify all listeners of a property change event.
+     *
+     * @param event the property change event to pass in the notification
+     */
+    protected void firePropertyChange(final PropertyChangeEvent event) {
         propertyChangeSupport.firePropertyChange(event);
     }
 
-    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
-        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    /**
+     * Notify all listeners of a property change event.
+     *
+     * @param propertyName the name of the changed property
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
+    protected void firePropertyChange(final String propertyName,
+            final Object oldValue, final Object newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName,
+                oldValue, newValue);
     }
 
-    protected void firePropertyChange(String propertyName, int oldValue, int newValue) {
-        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    /**
+     * Notify all listeners of a property change event.
+     *
+     * @param propertyName the name of the changed property
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
+    protected void firePropertyChange(final String propertyName,
+            final int oldValue, final int newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName,
+                oldValue, newValue);
     }
 
-    protected void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
-        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    /**
+     * Notify all listeners of a property change event.
+     *
+     * @param propertyName the name of the changed property
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
+    protected void firePropertyChange(final String propertyName,
+            final boolean oldValue, final boolean newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName,
+                oldValue, newValue);
     }
 
-    protected void fireIndexedPropertyChange(String propertyName, int index, Object oldValue, Object newValue) {
-        propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+    /**
+     * Notify all listeners of an indexed property change.
+     *
+     * @param propertyName the name of the property
+     * @param index the index in the property that changed
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
+    protected void fireIndexedPropertyChange(final String propertyName,
+            final int index, final Object oldValue, final Object newValue) {
+        propertyChangeSupport.fireIndexedPropertyChange(propertyName,
+                index, oldValue, newValue);
     }
 
-    protected void fireIndexedPropertyChange(String propertyName, int index, int oldValue, int newValue) {
-        propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+    /**
+     * Notify all listeners of an indexed property change.
+     *
+     * @param propertyName the name of the property
+     * @param index the index in the property that changed
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
+    protected void fireIndexedPropertyChange(final String propertyName,
+            final int index, final int oldValue, final int newValue) {
+        propertyChangeSupport.fireIndexedPropertyChange(propertyName,
+                index, oldValue, newValue);
     }
 
-    protected void fireIndexedPropertyChange(String propertyName, int index, boolean oldValue, boolean newValue) {
-        propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+    /**
+     * Notify all listeners of an indexed property change.
+     *
+     * @param propertyName the name of the property
+     * @param index the index in the property that changed
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
+    protected void fireIndexedPropertyChange(final String propertyName,
+            final int index, final boolean oldValue, final boolean newValue) {
+        propertyChangeSupport.fireIndexedPropertyChange(propertyName,
+                index, oldValue, newValue);
     }
 }
