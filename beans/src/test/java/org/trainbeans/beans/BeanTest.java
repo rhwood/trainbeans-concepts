@@ -57,6 +57,21 @@ class BeanTest {
     }
 
     @Test
+    void testHasListeners() {
+        assertThat(bean.hasListeners(null)).isFalse();
+        assertThat(bean.hasListeners("foo")).isFalse();
+        bean.addPropertyChangeListener(listener);
+        assertThat(bean.hasListeners(null)).isTrue();
+        assertThat(bean.hasListeners("foo")).isTrue();
+        bean.addPropertyChangeListener("foo", listener);
+        assertThat(bean.hasListeners(null)).isTrue();
+        assertThat(bean.hasListeners("foo")).isTrue();
+        bean.removePropertyChangeListener(listener);
+        assertThat(bean.hasListeners(null)).isFalse();
+        assertThat(bean.hasListeners("foo")).isTrue();
+    }
+
+    @Test
     void testAddPropertyChangeListener_String_PropertyChangeListener() {
         assertThat(bean.getPropertyChangeListeners()).isEmpty();
         assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
