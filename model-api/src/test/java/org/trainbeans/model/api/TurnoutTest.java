@@ -15,19 +15,22 @@
  */
 package org.trainbeans.model.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author rhwood
  */
-public class TurnoutTest extends AbstractDelegatingStatefulElementTest<Turnout, TurnoutDelegate> {
+public class TurnoutTest extends AbstractDelegatingDiscreateStateElementTest<Turnout, TurnoutDelegate> {
 
     @BeforeEach
     void setUp() {
         element = new Turnout();
         delegate = new TestTurnoutDelegate();
+        setUpEventListeners();
     }
 
     @AfterEach
@@ -35,7 +38,39 @@ public class TurnoutTest extends AbstractDelegatingStatefulElementTest<Turnout, 
         // nothing to do
     }
 
+    @Test
+    @Override
+    void testGetState() {
+        // default state is UNKNOWN without delegate
+        assertThat(element.getDelegate()).isNull();
+        assertThat(element.getState()).isEqualTo(Turnout.State.UNKNOWN);
+        element.state = Turnout.State.CONFLICTED;
+        assertThat(element.getState()).isEqualTo(Turnout.State.CONFLICTED);
+        element.setDelegate(delegate);
+        assertThat(element.getDelegate()).isEqualTo(delegate);
+        assertThat(delegate.getState()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(delegate.getState()).isNotEqualTo(element.state);
+        assertThat(element.getState()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(element.getState()).isNotEqualTo(element.state);
+    }
+
+    @Test
+    @Override
+    void testSetState() {
+        assertThat(element.getDelegate()).isNull();
+        assertThat(lastEvent).isNull();
+        element.setState(Turnout.State.CLOSED);
+        assertThat(lastEvent).isNotNull();
+        assertThat(lastEvent.getPropertyName()).isEqualTo("state");
+        assertThat(lastEvent.getOldValue()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(lastEvent.getNewValue()).isEqualTo(Turnout.State.CLOSED);
+    }
+
     private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
+
+        TestTurnoutDelegate() {
+            setState(Turnout.State.UNKNOWN);
+        }
 
         @Override
         protected boolean isValidName(String name) {

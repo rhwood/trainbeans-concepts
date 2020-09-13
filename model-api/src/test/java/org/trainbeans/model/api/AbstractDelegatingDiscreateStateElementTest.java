@@ -15,9 +15,11 @@
  */
 package org.trainbeans.model.api;
 
+import java.beans.PropertyChangeEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -26,10 +28,16 @@ import org.junit.jupiter.api.Test;
  * @param <E> the type of element in the test
  * @param <D> the type of delegate in the test
  */
-public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDelegatingDiscreteStateElement, D extends DiscreteStateDelegate> {
+public abstract class AbstractDelegatingDiscreateStateElementTest<E extends AbstractDelegatingDiscreteStateElement, D extends DiscreteStateDelegate> {
 
     E element;
     D delegate;
+    PropertyChangeEvent lastEvent;
+
+    void setUpEventListeners() {
+        element.addPropertyChangeListener((evt) -> lastEvent = evt);
+        lastEvent = null;
+    }
 
     @Test
     void testGetDelegate() {
@@ -69,12 +77,8 @@ public abstract class AbstractDelegatingStatefulElementTest<E extends AbstractDe
         assertThatThrownBy(() -> element.setName(" ")).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    void testGetState() {
-    }
+    abstract void testGetState();
 
-    @Test
-    void testSetState() {
-    }
+    abstract void testSetState();
     
 }
