@@ -37,8 +37,8 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement 
     protected abstract boolean isValidName(String name);
 
     @Override
-    public void setDelagator(DelegatingElement delagator) {
-        this.delagator = (E) delagator;
+    public void setDelagator(E delagator) {
+        this.delagator = delagator;
     }
 
     @Override
