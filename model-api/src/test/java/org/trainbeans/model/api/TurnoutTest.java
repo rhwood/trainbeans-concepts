@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author rhwood
  */
-public class TurnoutTest extends AbstractDelegatingDiscreateStateElementTest<Turnout, TurnoutDelegate> {
+class TurnoutTest extends AbstractDelegatingDiscreateStateElementTest<Turnout, TurnoutDelegate> {
 
     @BeforeEach
     void setUp() {
@@ -56,6 +56,22 @@ public class TurnoutTest extends AbstractDelegatingDiscreateStateElementTest<Tur
 
     @Test
     @Override
+    void testGetRequestedState() {
+        // default state is UNKNOWN without delegate
+        assertThat(element.getDelegate()).isNull();
+        assertThat(element.getRequestedState()).isEqualTo(element.getState());
+        element.state = Turnout.State.CONFLICTED;
+        assertThat(element.getRequestedState()).isEqualTo(element.getState());
+        element.setDelegate(delegate);
+        assertThat(element.getDelegate()).isEqualTo(delegate);
+        assertThat(delegate.getRequestedState()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(delegate.getRequestedState()).isNotEqualTo(element.state);
+        assertThat(element.getRequestedState()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(element.getRequestedState()).isNotEqualTo(element.state);
+    }
+
+    @Test
+    @Override
     void testSetState() {
         assertThat(element.getDelegate()).isNull();
         assertThat(lastEvent).isNull();
@@ -64,6 +80,15 @@ public class TurnoutTest extends AbstractDelegatingDiscreateStateElementTest<Tur
         assertThat(lastEvent.getPropertyName()).isEqualTo("state");
         assertThat(lastEvent.getOldValue()).isEqualTo(Turnout.State.UNKNOWN);
         assertThat(lastEvent.getNewValue()).isEqualTo(Turnout.State.CLOSED);
+        element.setDelegate(delegate);
+        assertThat(element.getDelegate()).isEqualTo(delegate);
+        assertThat(delegate.getState()).isEqualTo(Turnout.State.UNKNOWN);
+        lastEvent = null;
+        element.setState(Turnout.State.THROWN);
+        assertThat(lastEvent).isNotNull();
+        assertThat(lastEvent.getPropertyName()).isEqualTo("state");
+        assertThat(lastEvent.getOldValue()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(lastEvent.getNewValue()).isEqualTo(Turnout.State.THROWN);
     }
 
     private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
