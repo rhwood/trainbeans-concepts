@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author rhwood
  */
-class TurnoutTest extends AbstractDelegatingDiscreateStateElementTest<Turnout, TurnoutDelegate> {
+class TurnoutTest extends AbstractDelegatingDiscreteStateElementTest<Turnout, TurnoutDelegate> {
 
     @BeforeEach
     void setUp() {

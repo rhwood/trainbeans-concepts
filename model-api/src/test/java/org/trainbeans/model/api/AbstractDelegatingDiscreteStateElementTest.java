@@ -16,6 +16,7 @@
 package org.trainbeans.model.api;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,7 +28,7 @@ import org.junit.jupiter.api.Test;
  * @param <E> the type of element in the test
  * @param <D> the type of delegate in the test
  */
-abstract class AbstractDelegatingDiscreateStateElementTest<E extends AbstractDelegatingDiscreteStateElement, D extends DiscreteStateDelegate> {
+abstract class AbstractDelegatingDiscreteStateElementTest<E extends AbstractDelegatingDiscreteStateElement, D extends DiscreteStateDelegate> {
 
     E element;
     D delegate;
@@ -74,6 +75,25 @@ abstract class AbstractDelegatingDiscreateStateElementTest<E extends AbstractDel
         assertThatCode(() -> element.setName(null)).doesNotThrowAnyException();
         assertThatThrownBy(() -> element.setName("")).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> element.setName(" ")).isInstanceOf(IllegalArgumentException.class);
+        element.addVetoableChangeListener(evt -> {
+            throw new PropertyVetoException("test", evt);
+        });
+        assertThatThrownBy(() -> element.setName("test")).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void testPropertyChange() {
+        PropertyChangeEvent event = new PropertyChangeEvent(delegate, "foo", 1, 2);
+        event.setPropagationId(-1);
+        element.setDelegate(delegate);
+        // setting the delegate populated lastEvent
+        lastEvent = null;
+        element.propertyChange(new PropertyChangeEvent(new Object(), "foo", 1, 2));
+        assertThat(lastEvent).isNull();
+        element.propertyChange(event);
+        assertThat(lastEvent.getSource()).isEqualTo(element);
+        assertThat(lastEvent.getPropertyName()).isEqualTo("foo");
+        assertThat(lastEvent.getPropagationId()).isEqualTo(-1);
     }
 
     abstract void testGetRequestedState();
