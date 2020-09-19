@@ -94,6 +94,7 @@ class DefaultModelTest {
         Turnout turnout2 = model.getOrCreate(Turnout.class, "bar", null);
         assertThat(turnout2).isNotNull();
         assertThat(model.getAll(Turnout.class)).containsExactlyInAnyOrder(turnout1, turnout2);
+        assertThat(model.getOrCreate(Turnout.class, "bar", Lookup.EMPTY)).isEqualTo(turnout2);
     }
 
     @Test
@@ -132,6 +133,11 @@ class DefaultModelTest {
         assertThat(model.get(Element.class, "foo")).isEqualTo(turnout);
         assertThat(model.get(Element.class, "bar")).isNull();
         turnout.setName("bar");
+        assertThat(model.get(Element.class, "foo")).isNull();
+        assertThat(model.get(Element.class, "bar")).isEqualTo(turnout);
+        // TODO: how to assert DefaultModel ignores changes to properties other
+        // than name?
+        turnout.setState(Turnout.State.CLOSED);
         assertThat(model.get(Element.class, "foo")).isNull();
         assertThat(model.get(Element.class, "bar")).isEqualTo(turnout);
     }
