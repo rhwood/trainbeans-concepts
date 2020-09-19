@@ -112,4 +112,9 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
             elements.put(element.getName(), element);
         }
     }
+    
+    // package protected for tests
+    <T extends Element> Set<T> getCache(Class<T> type) {
+        return (Set<T>) cache.get(type);
+    }
 }

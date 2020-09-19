@@ -35,7 +35,7 @@ abstract class AbstractDiscreteStateDelegateTest<E extends DelegatingElement & D
     }
 
     @Test
-    public void testSetDelagator() {
+    void testSetDelagator() {
         assertThat(delegate.getDelagator()).isNull();
         delegate.setDelagator(element);
         assertThat(delegate.getDelagator()).isEqualTo(element);
@@ -44,7 +44,7 @@ abstract class AbstractDiscreteStateDelegateTest<E extends DelegatingElement & D
     }
 
     @Test
-    public void testGetDelagator() {
+    void testGetDelagator() {
         assertThat(delegate.getDelagator()).isNull();
         delegate.setDelagator(element);
         assertThat(delegate.getDelagator()).isEqualTo(element);

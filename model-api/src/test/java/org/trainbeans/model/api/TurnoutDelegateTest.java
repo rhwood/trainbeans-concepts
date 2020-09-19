@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author rhwood
  */
-public class TurnoutDelegateTest extends AbstractDiscreteStateDelegateTest<Turnout, TurnoutDelegate> {
+class TurnoutDelegateTest extends AbstractDiscreteStateDelegateTest<Turnout, TurnoutDelegate> {
 
     boolean valid;
 
@@ -54,22 +54,22 @@ public class TurnoutDelegateTest extends AbstractDiscreteStateDelegateTest<Turno
 
     @Override
     void testGetName() {
-        // no need, tested in testSetName()
+        // no need to test, tested in testSetName()
     }
 
     @Override
     void testGetState() {
-        // no need, tested in TurnoutTest#testGetState()
+        // no need to test, tested in TurnoutTest#testGetState()
     }
 
     @Override
     void testSetState() {
-        // no need, tested in TurnoutTest#testSetState()
+        // no need to test, tested in TurnoutTest#testSetState()
     }
 
     @Override
     void testGetRequestedState() {
-        // no need, tested in TurnoutTest#testGetRequestedState()
+        // no need to test, tested in TurnoutTest#testGetRequestedState()
     }
     
     private class TurnoutDelegateImpl extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
