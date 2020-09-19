@@ -15,6 +15,7 @@
  */
 package org.trainbeans.model.impl;
 
+import java.beans.PropertyChangeEvent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.AfterEach;
@@ -101,6 +102,8 @@ class DefaultModelTest {
     void testPut() {
         Turnout turnout = new Turnout();
         turnout.setName("foo");
+        assertThat(turnout.getPropertyChangeListeners()).isEmpty();
+        assertThat(turnout.getVetoableChangeListeners()).isEmpty();
         assertThat(turnout.getPropertyChangeListeners("name")).isEmpty();
         assertThat(turnout.getVetoableChangeListeners("name")).isEmpty();
         assertThat(model.getAll(Turnout.class)).isEmpty();
@@ -108,6 +111,8 @@ class DefaultModelTest {
         model.put(turnout);
         assertThat(model.getCache(Turnout.class)).isNull();
         assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
+        assertThat(turnout.getPropertyChangeListeners()).doesNotContain(model);
+        assertThat(turnout.getVetoableChangeListeners()).doesNotContain(model);
         assertThat(turnout.getPropertyChangeListeners("name")).containsExactly(model);
         assertThat(turnout.getVetoableChangeListeners("name")).containsExactly(model);
         assertThatCode(() -> model.put(turnout)).isInstanceOf(IllegalArgumentException.class);
@@ -137,7 +142,7 @@ class DefaultModelTest {
         assertThat(model.get(Element.class, "bar")).isEqualTo(turnout);
         // TODO: how to assert DefaultModel ignores changes to properties other
         // than name?
-        turnout.setState(Turnout.State.CLOSED);
+        model.propertyChange(new PropertyChangeEvent(turnout, "state", Turnout.State.UNKNOWN, Turnout.State.CLOSED));
         assertThat(model.get(Element.class, "foo")).isNull();
         assertThat(model.get(Element.class, "bar")).isEqualTo(turnout);
     }
