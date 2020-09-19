@@ -101,6 +101,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
         elements.remove(element.getName());
         element.removeVetoableChangeListener("name", this);
         element.removePropertyChangeListener("name", this);
+        cache.clear();
     }
 
     @Override
