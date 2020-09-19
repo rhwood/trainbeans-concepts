@@ -94,7 +94,25 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @throws IllegalArgumentException if an element of type with name already
      * exists
      */
-    public <T extends Element> T getOrCreate(Class<T> type, String name);
+    public default <T extends Element> T getOrCreate(Class<T> type, String name) {
+        return getOrCreate(type, name, null);
+    }
+
+
+    /**
+     * Get an element of a specific type from the model, creating it if needed.
+     * If the type is a {@link DelegatingElement} and the lookup contains a
+     * {@link Delegate}, the element will use that Delegate.
+     *
+     * @param <T> the type of element
+     * @param type the type of element
+     * @param name the name of the element
+     * @param lookup a container of additional services for the factory
+     * @return the matching element, possibly newly created
+     * @throws IllegalArgumentException if an element of type with name already
+     * exists
+     */
+    public <T extends Element> T getOrCreate(Class<T> type, String name, Lookup lookup);
 
     /**
      * Put an existing element into the model.

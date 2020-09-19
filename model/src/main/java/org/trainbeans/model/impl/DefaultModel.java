@@ -80,9 +80,9 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     }
 
     @Override
-    public <T extends Element> T getOrCreate(Class<T> type, String name) {
+    public <T extends Element> T getOrCreate(Class<T> type, String name, Lookup lookup) {
         T element = get(type, name);
-        return element != null ? element : create(type, name);
+        return element != null ? element : create(type, name, lookup);
     }
 
     @Override

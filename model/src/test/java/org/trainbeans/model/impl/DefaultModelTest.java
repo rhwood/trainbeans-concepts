@@ -20,8 +20,10 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.trainbeans.model.api.AbstractDelegatingDiscreteStateElement;
+import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Turnout;
 
 /**
@@ -44,6 +46,14 @@ class DefaultModelTest {
 
     @Test
     void testCreate() {
+        assertThat(model.get(Turnout.class, "foo")).isNull();
+        Turnout turnout1 = model.create(Turnout.class, "foo", Lookup.EMPTY);
+        assertThat(model.get(Turnout.class, "foo")).isEqualTo(turnout1);
+        assertThatCode(() -> model.create(Element.class, "foo", Lookup.EMPTY)).isInstanceOf(IllegalArgumentException.class);
+        assertThatCode(() -> model.create(Element.class, "bar", Lookup.EMPTY)).isInstanceOf(IllegalArgumentException.class);
+        Turnout turnout2 = model.getOrCreate(Turnout.class, "bar", null);
+        assertThat(turnout2).isNotNull();
+        assertThat(model.getAll(Turnout.class)).containsExactlyInAnyOrder(turnout1, turnout2);
     }
 
     @Test
@@ -51,12 +61,12 @@ class DefaultModelTest {
         assertThat(model.getCache(Turnout.class)).isNull();
         assertThat(model.getAll(Turnout.class)).isEmpty();
         assertThat(model.getCache(Turnout.class)).isEmpty();
-        Turnout foo = model.create(Turnout.class, "foo");
+        Turnout turnout = model.create(Turnout.class, "foo");
         // assert that set is gotten and cache is populated
-        assertThat(model.getAll(Turnout.class)).containsExactly(foo);
-        assertThat(model.getCache(Turnout.class)).containsExactly(foo);
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
+        assertThat(model.getCache(Turnout.class)).containsExactly(turnout);
         // assert that using cache works
-        assertThat(model.getAll(Turnout.class)).containsExactly(foo);
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
     }
 
     @Test
@@ -77,6 +87,13 @@ class DefaultModelTest {
 
     @Test
     void testGetOrCreate() {
+        assertThat(model.get(Turnout.class, "foo")).isNull();
+        Turnout turnout1 = model.getOrCreate(Turnout.class, "foo", Lookup.EMPTY);
+        assertThat(turnout1).isNotNull();
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout1);
+        Turnout turnout2 = model.getOrCreate(Turnout.class, "bar", null);
+        assertThat(turnout2).isNotNull();
+        assertThat(model.getAll(Turnout.class)).containsExactlyInAnyOrder(turnout1, turnout2);
     }
 
     @Test

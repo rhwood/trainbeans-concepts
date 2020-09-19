@@ -57,6 +57,14 @@ class ModelTest {
     }
 
     @Test
+    void testGetOrCreate_Class_String() {
+        // only really testing that null Lookup does not cause error
+        Element element = model.getOrCreate(ElementImpl.class, "foo");
+        assertThat(model.last).isNull();
+        assertThat(element.getName()).isEqualTo("foo");
+    }
+
+    @Test
     void testVetoableChange() {
         // test the vetoableChange throws if PropertyChangeEvent has property
         // "name" and an element with the same name
@@ -124,10 +132,10 @@ class ModelTest {
         }
 
         @Override
-        public <T extends Element> T getOrCreate(Class<T> type, String name) {
+        public <T extends Element> T getOrCreate(Class<T> type, String name, Lookup lookup) {
             Element element = get(type, name);
             if (element == null) {
-                return create(type, name);
+                return create(type, name, lookup);
             }
             return null;
         }
