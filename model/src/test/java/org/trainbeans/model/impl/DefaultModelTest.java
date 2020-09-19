@@ -114,10 +114,26 @@ class DefaultModelTest {
 
     @Test
     void testRemove() {
+        Turnout turnout = model.create(Turnout.class, "foo");
+        assertThat(turnout.getPropertyChangeListeners("name")).containsExactly(model);
+        assertThat(turnout.getVetoableChangeListeners("name")).containsExactly(model);
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
+        assertThat(model.getCache(Turnout.class)).isNotNull();
+        model.remove(turnout);
+        assertThat(turnout.getPropertyChangeListeners("name")).isEmpty();
+        assertThat(turnout.getVetoableChangeListeners("name")).isEmpty();
+        assertThat(model.getCache(Turnout.class)).isNull();
+        assertThat(model.getAll(Turnout.class)).isEmpty();
     }
 
     @Test
     void testPropertyChange() {
+        Turnout turnout = model.create(Turnout.class, "foo");
+        assertThat(model.get(Element.class, "foo")).isEqualTo(turnout);
+        assertThat(model.get(Element.class, "bar")).isNull();
+        turnout.setName("bar");
+        assertThat(model.get(Element.class, "foo")).isNull();
+        assertThat(model.get(Element.class, "bar")).isEqualTo(turnout);
     }
 
 }
