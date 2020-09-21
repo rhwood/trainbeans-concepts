@@ -25,7 +25,7 @@ import org.trainbeans.beans.VetoableBean;
  * @param <E> type of element
  * @param <D> type of delegate
  */
-public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, DiscreteStateElement {
+public abstract class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, DiscreteStateElement {
 
     DiscreteState state;
     D delegate = null;
