@@ -27,4 +27,9 @@ public final class Turnout extends AbstractDelegatingDiscreteStateElement<Turnou
         CLOSED,
         THROWN
     }
+
+    public Turnout() {
+        // set default state
+        setState(State.UNKNOWN);
+    }
 }

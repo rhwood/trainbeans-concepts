@@ -44,7 +44,7 @@ public abstract class AbstractDelegatingDiscreteStateElement<E extends Delegatin
         }
         delegate = newDelegate;
         if (delegate != null) {
-            delegate.removePropertyChangeListener(this);
+            delegate.addPropertyChangeListener(this);
         }
         firePropertyChange("delegate", oldDelegate, newDelegate);
     }

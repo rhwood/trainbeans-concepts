@@ -20,6 +20,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -181,25 +182,23 @@ class VetoableBeanTest {
         assertThat(vetoed).isZero();
         assertThat(heard).isZero();
         // differing objects get fired
-        bean.fireVetoableChange(new PropertyChangeEvent(bean, "foo", new Object(), new Object()));
+        bean.fireVetoableChange("foo", new Object(), new Object());
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // same objects do not get fired
         Object foo = new Object();
-        bean.fireVetoableChange(new PropertyChangeEvent(bean, "foo", foo, foo));
+        bean.fireVetoableChange("foo", foo, foo);
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // both objects null fires
-        bean.fireVetoableChange(new PropertyChangeEvent(bean, "foo", null, null));
+        bean.fireVetoableChange("foo", null, null);
         assertThat(passed).isEqualTo(2);
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(2);
         // veto is thrown
-        PropertyChangeEvent thrown = new PropertyChangeEvent(bean, "veto", null, null);
-        PropertyVetoException ex = catchThrowableOfType(() -> bean.fireVetoableChange(thrown), PropertyVetoException.class);
-        assertThat(ex.getPropertyChangeEvent()).isEqualTo(thrown);
+        assertThatCode(() -> bean.fireVetoableChange("veto", null, null)).isInstanceOf(PropertyVetoException.class);
         assertThat(heard).isEqualTo(2);
         assertThat(vetoed).isEqualTo(1);
         assertThat(passed).isEqualTo(2);
@@ -213,19 +212,18 @@ class VetoableBeanTest {
         assertThat(vetoed).isZero();
         assertThat(heard).isZero();
         // differing integers get fired
-        bean.fireVetoableChange(new PropertyChangeEvent(bean, "foo", 1, 2));
+        bean.fireVetoableChange("foo", 1, 2);
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // same integers do not get fired
         Object foo = new Object();
-        bean.fireVetoableChange(new PropertyChangeEvent(bean, "foo", 1, 1));
+        bean.fireVetoableChange("foo", 1, 1);
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // veto is thrown
-        PropertyVetoException ex = catchThrowableOfType(() -> bean.fireVetoableChange("veto", 1, 2), PropertyVetoException.class);
-        assertThat(ex.getPropertyChangeEvent().getPropertyName()).isEqualTo("veto");
+        assertThatCode(() -> bean.fireVetoableChange("veto", 1, 2)).isInstanceOf(PropertyVetoException.class);
         assertThat(heard).isEqualTo(1);
         assertThat(vetoed).isEqualTo(1);
         assertThat(passed).isEqualTo(1);
@@ -239,22 +237,50 @@ class VetoableBeanTest {
         assertThat(vetoed).isZero();
         assertThat(heard).isZero();
         // differing booleans get fired
-        bean.fireVetoableChange(new PropertyChangeEvent(bean, "foo", true, false));
+        bean.fireVetoableChange("foo", true, false);
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // same booleans do not get fired
         Object foo = new Object();
-        bean.fireVetoableChange(new PropertyChangeEvent(bean, "foo", false, false));
+        bean.fireVetoableChange("foo", false, false);
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // veto is thrown
-        PropertyVetoException ex = catchThrowableOfType(() -> bean.fireVetoableChange("veto", true, false), PropertyVetoException.class);
-        assertThat(ex.getPropertyChangeEvent().getPropertyName()).isEqualTo("veto");
+        assertThatCode(() -> bean.fireVetoableChange("veto", true, false)).isInstanceOf(PropertyVetoException.class);
         assertThat(heard).isEqualTo(1);
         assertThat(vetoed).isEqualTo(1);
         assertThat(passed).isEqualTo(1);
     }
 
+    @Test
+    void testHasListeners() {
+        // test pass through
+        assertThat(bean.hasListeners(null)).isFalse();
+        assertThat(bean.hasListeners("foo")).isFalse();
+        bean.addPropertyChangeListener(listener);
+        assertThat(bean.hasListeners(null)).isTrue();
+        assertThat(bean.hasListeners("foo")).isTrue();
+        bean.addPropertyChangeListener("foo", listener);
+        assertThat(bean.hasListeners(null)).isTrue();
+        assertThat(bean.hasListeners("foo")).isTrue();
+        bean.removePropertyChangeListener(listener);
+        assertThat(bean.hasListeners(null)).isFalse();
+        assertThat(bean.hasListeners("foo")).isTrue();
+        bean.removePropertyChangeListener("foo", listener);
+        // test vetoables
+        assertThat(bean.hasListeners(null)).isFalse();
+        assertThat(bean.hasListeners("foo")).isFalse();
+        bean.addVetoableChangeListener(vetoer);
+        assertThat(bean.hasListeners(null)).isTrue();
+        assertThat(bean.hasListeners("foo")).isTrue();
+        bean.addVetoableChangeListener("foo", vetoer);
+        assertThat(bean.hasListeners(null)).isTrue();
+        assertThat(bean.hasListeners("foo")).isTrue();
+        bean.removeVetoableChangeListener(vetoer);
+        assertThat(bean.hasListeners(null)).isFalse();
+        assertThat(bean.hasListeners("foo")).isTrue();
+    }
+    
 }

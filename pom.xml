@@ -98,12 +98,12 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>report-aggregate</id>
+                        <id>report</id>
                         <phase>prepare-package</phase>
                         <goals>
-                            <goal>report-aggregate</goal>
+                            <goal>report</goal>
                         </goals>
-                    </execution>                
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -117,22 +117,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report-aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <!-- only test scope dependencies should be in the parent POM -->
     <dependencies>

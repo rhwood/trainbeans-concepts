@@ -80,9 +80,9 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     }
 
     @Override
-    public <T extends Element> T getOrCreate(Class<T> type, String name) {
+    public <T extends Element> T getOrCreate(Class<T> type, String name, Lookup lookup) {
         T element = get(type, name);
-        return element != null ? element : create(type, name);
+        return element != null ? element : create(type, name, lookup);
     }
 
     @Override
@@ -101,6 +101,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
         elements.remove(element.getName());
         element.removeVetoableChangeListener("name", this);
         element.removePropertyChangeListener("name", this);
+        cache.clear();
     }
 
     @Override
@@ -110,5 +111,10 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
             elements.remove(evt.getOldValue().toString());
             elements.put(element.getName(), element);
         }
+    }
+    
+    // package protected for tests
+    <T extends Element> Set<T> getCache(Class<T> type) {
+        return (Set<T>) cache.get(type);
     }
 }
