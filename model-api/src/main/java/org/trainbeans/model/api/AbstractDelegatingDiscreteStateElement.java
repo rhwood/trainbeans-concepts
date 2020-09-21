@@ -66,7 +66,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
         try {
             fireVetoableChange("name", oldName, newName);
         } catch (PropertyVetoException ex) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException();
         }
         this.name = newName;
         firePropertyChange("name", oldName, newName);

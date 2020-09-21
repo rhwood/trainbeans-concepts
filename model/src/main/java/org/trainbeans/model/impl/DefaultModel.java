@@ -48,7 +48,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     @Override
     public <T extends Element> T create(Class<T> type, String name, Lookup lookup) {
         if (elements.get(name) != null) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException();
         }
         if (factories.get(type) == null) {
             throw new IllegalArgumentException();
@@ -88,7 +88,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     @Override
     public void put(Element element) {
         if (elements.containsKey(element.getName())) {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException();
         }
         element.addVetoableChangeListener("name", this);
         element.addPropertyChangeListener("name", this);

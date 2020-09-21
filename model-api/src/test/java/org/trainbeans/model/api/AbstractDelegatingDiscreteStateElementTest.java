@@ -78,7 +78,7 @@ abstract class AbstractDelegatingDiscreteStateElementTest<E extends AbstractDele
         element.addVetoableChangeListener(evt -> {
             throw new PropertyVetoException("test", evt);
         });
-        assertThatThrownBy(() -> element.setName("test")).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> element.setName("test")).isInstanceOf(IllegalStateException.class);
     }
 
     @Test

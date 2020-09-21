@@ -38,10 +38,10 @@ public interface Element extends PropertyChangeProvider, VetoableChangeProvider 
      * {@link java.beans.PropertyChangeListener}s.
      *
      * @param name the new name
-     * @throws IllegalArgumentException if another element in the same model has
-     * the same name, the name is blank, or the name is null and the Element
-     * does not have a {@link Delegate}
+     * @throws IllegalArgumentException if the name is blank, or the name is
+     * null and the Element does not have a {@link Delegate}
+     * @throws IllegalStateException if another element in the same model has
+     * the same name
      */
-    // TODO: should this throw an IllegalStateException if vetoed instead of an IllegalArgumentException?
     public void setName(String name);
 }
