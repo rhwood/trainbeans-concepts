@@ -30,7 +30,7 @@ import org.trainbeans.model.api.TurnoutDelegate;
  *
  * @author rhwood
  */
-public class TurnoutFactoryTest {
+class TurnoutFactoryTest {
 
     private TurnoutFactory factory;
     
@@ -45,12 +45,12 @@ public class TurnoutFactoryTest {
     }
 
     @Test
-    public void testGetElementClass() {
+    void testGetElementClass() {
         assertThat(factory.getElementClass()).isEqualTo(Turnout.class);
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         // empty Lookup
         assertThat(factory.create("test", Lookup.EMPTY).getName()).isEqualTo("test");
         assertThatThrownBy(() -> factory.create(null, Lookup.EMPTY)).isInstanceOf(IllegalArgumentException.class);
