@@ -29,13 +29,13 @@ public interface Delegate<T extends DelegatingElement> extends Element {
      * @param delagator the element
      */
     // TODO is any need for this a sign of failed design?
-    public void setDelagator(T delagator);
+    void setDelagator(T delagator);
 
     /**
      * Get the Element this is a delegate for.
-     * 
+     *
      * @return the element or null if this Delegate is not being delegated to
      */
     // TODO is any need for this a sign of failed design?
-    public T getDelagator();
+    T getDelagator();
 }

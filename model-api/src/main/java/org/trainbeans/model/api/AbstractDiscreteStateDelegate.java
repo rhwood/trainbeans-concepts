@@ -18,62 +18,98 @@ package org.trainbeans.model.api;
 import org.trainbeans.beans.VetoableBean;
 
 /**
+ * This is a simplistic abstract delegate for {@link DiscreteStateElement}s that
+ * is primarily useful for simulation and unit testing. Other implementations of
+ * {@link DiscreteStateDelegate} can use this as a template.
  *
  * @author rhwood
  * @param <E> the type of supported element
  */
-public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement & DiscreteStateElement> extends VetoableBean implements DiscreteStateDelegate<E> {
+public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement
+        & DiscreteStateElement> extends VetoableBean
+        implements DiscreteStateDelegate<E> {
 
-    private E delagator;
+    /**
+     * The delegating element.
+     */
+    private E delegator;
+    /**
+     * The name of the delegate. Will be used by the delegator if the delegator
+     * is not overriding it.
+     */
     private String name;
+    /**
+     * The current state.
+     */
     private DiscreteState state;
 
     /**
      * Test if the provided name is valid in this context.
-     * 
-     * @param name the name to test
+     *
+     * @param aName the name to test
      * @return true if name is valid; false otherwise
      */
-    protected abstract boolean isValidName(String name);
+    protected abstract boolean isValidName(String aName);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setDelagator(E delagator) {
-        this.delagator = delagator;
+    public void setDelagator(final E delagator) {
+        this.delegator = delagator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E getDelagator() {
-        return delagator;
+        return delegator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setName(String newName) {
-        String oldName = name;
-        if (isValidName(newName)) {
-            name = newName;
+    public void setName(final String name) {
+        String oldName = this.name;
+        if (isValidName(name)) {
+            this.name = name;
         } else {
             throw new IllegalArgumentException();
         }
-        firePropertyChange("name", oldName, newName);
+        firePropertyChange("name", oldName, name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DiscreteState getState() {
         return state;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setState(DiscreteState newState) {
+    public void setState(final DiscreteState newState) {
         DiscreteState oldState = state;
         state = newState;
         firePropertyChange("state", oldState, newState);
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DiscreteState getRequestedState() {
         return getState();

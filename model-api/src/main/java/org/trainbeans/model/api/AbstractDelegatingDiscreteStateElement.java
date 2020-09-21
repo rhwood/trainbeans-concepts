@@ -25,19 +25,35 @@ import org.trainbeans.beans.VetoableBean;
  * @param <E> type of element
  * @param <D> type of delegate
  */
-public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>> extends VetoableBean implements DelegatingElement<E, D>, DiscreteStateElement {
+@SuppressWarnings("linelength") // generic definitions on single line
+public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>>
+        extends VetoableBean
+        implements DelegatingElement<E, D>, DiscreteStateElement {
 
-    DiscreteState state;
-    D delegate = null;
+    /**
+     * The state if not handled by a delegate.
+     */
+    private DiscreteState state;
+    /**
+     * The delegate; if not null, most property access defers to the delegate.
+     */
+    private D delegate = null;
+    /**
+     * The name of the element; ignored if null or empty and the delegate is not
+     * null.
+     */
     private String name;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public D getDelegate() {
         return delegate;
     }
 
     @Override
-    public final void setDelegate(D newDelegate) {
+    public final void setDelegate(final D newDelegate) {
         D oldDelegate = delegate;
         if (oldDelegate != null) {
             oldDelegate.removePropertyChangeListener(this);
@@ -49,6 +65,9 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
         firePropertyChange("delegate", oldDelegate, newDelegate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         if (name == null) {
@@ -58,8 +77,9 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
     }
 
     @Override
-    public final void setName(String newName) {
-        if ((newName == null && delegate == null) || (newName != null && newName.trim().isEmpty())) {
+    public final void setName(final String newName) {
+        if ((newName == null && delegate == null)
+                || (newName != null && newName.trim().isEmpty())) {
             throw new IllegalArgumentException();
         }
         String oldName = this.name;
@@ -72,18 +92,27 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
         firePropertyChange("name", oldName, newName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DiscreteState getState() {
         return delegate != null ? delegate.getState() : state;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DiscreteState getRequestedState() {
         return delegate != null ? delegate.getRequestedState() : state;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setState(DiscreteState newState) {
+    public void setState(final DiscreteState newState) {
         DiscreteState oldState = state;
         state = newState;
         if (delegate != null) {
@@ -100,12 +129,35 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
      * @param evt {@inheritDoc}
      */
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         if (delegate == evt.getSource()) {
-            PropertyChangeEvent propagation = new PropertyChangeEvent(this, evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
+            PropertyChangeEvent propagation = new PropertyChangeEvent(this,
+                    evt.getPropertyName(),
+                    evt.getOldValue(),
+                    evt.getNewValue());
             propagation.setPropagationId(evt.getPropagationId());
             firePropertyChange(propagation);
         }
     }
 
+    /**
+     * Get the state, bypassing any assigned delegate.
+     *
+     * @return the state
+     */
+    // package protected for unit testing
+    DiscreteState getNonDelegatedState() {
+        return state;
+    }
+
+    /**
+     * Set the state, bypassing any assigned delegate and without notifying
+     * listeners of the change in the state.
+     *
+     * @param newState the new state
+     */
+    // package protected for unit testing
+    void setNonDelegatedState(final DiscreteState newState) {
+        this.state = newState;
+    }
 }

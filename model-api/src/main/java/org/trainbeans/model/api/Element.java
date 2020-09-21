@@ -19,18 +19,19 @@ import org.trainbeans.beans.PropertyChangeProvider;
 import org.trainbeans.beans.VetoableChangeProvider;
 
 /**
- * An element in the internal model of a model railroad
+ * An element in the internal model of a model railroad.
  *
  * @author rhwood
  */
-public interface Element extends PropertyChangeProvider, VetoableChangeProvider {
+public interface Element extends PropertyChangeProvider,
+        VetoableChangeProvider {
 
     /**
      * Get the name of the element.
      *
      * @return the name
      */
-    public String getName();
+    String getName();
 
     /**
      * Set the name of the element. Implementations of this must notify
@@ -42,6 +43,7 @@ public interface Element extends PropertyChangeProvider, VetoableChangeProvider 
      * the same name, the name is blank, or the name is null and the Element
      * does not have a {@link Delegate}
      */
-    // TODO: should this throw an IllegalStateException if vetoed instead of an IllegalArgumentException?
-    public void setName(String name);
+    // TODO: should this throw an IllegalStateException if vetoed instead of an
+    // IllegalArgumentException?
+    void setName(String name);
 }

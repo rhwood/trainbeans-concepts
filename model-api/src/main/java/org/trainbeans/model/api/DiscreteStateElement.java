@@ -26,16 +26,16 @@ public interface DiscreteStateElement extends Element {
     /**
      * Get the state.
      *
-     * @return
+     * @return the state
      */
-    public DiscreteState getState();
+    DiscreteState getState();
 
     /**
      * Set the state.
      *
      * @param state the state to set
      */
-    public void setState(DiscreteState state);
+    void setState(DiscreteState state);
 
     /**
      * Get the the state that was last set. This may differ from
@@ -46,5 +46,5 @@ public interface DiscreteStateElement extends Element {
      *
      * @return the requested set
      */
-    public DiscreteState getRequestedState();
+    DiscreteState getRequestedState();
 }

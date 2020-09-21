@@ -27,7 +27,13 @@ import org.trainbeans.model.api.Element;
  */
 public interface ElementFactory<T extends Element> {
 
-    public Class<T> getElementClass();
+    /**
+     * Get the most specific class of object created by the
+     * {@link #create(String, Lookup)} method of this factory.
+     *
+     * @return the class of object created by this factory
+     */
+    Class<T> getElementClass();
 
     /**
      * Create an element with the given name. If this Factory supports a
@@ -41,5 +47,5 @@ public interface ElementFactory<T extends Element> {
      * @throws IllegalArgumentException if name is blank and the lookup does not
      * contain a Delegate
      */
-    public T create(String name, Lookup lookup);
+    T create(String name, Lookup lookup);
 }
