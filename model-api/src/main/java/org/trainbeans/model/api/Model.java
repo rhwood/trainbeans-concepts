@@ -20,6 +20,7 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.util.Set;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.trainbeans.beans.PropertyChangeProvider;
 
 /**
@@ -135,12 +136,14 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
     <T extends Element> void remove(T element);
 
     @Override
-            // TODO: support I18N
-            throw new PropertyVetoException("Element with name \"" + evt.getNewValue() + "\" already exists.", evt);
     default void vetoableChange(PropertyChangeEvent evt)
             throws PropertyVetoException {
         if (evt.getPropertyName().equals("name")
                 && get(Element.class, evt.getNewValue().toString()) != null) {
+            throw new PropertyVetoException(
+                    NbBundle.getMessage(Model.class, "veto.exception",
+                            evt.getNewValue()),
+                    evt);
         }
     }
 }
