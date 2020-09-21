@@ -40,10 +40,10 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @param type the type of element
      * @param name the name of the element
      * @return the newly created element
-     * @throws IllegalArgumentException if an element of type with name already
-     * exists
-     * @throws IllegalArgumentException if no
+     * @throws IllegalArgumentException if name is blank; if no
      * {@link org.trainbeans.model.spi.ElementFactory} for type exists in model
+     * @throws IllegalStateException if an element of type with name already
+     * exists
      */
     default <T extends Element> T create(Class<T> type, String name) {
         return create(type, name, null);
@@ -59,9 +59,11 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @param name the name of the element
      * @param lookup a container of additional services for the factory
      * @return the newly created element
-     * @throws IllegalArgumentException if an element of type with name already
-     * exists; if name is blank and lookup does not contain a Delegate; if no
-     * {@link org.trainbeans.model.spi.ElementFactory} for type exists in model
+     * @throws IllegalArgumentException if name is blank and lookup does not
+     * contain a Delegate; if no {@link org.trainbeans.model.spi.ElementFactory}
+     * for type exists in model
+     * @throws IllegalStateException if an element of type with name already
+     * exists
      */
     <T extends Element> T create(Class<T> type, String name, Lookup lookup);
 
@@ -92,7 +94,9 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @param type the type of element
      * @param name the name of the element
      * @return the matching element, possibly newly created
-     * @throws IllegalArgumentException if an element of type with name already
+     * @throws IllegalArgumentException if name is blank; if no
+     * {@link org.trainbeans.model.spi.ElementFactory} for type exists in model
+     * @throws IllegalStateException if an element of type with name already
      * exists
      */
     default <T extends Element> T getOrCreate(Class<T> type, String name) {
@@ -109,7 +113,10 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @param name the name of the element
      * @param lookup a container of additional services for the factory
      * @return the matching element, possibly newly created
-     * @throws IllegalArgumentException if an element of type with name already
+     * @throws IllegalArgumentException if name is blank and lookup does not
+     * contain a Delegate; if no {@link org.trainbeans.model.spi.ElementFactory}
+     * for type exists in model
+     * @throws IllegalStateException if an element of type with name already
      * exists
      */
     <T extends Element> T getOrCreate(Class<T> type, String name,
@@ -120,8 +127,8 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      *
      * @param <T> the type of element
      * @param element the element
-     * @throws IllegalArgumentException if an element of the same type with the
-     * same name already exists
+     * @throws IllegalStateException if an element of with the same name already
+     * exists
      */
     <T extends Element> void put(T element);
 

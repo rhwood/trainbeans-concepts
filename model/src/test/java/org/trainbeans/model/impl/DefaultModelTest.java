@@ -50,7 +50,9 @@ class DefaultModelTest {
         assertThat(model.get(Turnout.class, "foo")).isNull();
         Turnout turnout1 = model.create(Turnout.class, "foo", Lookup.EMPTY);
         assertThat(model.get(Turnout.class, "foo")).isEqualTo(turnout1);
-        assertThatCode(() -> model.create(Element.class, "foo", Lookup.EMPTY)).isInstanceOf(IllegalArgumentException.class);
+        // name is in use
+        assertThatCode(() -> model.create(Element.class, "foo", Lookup.EMPTY)).isInstanceOf(IllegalStateException.class);
+        // no factory for Element
         assertThatCode(() -> model.create(Element.class, "bar", Lookup.EMPTY)).isInstanceOf(IllegalArgumentException.class);
         Turnout turnout2 = model.getOrCreate(Turnout.class, "bar", null);
         assertThat(turnout2).isNotNull();
@@ -115,7 +117,7 @@ class DefaultModelTest {
         assertThat(turnout.getVetoableChangeListeners()).doesNotContain(model);
         assertThat(turnout.getPropertyChangeListeners("name")).containsExactly(model);
         assertThat(turnout.getVetoableChangeListeners("name")).containsExactly(model);
-        assertThatCode(() -> model.put(turnout)).isInstanceOf(IllegalArgumentException.class);
+        assertThatCode(() -> model.put(turnout)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
