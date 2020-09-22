@@ -20,6 +20,7 @@ package org.trainbeans.model.api;
  * @author rhwood
  * @param <T> the type of Element being delegated
  */
-public interface DiscreteStateDelegate<T extends DelegatingElement & DiscreteStateElement> extends Delegate<T>, DiscreteStateElement {
-    
+public interface DiscreteStateDelegate<T extends DelegatingElement
+        & DiscreteStateElement> extends Delegate<T>, DiscreteStateElement {
+
 }

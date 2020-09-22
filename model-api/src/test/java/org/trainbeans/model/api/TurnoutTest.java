@@ -44,14 +44,14 @@ class TurnoutTest extends AbstractDelegatingDiscreteStateElementTest<Turnout, Tu
         // default state is UNKNOWN without delegate
         assertThat(element.getDelegate()).isNull();
         assertThat(element.getState()).isEqualTo(Turnout.State.UNKNOWN);
-        element.state = Turnout.State.CONFLICTED;
+        element.setNonDelegatedState(Turnout.State.CONFLICTED);
         assertThat(element.getState()).isEqualTo(Turnout.State.CONFLICTED);
         element.setDelegate(delegate);
         assertThat(element.getDelegate()).isEqualTo(delegate);
         assertThat(delegate.getState()).isEqualTo(Turnout.State.UNKNOWN);
-        assertThat(delegate.getState()).isNotEqualTo(element.state);
+        assertThat(delegate.getState()).isNotEqualTo(element.getNonDelegatedState());
         assertThat(element.getState()).isEqualTo(Turnout.State.UNKNOWN);
-        assertThat(element.getState()).isNotEqualTo(element.state);
+        assertThat(element.getState()).isNotEqualTo(element.getNonDelegatedState());
     }
 
     @Test
@@ -60,14 +60,14 @@ class TurnoutTest extends AbstractDelegatingDiscreteStateElementTest<Turnout, Tu
         // default state is UNKNOWN without delegate
         assertThat(element.getDelegate()).isNull();
         assertThat(element.getRequestedState()).isEqualTo(element.getState());
-        element.state = Turnout.State.CONFLICTED;
+        element.setNonDelegatedState(Turnout.State.CONFLICTED);
         assertThat(element.getRequestedState()).isEqualTo(element.getState());
         element.setDelegate(delegate);
         assertThat(element.getDelegate()).isEqualTo(delegate);
         assertThat(delegate.getRequestedState()).isEqualTo(Turnout.State.UNKNOWN);
-        assertThat(delegate.getRequestedState()).isNotEqualTo(element.state);
+        assertThat(delegate.getRequestedState()).isNotEqualTo(element.getNonDelegatedState());
         assertThat(element.getRequestedState()).isEqualTo(Turnout.State.UNKNOWN);
-        assertThat(element.getRequestedState()).isNotEqualTo(element.state);
+        assertThat(element.getRequestedState()).isNotEqualTo(element.getNonDelegatedState());
     }
 
     @Test
@@ -98,7 +98,7 @@ class TurnoutTest extends AbstractDelegatingDiscreteStateElementTest<Turnout, Tu
         }
 
         @Override
-        protected boolean isValidName(String name) {
+        protected boolean isValidName(String aName) {
             return true;
         }
     }

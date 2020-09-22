@@ -20,5 +20,5 @@ package org.trainbeans.model.api;
  * @author rhwood
  */
 public interface TurnoutDelegate extends DiscreteStateDelegate<Turnout> {
-    
+
 }

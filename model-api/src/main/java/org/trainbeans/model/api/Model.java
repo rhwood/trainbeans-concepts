@@ -20,6 +20,7 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.util.Set;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.trainbeans.beans.PropertyChangeProvider;
 
 /**
@@ -44,7 +45,7 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @throws IllegalStateException if an element of type with name already
      * exists
      */
-    public default <T extends Element> T create(Class<T> type, String name) {
+    default <T extends Element> T create(Class<T> type, String name) {
         return create(type, name, null);
     }
 
@@ -64,7 +65,7 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @throws IllegalStateException if an element of type with name already
      * exists
      */
-    public <T extends Element> T create(Class<T> type, String name, Lookup lookup);
+    <T extends Element> T create(Class<T> type, String name, Lookup lookup);
 
     /**
      * Get all elements of a specific type from the model.
@@ -74,7 +75,7 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @return a set of elements; this set is empty if there are no matching
      * elements
      */
-    public <T extends Element> Set<T> getAll(Class<T> type);
+    <T extends Element> Set<T> getAll(Class<T> type);
 
     /**
      * Get an element of a specific type from the model.
@@ -84,7 +85,7 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @param name the name of the element
      * @return the matching element or null if there is no such element
      */
-    public <T extends Element> T get(Class<T> type, String name);
+    <T extends Element> T get(Class<T> type, String name);
 
     /**
      * Get an element of a specific type from the model, creating it if needed.
@@ -98,7 +99,7 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @throws IllegalStateException if an element of type with name already
      * exists
      */
-    public default <T extends Element> T getOrCreate(Class<T> type, String name) {
+    default <T extends Element> T getOrCreate(Class<T> type, String name) {
         return getOrCreate(type, name, null);
     }
 
@@ -118,7 +119,8 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @throws IllegalStateException if an element of type with name already
      * exists
      */
-    public <T extends Element> T getOrCreate(Class<T> type, String name, Lookup lookup);
+    <T extends Element> T getOrCreate(Class<T> type, String name,
+            Lookup lookup);
 
     /**
      * Put an existing element into the model.
@@ -128,7 +130,7 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @throws IllegalStateException if an element of with the same name already
      * exists
      */
-    public <T extends Element> void put(T element);
+    <T extends Element> void put(T element);
 
     /**
      * Remove an element from the model. It is not an error if the element does
@@ -138,13 +140,17 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @param <T> the type of element
      * @param element the element to remove
      */
-    public <T extends Element> void remove(T element);
+    <T extends Element> void remove(T element);
 
     @Override
-    public default void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
-        if (evt.getPropertyName().equals("name") && get(Element.class, evt.getNewValue().toString()) != null) {
-            // TODO: support I18N
-            throw new PropertyVetoException("Element with name \"" + evt.getNewValue() + "\" already exists.", evt);
+    default void vetoableChange(PropertyChangeEvent evt)
+            throws PropertyVetoException {
+        if (evt.getPropertyName().equals("name")
+                && get(Element.class, evt.getNewValue().toString()) != null) {
+            throw new PropertyVetoException(
+                    NbBundle.getMessage(Model.class, "veto.exception",
+                            evt.getNewValue()),
+                    evt);
         }
     }
 }

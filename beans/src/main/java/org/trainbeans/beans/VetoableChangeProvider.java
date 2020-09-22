@@ -25,26 +25,27 @@ public interface VetoableChangeProvider {
 
     /**
      * Add a VetoableChangeListener to this object. If a listener is added
-     * multiple times, it's
-     * {@link VetoableChangeListener#vetoableChange(java.beans.PropertyChangeEvent)}
+     * multiple times, it's {@link
+     * VetoableChangeListener#vetoableChange(java.beans.PropertyChangeEvent)}
      * method will be called as many times as the listener was added. If the
      * listener is null, no exception is thrown and no action is taken.
      *
      * @param listener the listener to add
      */
-    public void addVetoableChangeListener(VetoableChangeListener listener);
+    void addVetoableChangeListener(VetoableChangeListener listener);
 
     /**
      * Add a VetoableChangeListener to a specific property of this object. If a
-     * listener is added multiple times, it's
-     * {@link VetoableChangeListener#vetoableChange(java.beans.PropertyChangeEvent)}
+     * listener is added multiple times, it's {@link
+     * VetoableChangeListener#vetoableChange(java.beans.PropertyChangeEvent)}
      * method will be called as many times as the listener was added. If the
      * listener is null, no exception is thrown and no action is taken.
      *
      * @param propertyName the property to add the listener to
      * @param listener the listener to add to the property
      */
-    public void addVetoableChangeListener(String propertyName, VetoableChangeListener listener);
+    void addVetoableChangeListener(String propertyName,
+            VetoableChangeListener listener);
 
     /**
      * Get the VetoableChangeListeners to this object. If a listener was added
@@ -54,7 +55,7 @@ public interface VetoableChangeProvider {
      * @return the listeners or an empty array if none
      * @see java.beans.VetoableChangeSupport#getVetoableChangeListeners()
      */
-    public VetoableChangeListener[] getVetoableChangeListeners();
+    VetoableChangeListener[] getVetoableChangeListeners();
 
     /**
      * Get the VetoableChangeListeners to a named property of this object.
@@ -62,7 +63,7 @@ public interface VetoableChangeProvider {
      * @param propertyName the named property
      * @return the listeners or an empty array if none or propertyName is null
      */
-    public VetoableChangeListener[] getVetoableChangeListeners(String propertyName);
+    VetoableChangeListener[] getVetoableChangeListeners(String propertyName);
 
     /**
      * Remove the VetoableChangeListener from the list of listeners. Only
@@ -72,7 +73,7 @@ public interface VetoableChangeProvider {
      *
      * @param listener the listener to remove
      */
-    public void removeVetoableChangeListener(VetoableChangeListener listener);
+    void removeVetoableChangeListener(VetoableChangeListener listener);
 
     /**
      * Remove the VetoableChangeListener from this object for the named
@@ -83,7 +84,8 @@ public interface VetoableChangeProvider {
      * @param propertyName the property name
      * @param listener the listener to remove
      */
-    public void removeVetoableChangeListener(String propertyName, VetoableChangeListener listener);
+    void removeVetoableChangeListener(String propertyName,
+            VetoableChangeListener listener);
 
     /**
      * Are any listeners for a named property present?
@@ -91,5 +93,5 @@ public interface VetoableChangeProvider {
      * @param propertyName the property to check
      * @return true if listeners are present; false otherwise
      */
-    public boolean hasListeners(String propertyName);
+    boolean hasListeners(String propertyName);
 }

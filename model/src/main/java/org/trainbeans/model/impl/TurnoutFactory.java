@@ -22,11 +22,12 @@ import org.trainbeans.model.api.TurnoutDelegate;
 import org.trainbeans.model.spi.ElementFactory;
 
 /**
+ * ElementFactory that creates {@link Turnout}s.
  *
  * @author rhwood
  */
 @ServiceProvider(service = ElementFactory.class)
-public class TurnoutFactory implements ElementFactory<Turnout> {
+public final class TurnoutFactory implements ElementFactory<Turnout> {
 
     @Override
     public Class<Turnout> getElementClass() {
@@ -34,7 +35,7 @@ public class TurnoutFactory implements ElementFactory<Turnout> {
     }
 
     @Override
-    public Turnout create(String name, Lookup lookup) {
+    public Turnout create(final String name, final Lookup lookup) {
         Turnout turnout = new Turnout();
         if (lookup != null) {
             turnout.setDelegate(lookup.lookup(TurnoutDelegate.class));
@@ -42,5 +43,5 @@ public class TurnoutFactory implements ElementFactory<Turnout> {
         turnout.setName(name);
         return turnout;
     }
-    
+
 }

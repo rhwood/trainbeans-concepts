@@ -30,19 +30,20 @@ import java.beans.PropertyChangeListener;
  * @param <E> the type of element supported by the delegate
  * @param <D> the type of delegate
  */
-public interface DelegatingElement<E extends DelegatingElement, D extends Delegate<E>> extends Element, PropertyChangeListener {
+public interface DelegatingElement<E extends DelegatingElement,
+        D extends Delegate<E>> extends Element, PropertyChangeListener {
 
     /**
      * Get the delegate for this element.
      *
      * @return the delegate or null if there is no delegate
      */
-    public D getDelegate();
+    D getDelegate();
 
     /**
      * Set the delegate for this element.
      *
      * @param delegate the delegate or null if removing a delegate
      */
-    public void setDelegate(D delegate);
+    void setDelegate(D delegate);
 }

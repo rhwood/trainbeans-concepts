@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.api;
-
 /**
- * The DiscreteState is implemented by subclasses of
- * {@link DiscreteStateElement} as a public enum within the class so that
- * {@link DiscreteStateElement#getState()},
- * {@link DiscreteStateElement#setState(DiscreteState)}, and
- * {@link DiscreteStateElement#getRequestedState()} can all contain meaningful
- * values specific to the type of states allowed while using enums.
- *
- * @author rhwood
+ * Implementation of the {@link org.trainbeans.model.api Model API}. The
+ * implementation is deliberately in a separate module to avoid the temptation
+ * to rely on an implementation detail not specified in the API.
  */
-public interface DiscreteState {
-
-}
+package org.trainbeans.model.impl;

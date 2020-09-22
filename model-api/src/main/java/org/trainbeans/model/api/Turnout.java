@@ -19,15 +19,31 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public final class Turnout extends AbstractDelegatingDiscreteStateElement<Turnout, TurnoutDelegate> {
+public final class Turnout extends
+        AbstractDelegatingDiscreteStateElement<Turnout, TurnoutDelegate> {
 
     public enum State implements DiscreteState {
+        /**
+         * The turnout state is unknown.
+         */
         UNKNOWN,
+        /**
+         * The requested state does not match any other state.
+         */
         CONFLICTED,
+        /**
+         * The turnout is in its normal position, set for its mainline route.
+         */
         CLOSED,
+        /**
+         * The turnout is in its open position, set for its diverging route.
+         */
         THROWN
     }
 
+    /**
+     * Create a turnout.
+     */
     public Turnout() {
         // set default state
         setState(State.UNKNOWN);
