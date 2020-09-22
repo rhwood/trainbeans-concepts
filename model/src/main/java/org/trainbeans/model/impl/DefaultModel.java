@@ -31,22 +31,47 @@ import org.trainbeans.model.api.Model;
 import org.trainbeans.model.spi.ElementFactory;
 
 /**
+ * The default implementation of a Model.
  *
  * @author rhwood
  */
-public class DefaultModel extends Bean implements Model, PropertyChangeListener, VetoableChangeListener {
+public final class DefaultModel extends Bean implements Model,
+        PropertyChangeListener, VetoableChangeListener {
 
+    /**
+     * Map of factories to be used to create elements, keyed by the Class the
+     * factory can create.
+     */
+    @SuppressWarnings("checkstyle:linelength") // generic defintion on one line
     private final Map<Class<? extends Element>, ElementFactory<? extends Element>> factories = new HashMap<>();
+    /**
+     * Map of elements, keyed by name.
+     */
     // TODO should I use a BidiSortedMap from Apache Commons Collections here?
     private final SortedMap<String, Element> elements = new TreeMap<>();
+    /**
+     * Cache of sets of all elements by requested interface. All caches are
+     * invalidated by adding or removing an element.
+     */
+    @SuppressWarnings("checkstyle:linelength") // generic defintion on one line
     private final Map<Class<? extends Element>, Set<? extends Element>> cache = new HashMap<>();
 
-    public DefaultModel(Lookup lookup) {
-        lookup.lookupAll(ElementFactory.class).forEach(factory -> factories.put(factory.getElementClass(), factory));
+    /**
+     * Create a model.
+     *
+     * @param lookup the container with the
+     * {@link ElementFactory ElementFactories} to use to create {@link Element}s
+     */
+    public DefaultModel(final Lookup lookup) {
+        lookup.lookupAll(ElementFactory.class)
+                .forEach(factory
+                        -> factories.put(factory.getElementClass(), factory));
     }
-    
+
     @Override
-    public <T extends Element> T create(Class<T> type, String name, Lookup lookup) {
+    public <T extends Element> T create(final Class<T> type,
+            final String name,
+            final Lookup lookup) {
         if (elements.get(name) != null) {
             throw new IllegalStateException();
         }
@@ -59,19 +84,21 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     }
 
     @Override
-    public <T extends Element> Set<T> getAll(Class<T> type) {
+    public <T extends Element> Set<T> getAll(final Class<T> type) {
         if (cache.containsKey(type)) {
             return (Set<T>) cache.get(type);
         } else {
             Set<T> set = new HashSet<>();
-            elements.values().stream().filter(type::isInstance).forEach(e -> set.add((T) e));
+            elements.values().stream()
+                    .filter(type::isInstance)
+                    .forEach(e -> set.add((T) e));
             cache.put(type, set);
             return set;
         }
     }
 
     @Override
-    public <T extends Element> T get(Class<T> type, String name) {
+    public <T extends Element> T get(final Class<T> type, final String name) {
         Element element = elements.get(name);
         if (type.isInstance(element)) {
             return (T) element;
@@ -80,13 +107,15 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     }
 
     @Override
-    public <T extends Element> T getOrCreate(Class<T> type, String name, Lookup lookup) {
+    public <T extends Element> T getOrCreate(final Class<T> type,
+            final String name,
+            final Lookup lookup) {
         T element = get(type, name);
         return element != null ? element : create(type, name, lookup);
     }
 
     @Override
-    public void put(Element element) {
+    public void put(final Element element) {
         if (elements.containsKey(element.getName())) {
             throw new IllegalStateException();
         }
@@ -97,7 +126,7 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     }
 
     @Override
-    public void remove(Element element) {
+    public void remove(final Element element) {
         elements.remove(element.getName());
         element.removeVetoableChangeListener("name", this);
         element.removePropertyChangeListener("name", this);
@@ -105,16 +134,16 @@ public class DefaultModel extends Bean implements Model, PropertyChangeListener,
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+    public void propertyChange(final PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("name")) {
             Element element = elements.get(evt.getOldValue().toString());
             elements.remove(evt.getOldValue().toString());
             elements.put(element.getName(), element);
         }
     }
-    
+
     // package protected for tests
-    <T extends Element> Set<T> getCache(Class<T> type) {
+    <T extends Element> Set<T> getCache(final Class<T> type) {
         return (Set<T>) cache.get(type);
     }
 }
