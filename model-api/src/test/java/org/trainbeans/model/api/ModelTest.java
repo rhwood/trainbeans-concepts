@@ -94,6 +94,11 @@ class ModelTest {
         @Override
         public ElementImpl setName(String name) {
             this.name = name;
+            return getSelf();
+        }
+        
+        @Override
+        public ElementImpl getSelf() {
             return this;
         }
     }

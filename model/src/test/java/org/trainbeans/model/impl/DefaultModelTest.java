@@ -80,6 +80,11 @@ class DefaultModelTest {
             public String getName() {
                 return "bar";
             }
+            
+            @Override
+            public AbstractDelegatingDiscreteStateElement getSelf() {
+                return this;
+            }
         });
         assertThat(model.get(Turnout.class, "bar")).isNull();
         Turnout turnout = new Turnout();

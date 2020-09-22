@@ -48,4 +48,9 @@ public final class Turnout extends
         // set default state
         setState(State.UNKNOWN);
     }
+
+    @Override
+    public Turnout getSelf() {
+        return this;
+    }
 }

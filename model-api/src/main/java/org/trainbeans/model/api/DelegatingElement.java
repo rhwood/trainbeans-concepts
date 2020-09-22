@@ -43,8 +43,9 @@ public interface DelegatingElement<E extends DelegatingElement,
     /**
      * Set the delegate for this element.
      *
+     * @param <T> the returned type
      * @param delegate the delegate or null if removing a delegate
      * @return this object
      */
-    DelegatingElement<E, D> setDelegate(D delegate);
+    <T extends DelegatingElement<E, D>> T setDelegate(D delegate);
 }

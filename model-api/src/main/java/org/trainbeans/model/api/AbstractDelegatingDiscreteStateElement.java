@@ -26,7 +26,7 @@ import org.trainbeans.beans.VetoableBean;
  * @param <D> type of delegate
  */
 @SuppressWarnings("linelength") // generic definitions on single line
-public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>>
+public abstract class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>>
         extends VetoableBean
         implements DelegatingElement<E, D>, DiscreteStateElement {
 
@@ -53,7 +53,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
     }
 
     @Override
-    public final AbstractDelegatingDiscreteStateElement<E, D>
+    public final <T extends DelegatingElement<E, D>> T
             setDelegate(final D newDelegate) {
         D oldDelegate = delegate;
         if (oldDelegate != null) {
@@ -64,7 +64,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
             delegate.addPropertyChangeListener(this);
         }
         firePropertyChange("delegate", oldDelegate, newDelegate);
-        return this;
+        return getSelf();
     }
 
     /**
@@ -79,7 +79,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
     }
 
     @Override
-    public final AbstractDelegatingDiscreteStateElement<E, D>
+    public final <T extends Element> T
             setName(final String newName) {
         if ((newName == null && delegate == null)
                 || (newName != null && newName.trim().isEmpty())) {
@@ -93,7 +93,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
         }
         this.name = newName;
         firePropertyChange("name", oldName, newName);
-        return this;
+        return getSelf();
     }
 
     /**
@@ -125,7 +125,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
         } else {
             firePropertyChange("state", oldState, newState);
         }
-        return this;
+        return getSelf();
     }
 
     /**

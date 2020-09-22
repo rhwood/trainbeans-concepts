@@ -79,7 +79,11 @@ class TurnoutDelegateTest extends AbstractDiscreteStateDelegateTest<Turnout, Tur
             return valid;
         }
 
+        @Override
+        public TurnoutDelegateImpl getSelf() {
+            return this;
+        }
+
     }
 
-    
 }

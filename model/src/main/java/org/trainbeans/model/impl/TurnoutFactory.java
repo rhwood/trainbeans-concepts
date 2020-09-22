@@ -36,12 +36,13 @@ public final class TurnoutFactory implements ElementFactory<Turnout> {
 
     @Override
     public Turnout create(final String name, final Lookup lookup) {
-        Turnout turnout = new Turnout();
         if (lookup != null) {
-            turnout.setDelegate(lookup.lookup(TurnoutDelegate.class));
+            return new Turnout()
+                    .setDelegate(lookup.lookup(TurnoutDelegate.class))
+                    .setName(name);
+        } else {
+            return new Turnout().setName(name);
         }
-        turnout.setName(name);
-        return turnout;
     }
 
 }

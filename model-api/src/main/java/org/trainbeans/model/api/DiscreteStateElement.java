@@ -33,10 +33,11 @@ public interface DiscreteStateElement extends Element {
     /**
      * Set the state.
      *
+     * @param <T> the returned type
      * @param state the state to set
      * @return this object
      */
-    DiscreteStateElement setState(DiscreteState state);
+    <T extends DiscreteStateElement> T setState(DiscreteState state);
 
     /**
      * Get the the state that was last set. This may differ from
