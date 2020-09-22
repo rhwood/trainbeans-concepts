@@ -53,7 +53,8 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
     }
 
     @Override
-    public final void setDelegate(final D newDelegate) {
+    public final AbstractDelegatingDiscreteStateElement<E, D>
+            setDelegate(final D newDelegate) {
         D oldDelegate = delegate;
         if (oldDelegate != null) {
             oldDelegate.removePropertyChangeListener(this);
@@ -63,6 +64,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
             delegate.addPropertyChangeListener(this);
         }
         firePropertyChange("delegate", oldDelegate, newDelegate);
+        return this;
     }
 
     /**
@@ -77,7 +79,8 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
     }
 
     @Override
-    public final void setName(final String newName) {
+    public final AbstractDelegatingDiscreteStateElement<E, D>
+            setName(final String newName) {
         if ((newName == null && delegate == null)
                 || (newName != null && newName.trim().isEmpty())) {
             throw new IllegalArgumentException();
@@ -90,6 +93,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
         }
         this.name = newName;
         firePropertyChange("name", oldName, newName);
+        return this;
     }
 
     /**
@@ -112,7 +116,8 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
      * {@inheritDoc}
      */
     @Override
-    public void setState(final DiscreteState newState) {
+    public AbstractDelegatingDiscreteStateElement<E, D>
+            setState(final DiscreteState newState) {
         DiscreteState oldState = state;
         state = newState;
         if (delegate != null) {
@@ -120,6 +125,7 @@ public class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement 
         } else {
             firePropertyChange("state", oldState, newState);
         }
+        return this;
     }
 
     /**

@@ -34,15 +34,16 @@ public interface Element extends PropertyChangeProvider,
     String getName();
 
     /**
-     * Set the name of the element. Implementations of this must notify
-     * {@link java.beans.VetoableChangeListener}s and
-     * {@link java.beans.PropertyChangeListener}s.
+     * Set the name of the element.Implementations of this must notify
+    {@link java.beans.VetoableChangeListener}s and
+    {@link java.beans.PropertyChangeListener}s.
      *
      * @param name the new name
+     * @return this object
      * @throws IllegalArgumentException if the name is blank, or the name is
      * null and the Element does not have a {@link Delegate}
      * @throws IllegalStateException if another element in the same model has
      * the same name
      */
-    void setName(String name);
+    Element setName(String name);
 }

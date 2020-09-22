@@ -44,6 +44,7 @@ public interface DelegatingElement<E extends DelegatingElement,
      * Set the delegate for this element.
      *
      * @param delegate the delegate or null if removing a delegate
+     * @return this object
      */
-    void setDelegate(D delegate);
+    DelegatingElement<E, D> setDelegate(D delegate);
 }
