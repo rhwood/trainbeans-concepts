@@ -101,5 +101,10 @@ class TurnoutTest extends AbstractDelegatingDiscreteStateElementTest<Turnout, Tu
         protected boolean isValidName(String aName) {
             return true;
         }
+
+        @Override
+        public TestTurnoutDelegate getSelf() {
+            return this;
+        }
     }
 }

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.trainbeans.model.api.AbstractDiscreteStateDelegate;
+import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.api.TurnoutDelegate;
 
@@ -71,6 +72,11 @@ class TurnoutFactoryTest {
         protected boolean isValidName(String name) {
             return true;
         }
-        
+
+        @Override
+        public TestTurnoutDelegate getSelf() {
+            return this;
+        }
+
     }
 }

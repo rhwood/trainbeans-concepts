@@ -25,9 +25,9 @@ import org.trainbeans.beans.VetoableBean;
  * @author rhwood
  * @param <E> the type of supported element
  */
-public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement
-        & DiscreteStateElement> extends VetoableBean
-        implements DiscreteStateDelegate<E> {
+@SuppressWarnings("checkstyle:linelength") // generic definition on one line
+public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement & DiscreteStateElement>
+        extends VetoableBean implements DiscreteStateDelegate<E> {
 
     /**
      * The delegating element.
@@ -79,7 +79,7 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement
      * {@inheritDoc}
      */
     @Override
-    public void setName(final String name) {
+    public AbstractDiscreteStateDelegate<E> setName(final String name) {
         String oldName = this.name;
         if (isValidName(name)) {
             this.name = name;
@@ -87,6 +87,7 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement
             throw new IllegalArgumentException();
         }
         firePropertyChange("name", oldName, name);
+        return this;
     }
 
     /**
@@ -101,10 +102,12 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement
      * {@inheritDoc}
      */
     @Override
-    public void setState(final DiscreteState newState) {
+    public AbstractDiscreteStateDelegate<E>
+            setState(final DiscreteState newState) {
         DiscreteState oldState = state;
         state = newState;
         firePropertyChange("state", oldState, newState);
+        return this;
     }
 
     /**

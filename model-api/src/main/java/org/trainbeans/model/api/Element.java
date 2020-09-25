@@ -38,11 +38,23 @@ public interface Element extends PropertyChangeProvider,
      * {@link java.beans.VetoableChangeListener}s and
      * {@link java.beans.PropertyChangeListener}s.
      *
+     * @param <E> the returned type
      * @param name the new name
+     * @return this object
      * @throws IllegalArgumentException if the name is blank, or the name is
      * null and the Element does not have a {@link Delegate}
      * @throws IllegalStateException if another element in the same model has
      * the same name
      */
-    void setName(String name);
+    <E extends Element> E setName(String name);
+
+    /**
+     * Get this object. This is an exposed internal implementation detail that
+     * enables a fluent interface and method chaining. It should <em>not</em>
+     * be implemented by abstract classes.
+     *
+     * @param <E> the returned type
+     * @return this object
+     */
+    <E extends Element> E getSelf();
 }

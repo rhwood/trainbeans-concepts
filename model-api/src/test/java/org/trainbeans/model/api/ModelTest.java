@@ -92,8 +92,14 @@ class ModelTest {
         }
 
         @Override
-        public void setName(String name) {
+        public ElementImpl setName(String name) {
             this.name = name;
+            return getSelf();
+        }
+        
+        @Override
+        public ElementImpl getSelf() {
+            return this;
         }
     }
 
@@ -107,8 +113,7 @@ class ModelTest {
             last = lookup;
             // do not use factory in test model
             if (ElementImpl.class.equals(type)) {
-                ElementImpl impl = new ElementImpl();
-                impl.setName(name);
+                ElementImpl impl = new ElementImpl().setName(name);
                 elements.add(impl);
                 return (T) impl;
             } else {
