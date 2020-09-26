@@ -115,7 +115,7 @@ public final class DefaultModel extends Bean implements Model,
     }
 
     @Override
-    public void put(final Element element) {
+    public DefaultModel put(final Element element) {
         if (elements.containsKey(element.getName())) {
             throw new IllegalStateException();
         }
@@ -123,14 +123,16 @@ public final class DefaultModel extends Bean implements Model,
         element.addPropertyChangeListener("name", this);
         elements.put(element.getName(), element);
         cache.clear();
+        return getSelf();
     }
 
     @Override
-    public void remove(final Element element) {
+    public DefaultModel remove(final Element element) {
         elements.remove(element.getName());
         element.removeVetoableChangeListener("name", this);
         element.removePropertyChangeListener("name", this);
         cache.clear();
+        return getSelf();
     }
 
     @Override
@@ -147,6 +149,13 @@ public final class DefaultModel extends Bean implements Model,
         return this;
     }
 
+    /**
+     * Get the cache entry for a given class.
+     *
+     * @param <T> the return type
+     * @param type the type in the cached set
+     * @return the set of cached items matching type or null if none exists
+     */
     // package protected for tests
     <T extends Element> Set<T> getCache(final Class<T> type) {
         return (Set<T>) cache.get(type);
