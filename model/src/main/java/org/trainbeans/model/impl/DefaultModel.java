@@ -142,6 +142,11 @@ public final class DefaultModel extends Bean implements Model,
         }
     }
 
+    @Override
+    public DefaultModel getSelf() {
+        return this;
+    }
+
     // package protected for tests
     <T extends Element> Set<T> getCache(final Class<T> type) {
         return (Set<T>) cache.get(type);

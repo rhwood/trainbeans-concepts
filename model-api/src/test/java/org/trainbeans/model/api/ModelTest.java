@@ -154,6 +154,11 @@ class ModelTest {
         public <T extends Element> void remove(T element) {
             // not implemented
         }
+
+        @Override
+        public ModelImpl getSelf() {
+            return this;
+        }
     }
     
 }

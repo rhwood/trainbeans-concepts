@@ -23,50 +23,54 @@ import java.beans.PropertyChangeSupport;
  *
  * @author rhwood
  */
-public class Bean implements PropertyChangeProvider {
+public abstract class Bean implements PropertyChangeProvider {
 
     /**
      * Supporting class that manages {@link PropertyChangeListeners} and
      * {@link PropertyChangeEvent} propagation.
      */
-    private final PropertyChangeSupport propertyChangeSupport =
-            new PropertyChangeSupport(this);
+    private final PropertyChangeSupport propertyChangeSupport
+            = new PropertyChangeSupport(this);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addPropertyChangeListener(
+    public <P extends PropertyChangeProvider> P addPropertyChangeListener(
             final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
+        return getSelf();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addPropertyChangeListener(final String propertyName,
-            final PropertyChangeListener listener) {
+    public <P extends PropertyChangeProvider> P addPropertyChangeListener(
+            final String propertyName, final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+        return getSelf();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void removePropertyChangeListener(
+    public <P extends PropertyChangeProvider> P removePropertyChangeListener(
             final PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
+        return getSelf();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void removePropertyChangeListener(final String propertyName,
-            final PropertyChangeListener listener) {
+    public <P extends PropertyChangeProvider> P removePropertyChangeListener(
+            final String propertyName, final PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(propertyName,
                 listener);
+        return getSelf();
     }
 
     /**

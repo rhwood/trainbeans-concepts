@@ -24,7 +24,8 @@ import java.beans.VetoableChangeSupport;
  *
  * @author rhwood
  */
-public class VetoableBean extends Bean implements VetoableChangeProvider {
+public abstract class VetoableBean extends Bean
+        implements VetoableChangeProvider {
 
     /**
      * Supporting class that manages {@link VetoableChangeListeners} and
@@ -37,18 +38,20 @@ public class VetoableBean extends Bean implements VetoableChangeProvider {
      * {@inheritDoc}
      */
     @Override
-    public void addVetoableChangeListener(
+    public <P extends VetoableChangeProvider> P addVetoableChangeListener(
             final VetoableChangeListener listener) {
         vetoableChangeSupport.addVetoableChangeListener(listener);
+        return getSelf();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void addVetoableChangeListener(final String propertyName,
-            final VetoableChangeListener listener) {
+    public <P extends VetoableChangeProvider> P addVetoableChangeListener(
+            final String propertyName, final VetoableChangeListener listener) {
         vetoableChangeSupport.addVetoableChangeListener(propertyName, listener);
+        return getSelf();
     }
 
     /**
@@ -72,19 +75,21 @@ public class VetoableBean extends Bean implements VetoableChangeProvider {
      * {@inheritDoc}
      */
     @Override
-    public void removeVetoableChangeListener(
+    public <P extends VetoableChangeProvider> P removeVetoableChangeListener(
             final VetoableChangeListener listener) {
         vetoableChangeSupport.removeVetoableChangeListener(listener);
+        return getSelf();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void removeVetoableChangeListener(final String propertyName,
-            final VetoableChangeListener listener) {
+    public <P extends VetoableChangeProvider> P removeVetoableChangeListener(
+            final String propertyName, final VetoableChangeListener listener) {
         vetoableChangeSupport.removeVetoableChangeListener(propertyName,
                 listener);
+        return getSelf();
     }
 
     /**
