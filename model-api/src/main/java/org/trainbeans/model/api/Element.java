@@ -47,14 +47,4 @@ public interface Element extends PropertyChangeProvider,
      * the same name
      */
     <E extends Element> E setName(String name);
-
-    /**
-     * Get this object. This is an exposed internal implementation detail that
-     * enables a fluent interface and method chaining. It should <em>not</em>
-     * be implemented by abstract classes.
-     *
-     * @param <E> the returned type
-     * @return this object
-     */
-    <E extends Element> E getSelf();
 }

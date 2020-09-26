@@ -126,21 +126,25 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * Put an existing element into the model.
      *
      * @param <T> the type of element
+     * @param <M> the return type
      * @param element the element
      * @throws IllegalStateException if an element of with the same name already
      * exists
+     * @return this object
      */
-    <T extends Element> void put(T element);
+    <T extends Element, M extends Model> M put(T element);
 
     /**
      * Remove an element from the model. It is not an error if the element does
      * not exist in the model, nor is it an error to attempt to remove a null
      * element.
      *
+     * @param <M> the return type
      * @param <T> the type of element
      * @param element the element to remove
+     * @return this object
      */
-    <T extends Element> void remove(T element);
+    <T extends Element, M extends Model> M remove(T element);
 
     @Override
     default void vetoableChange(PropertyChangeEvent evt)

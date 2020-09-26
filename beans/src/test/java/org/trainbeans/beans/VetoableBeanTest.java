@@ -41,7 +41,12 @@ class VetoableBeanTest {
 
     @BeforeEach
     void setUp() {
-        bean = new VetoableBean();
+        bean = new VetoableBean() {
+            @Override
+            public VetoableBean getSelf() {
+                return this;
+            }
+        };
         vetoed = 0;
         passed = 0;
         heard = 0;
@@ -65,10 +70,10 @@ class VetoableBeanTest {
     void testAddVetoableChangeListener_VetoableChangeListener() {
         assertThat(bean.getVetoableChangeListeners()).isEmpty();
         assertThat(bean.getVetoableChangeListeners("foo")).isEmpty();
-        bean.addVetoableChangeListener(vetoer);
+        assertThat((Object) bean.addVetoableChangeListener(vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).hasSize(1);
         assertThat(bean.getVetoableChangeListeners("foo")).isEmpty();
-        bean.addVetoableChangeListener(vetoer);
+        assertThat((Object) bean.addVetoableChangeListener(vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).hasSize(2);
         assertThat(bean.getVetoableChangeListeners("foo")).isEmpty();
     }
@@ -77,10 +82,10 @@ class VetoableBeanTest {
     void testAddVetoableChangeListener_String_VetoableChangeListener() {
         assertThat(bean.getVetoableChangeListeners()).isEmpty();
         assertThat(bean.getVetoableChangeListeners("foo")).isEmpty();
-        bean.addVetoableChangeListener("foo", vetoer);
+        assertThat((Object) bean.addVetoableChangeListener("foo", vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).hasSize(1);
         assertThat(bean.getVetoableChangeListeners("foo")).hasSize(1);
-        bean.addVetoableChangeListener("foo", vetoer);
+        assertThat((Object) bean.addVetoableChangeListener("foo", vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).hasSize(2);
         assertThat(bean.getVetoableChangeListeners("foo")).hasSize(2);
     }
@@ -121,10 +126,10 @@ class VetoableBeanTest {
         bean.addVetoableChangeListener(vetoer);
         assertThat(bean.getVetoableChangeListeners()).hasSize(4);
         assertThat(bean.getVetoableChangeListeners("foo")).hasSize(2);
-        bean.removeVetoableChangeListener(vetoer);
+        assertThat((Object) bean.removeVetoableChangeListener(vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).hasSize(3);
         assertThat(bean.getVetoableChangeListeners("foo")).hasSize(2);
-        bean.removeVetoableChangeListener(vetoer);
+        assertThat((Object) bean.removeVetoableChangeListener(vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).hasSize(2);
         assertThat(bean.getVetoableChangeListeners("foo")).hasSize(2);
     }
@@ -135,10 +140,10 @@ class VetoableBeanTest {
         bean.addVetoableChangeListener("foo", vetoer);
         assertThat(bean.getVetoableChangeListeners()).hasSize(2);
         assertThat(bean.getVetoableChangeListeners("foo")).hasSize(2);
-        bean.removeVetoableChangeListener("foo", vetoer);
+        assertThat((Object) bean.removeVetoableChangeListener("foo", vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).hasSize(1);
         assertThat(bean.getVetoableChangeListeners("foo")).hasSize(1);
-        bean.removeVetoableChangeListener("foo", vetoer);
+        assertThat((Object) bean.removeVetoableChangeListener("foo", vetoer)).isEqualTo(bean);
         assertThat(bean.getVetoableChangeListeners()).isEmpty();
         assertThat(bean.getVetoableChangeListeners("foo")).isEmpty();
     }
@@ -217,7 +222,6 @@ class VetoableBeanTest {
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // same integers do not get fired
-        Object foo = new Object();
         bean.fireVetoableChange("foo", 1, 1);
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
@@ -242,7 +246,6 @@ class VetoableBeanTest {
         assertThat(vetoed).isZero();
         assertThat(heard).isEqualTo(1);
         // same booleans do not get fired
-        Object foo = new Object();
         bean.fireVetoableChange("foo", false, false);
         assertThat(passed).isEqualTo(1);
         assertThat(vetoed).isZero();
@@ -282,5 +285,5 @@ class VetoableBeanTest {
         assertThat(bean.hasListeners(null)).isFalse();
         assertThat(bean.hasListeners("foo")).isTrue();
     }
-    
+
 }
