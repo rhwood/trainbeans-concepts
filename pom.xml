@@ -27,6 +27,7 @@
         <module>model-api</module>
         <module>model</module>
         <module>beans</module>
+        <module>connection-api</module>
     </modules>
 
     <build>
