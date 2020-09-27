@@ -43,13 +43,13 @@ abstract public class AbstractNetworkServerConnectionTestBase<C extends Abstract
     public void testSetPort() throws IOException {
         assertThat(connection.isStopped()).isTrue();
         assertThat(connection.getPort()).isEqualTo(0);
-        int port;
+        int port1;
         try (ServerSocket ss = new ServerSocket(0)) {
-            port = ss.getLocalPort();
+            port1 = ss.getLocalPort();
         }
-        assertThat(port).isNotEqualTo(0);
-        connection.setPort(port);
-        assertThat(connection.getPort()).isEqualTo(port);
+        assertThat(port1).isNotEqualTo(0);
+        connection.setPort(port1);
+        assertThat(connection.getPort()).isEqualTo(port1);
         connection.setPort(0);
         assertThat(connection.getPort()).isEqualTo(0);
         connection.setPort(MAX_PORT);
@@ -61,6 +61,11 @@ abstract public class AbstractNetworkServerConnectionTestBase<C extends Abstract
         connection.start();
         assertThatCode(() -> connection.setPort(0))
                 .isExactlyInstanceOf(IllegalStateException.class);
+        try (ServerSocket ss = new ServerSocket(0)) {
+            int port2 = ss.getLocalPort();
+            assertThatCode(() -> connection.setPort(port2))
+                    .isExactlyInstanceOf(IllegalStateException.class);
+        }
     }
 
 }
