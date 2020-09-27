@@ -26,9 +26,10 @@ public abstract class AbstractNetworkServerConnection extends AbstractConnection
         implements NetworkServerConnection {
 
     /**
-     * The port for this server to listen on.
+     * The port for this server to listen on; defaults to 0 to allow automatic
+     * starting with an ephemeral port.
      */
-    private int port;
+    private int port = 0;
     /**
      * Valid ports are in the range 0 to {@value #MAX_PORT}.
      */
