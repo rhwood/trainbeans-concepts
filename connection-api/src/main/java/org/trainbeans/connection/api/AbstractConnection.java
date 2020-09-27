@@ -44,6 +44,8 @@ public abstract class AbstractConnection extends Bean implements Connection {
      * @param newState the new state to set
      * @param cause the cause of a failed state
      */
+    // because this is protected, and not public, is not fluent
+    // if changing to public, make fluent
     protected void setState(final State newState, final Throwable cause) {
         State oldState = state;
         state = newState;
@@ -116,4 +118,11 @@ public abstract class AbstractConnection extends Bean implements Connection {
         return getSelf();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<Listener> getListeners() {
+        return new HashSet<>(listeners);
+    }
 }

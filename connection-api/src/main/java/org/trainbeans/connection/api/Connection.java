@@ -16,6 +16,7 @@
 package org.trainbeans.connection.api;
 
 import java.util.EventListener;
+import java.util.Set;
 import org.trainbeans.beans.PropertyChangeProvider;
 
 /**
@@ -106,16 +107,6 @@ public interface Connection extends PropertyChangeProvider {
      * the same name
      */
     <C extends Connection> C setName(String name);
-
-    /**
-     * Get this object. This is an exposed internal implementation detail that
-     * enables a fluent interface and method chaining. It should <em>not</em>
-     * be implemented by abstract classes.
-     *
-     * @param <C> the returned type
-     * @return this object
-     */
-    <C extends Connection> C getSelf();
 
     /**
      * Check if the connection is running (either {@link State#STARTED} or
@@ -232,4 +223,11 @@ public interface Connection extends PropertyChangeProvider {
      * @return this connection
      */
     <C extends Connection> C removeListener(Listener listener);
+
+    /**
+     * Get the listeners for this collection.
+     *
+     * @return the listeners or an empty set
+     */
+    Set<Listener> getListeners();
 }
