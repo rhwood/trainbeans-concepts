@@ -31,14 +31,19 @@ class BeanTest {
     private Bean bean;
     private PropertyChangeListener listener;
     private int heard;
-    
+
     @BeforeEach
     void setUp() {
-        bean = new Bean();
+        bean = new Bean() {
+            @Override
+            public Bean getSelf() {
+                return this;
+            }
+        };
         heard = 0;
         listener = (PropertyChangeEvent evt) -> heard++;
     }
-    
+
     @AfterEach
     void tearDown() {
         // nothing to do
@@ -48,10 +53,10 @@ class BeanTest {
     void testAddPropertyChangeListener_PropertyChangeListener() {
         assertThat(bean.getPropertyChangeListeners()).isEmpty();
         assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
-        bean.addPropertyChangeListener(listener);
+        assertThat((Object) bean.addPropertyChangeListener(listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).hasSize(1);
         assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
-        bean.addPropertyChangeListener(listener);
+        assertThat((Object) bean.addPropertyChangeListener(listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).hasSize(2);
         assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
     }
@@ -75,10 +80,10 @@ class BeanTest {
     void testAddPropertyChangeListener_String_PropertyChangeListener() {
         assertThat(bean.getPropertyChangeListeners()).isEmpty();
         assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
-        bean.addPropertyChangeListener("foo", listener);
+        assertThat((Object) bean.addPropertyChangeListener("foo", listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).hasSize(1);
         assertThat(bean.getPropertyChangeListeners("foo")).hasSize(1);
-        bean.addPropertyChangeListener("foo", listener);
+        assertThat((Object) bean.addPropertyChangeListener("foo", listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).hasSize(2);
         assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
     }
@@ -91,10 +96,10 @@ class BeanTest {
         bean.addPropertyChangeListener(listener);
         assertThat(bean.getPropertyChangeListeners()).hasSize(4);
         assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
-        bean.removePropertyChangeListener(listener);
+        assertThat((Object) bean.removePropertyChangeListener(listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).hasSize(3);
         assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
-        bean.removePropertyChangeListener(listener);
+        assertThat((Object) bean.removePropertyChangeListener(listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).hasSize(2);
         assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
     }
@@ -105,10 +110,10 @@ class BeanTest {
         bean.addPropertyChangeListener("foo", listener);
         assertThat(bean.getPropertyChangeListeners()).hasSize(2);
         assertThat(bean.getPropertyChangeListeners("foo")).hasSize(2);
-        bean.removePropertyChangeListener("foo", listener);
+        assertThat((Object) bean.removePropertyChangeListener("foo", listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).hasSize(1);
         assertThat(bean.getPropertyChangeListeners("foo")).hasSize(1);
-        bean.removePropertyChangeListener("foo", listener);
+        assertThat((Object) bean.removePropertyChangeListener("foo", listener)).isEqualTo(bean);
         assertThat(bean.getPropertyChangeListeners()).isEmpty();
         assertThat(bean.getPropertyChangeListeners("foo")).isEmpty();
     }
@@ -232,5 +237,5 @@ class BeanTest {
         bean.fireIndexedPropertyChange("foo", 0, true, true);
         assertThat(heard).isEqualTo(1);
     }
-    
+
 }

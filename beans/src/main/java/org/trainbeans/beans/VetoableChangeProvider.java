@@ -21,7 +21,7 @@ import java.beans.VetoableChangeListener;
  *
  * @author rhwood
  */
-public interface VetoableChangeProvider {
+public interface VetoableChangeProvider extends Fluent {
 
     /**
      * Add a VetoableChangeListener to this object. If a listener is added
@@ -30,9 +30,12 @@ public interface VetoableChangeProvider {
      * method will be called as many times as the listener was added. If the
      * listener is null, no exception is thrown and no action is taken.
      *
+     * @param <P> the return type
      * @param listener the listener to add
+     * @return this object
      */
-    void addVetoableChangeListener(VetoableChangeListener listener);
+    <P extends VetoableChangeProvider> P
+            addVetoableChangeListener(VetoableChangeListener listener);
 
     /**
      * Add a VetoableChangeListener to a specific property of this object. If a
@@ -41,11 +44,14 @@ public interface VetoableChangeProvider {
      * method will be called as many times as the listener was added. If the
      * listener is null, no exception is thrown and no action is taken.
      *
+     * @param <P> the return type
      * @param propertyName the property to add the listener to
      * @param listener the listener to add to the property
+     * @return this object
      */
-    void addVetoableChangeListener(String propertyName,
-            VetoableChangeListener listener);
+    <P extends VetoableChangeProvider> P
+            addVetoableChangeListener(String propertyName,
+                    VetoableChangeListener listener);
 
     /**
      * Get the VetoableChangeListeners to this object. If a listener was added
@@ -71,9 +77,12 @@ public interface VetoableChangeProvider {
      * named property. If listener is null, no exception is thrown and no action
      * is taken.
      *
+     * @param <P> the return type
      * @param listener the listener to remove
+     * @return this object
      */
-    void removeVetoableChangeListener(VetoableChangeListener listener);
+    <P extends VetoableChangeProvider> P
+            removeVetoableChangeListener(VetoableChangeListener listener);
 
     /**
      * Remove the VetoableChangeListener from this object for the named
@@ -81,11 +90,14 @@ public interface VetoableChangeProvider {
      * the named property. If listener is null, no exception is thrown and no
      * action is taken.
      *
+     * @param <P> the return type
      * @param propertyName the property name
      * @param listener the listener to remove
+     * @return this object
      */
-    void removeVetoableChangeListener(String propertyName,
-            VetoableChangeListener listener);
+    <P extends VetoableChangeProvider> P
+            removeVetoableChangeListener(String propertyName,
+                    VetoableChangeListener listener);
 
     /**
      * Are any listeners for a named property present?

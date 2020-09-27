@@ -146,13 +146,20 @@ class ModelTest {
         }
 
         @Override
-        public <T extends Element> void put(T element) {
-            // not implemented
+        public <T extends Element, M extends Model> M put(T element) {
+            // no effect
+            return (M) getSelf();
         }
 
         @Override
-        public <T extends Element> void remove(T element) {
-            // not implemented
+        public <T extends Element, M extends Model> M remove(T element) {
+            // no effect
+            return (M) getSelf();
+        }
+
+        @Override
+        public ModelImpl getSelf() {
+            return this;
         }
     }
     

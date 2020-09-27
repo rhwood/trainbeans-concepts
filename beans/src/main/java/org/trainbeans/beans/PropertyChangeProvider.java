@@ -24,28 +24,34 @@ import java.beans.PropertyChangeListener;
  *
  * @author rhwood
  */
-public interface PropertyChangeProvider {
+public interface PropertyChangeProvider extends Fluent {
 
     /**
-     * Add a PropertyChangeListener that listens to all property changes. If the
+     * Add a PropertyChangeListener that listens to all property changes.If the
      * same listener is added multiple times, it receives the change
      * notification multiple times.
      *
+     * @param <P> the return type
      * @param listener the listener to add; if null, no action is taken and no
      * exception is thrown
+     * @return this object
      */
-    void addPropertyChangeListener(PropertyChangeListener listener);
+    <P extends PropertyChangeProvider> P
+            addPropertyChangeListener(PropertyChangeListener listener);
 
     /**
      * Add a PropertyChangeListener that listens to changes in the named
      * property. If the same listener is added multiple times, it receives the
      * change notification multiple times.
      *
+     * @param <P> the return type
      * @param propertyName the name of the property to listen to
      * @param listener the listener to add; if null, no action is taken and no
      * exception is thrown
+     * @return this object
      */
-    void addPropertyChangeListener(String propertyName,
+    <P extends PropertyChangeProvider> P
+            addPropertyChangeListener(String propertyName,
             PropertyChangeListener listener);
 
     /**
@@ -53,21 +59,27 @@ public interface PropertyChangeProvider {
      * properties. If the same listener was added multiple times, only removes
      * the first instance of that listener.
      *
+     * @param <P> the return type
      * @param listener the listener to remove; if null or not previously added,
      * no action is taken and no exception is thrown
+     * @return this object
      */
-    void removePropertyChangeListener(PropertyChangeListener listener);
+    <P extends PropertyChangeProvider> P
+            removePropertyChangeListener(PropertyChangeListener listener);
 
     /**
      * Remove a PropertyChangeListener that listens to changes to all
      * properties. If the same listener was added multiple times, only removes
      * the first instance of that listener.
      *
+     * @param <P> the return type
      * @param propertyName the name of the property to listen to
      * @param listener the listener to remove; if null or not previously added,
      * no action is taken and no exception is thrown
+     * @return this object
      */
-    void removePropertyChangeListener(String propertyName,
+    <P extends PropertyChangeProvider> P
+            removePropertyChangeListener(String propertyName,
             PropertyChangeListener listener);
 
     /**

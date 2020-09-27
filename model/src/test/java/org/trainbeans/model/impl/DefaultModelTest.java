@@ -115,7 +115,7 @@ class DefaultModelTest {
         assertThat(turnout.getVetoableChangeListeners("name")).isEmpty();
         assertThat(model.getAll(Turnout.class)).isEmpty();
         assertThat(model.getCache(Turnout.class)).isNotNull();
-        model.put(turnout);
+        assertThat(model.put(turnout)).isExactlyInstanceOf(DefaultModel.class).isEqualTo(model);
         assertThat(model.getCache(Turnout.class)).isNull();
         assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
         assertThat(turnout.getPropertyChangeListeners()).doesNotContain(model);
@@ -132,7 +132,7 @@ class DefaultModelTest {
         assertThat(turnout.getVetoableChangeListeners("name")).containsExactly(model);
         assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
         assertThat(model.getCache(Turnout.class)).isNotNull();
-        model.remove(turnout);
+        assertThat(model.remove(turnout)).isExactlyInstanceOf(DefaultModel.class).isEqualTo(model);
         assertThat(turnout.getPropertyChangeListeners("name")).isEmpty();
         assertThat(turnout.getVetoableChangeListeners("name")).isEmpty();
         assertThat(model.getCache(Turnout.class)).isNull();
