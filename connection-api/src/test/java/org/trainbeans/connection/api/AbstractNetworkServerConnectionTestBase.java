@@ -26,11 +26,11 @@ import static org.trainbeans.connection.api.AbstractNetworkServerConnection.MAX_
  *
  * @author rhwood
  */
-abstract public class AbstractNetworkServerConnectionTestBase<C extends AbstractNetworkServerConnection, L extends Connection.Listener> extends AbstractConnectionTestBase<C, L> {
+abstract class AbstractNetworkServerConnectionTestBase<C extends AbstractNetworkServerConnection, L extends Connection.Listener> extends AbstractConnectionTestBase<C, L> {
 
     @Test
-    public void testGetPort() throws IOException {
-        assertThat(connection.getPort()).isEqualTo(0);
+    void testGetPort() throws IOException {
+        assertThat(connection.getPort()).isZero();
         int port;
         try (ServerSocket ss = new ServerSocket(0)) {
             port = ss.getLocalPort();
@@ -40,18 +40,18 @@ abstract public class AbstractNetworkServerConnectionTestBase<C extends Abstract
     }
 
     @Test
-    public void testSetPort() throws IOException {
+    void testSetPort() throws IOException {
         assertThat(connection.isStopped()).isTrue();
-        assertThat(connection.getPort()).isEqualTo(0);
+        assertThat(connection.getPort()).isZero();
         int port1;
         try (ServerSocket ss = new ServerSocket(0)) {
             port1 = ss.getLocalPort();
         }
-        assertThat(port1).isNotEqualTo(0);
+        assertThat(port1).isNotZero();
         connection.setPort(port1);
         assertThat(connection.getPort()).isEqualTo(port1);
         connection.setPort(0);
-        assertThat(connection.getPort()).isEqualTo(0);
+        assertThat(connection.getPort()).isZero();
         assertThatCode(() -> connection.setPort(-1))
                 .isExactlyInstanceOf(IllegalArgumentException.class);
         assertThatCode(() -> connection.setPort(MAX_PORT + 1))
