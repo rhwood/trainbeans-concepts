@@ -29,17 +29,17 @@ abstract class AbstractNetworkClientConnectionTestBase<C extends AbstractNetwork
 
     @Test
     void testValidatedURI() throws URISyntaxException {
-        URI uri = new URI("http://localhost:8080");
+        URI uri = new URI(null, null, "localhost", 8080, null, null, null);
         assertThat(connection.validatedURI(uri)).isEqualTo(uri);
-        assertThatCode(() -> {
-            connection.validatedURI(new URI("http://localhost:-1"));
-        }).isExactlyInstanceOf(IllegalArgumentException.class);
-        assertThatCode(() -> {
-            connection.validatedURI(new URI("http://:-1"));
-        }).isExactlyInstanceOf(IllegalArgumentException.class);
-        assertThatCode(() -> {
-            connection.validatedURI(new URI("http://:8080"));
-        }).isExactlyInstanceOf(IllegalArgumentException.class);
+        assertThatCode(() -> connection
+                .validatedURI(new URI(null, null, "localhost", -1, null, null, null)))
+                .isExactlyInstanceOf(IllegalArgumentException.class);
+        assertThatCode(() -> connection
+                .validatedURI(new URI(null, null, null, 8080, null, null, null)))
+                .isExactlyInstanceOf(IllegalArgumentException.class);
+        assertThatCode(() -> connection
+                .validatedURI(new URI(null, null, null, -1, null, null, null)))
+                .isExactlyInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
