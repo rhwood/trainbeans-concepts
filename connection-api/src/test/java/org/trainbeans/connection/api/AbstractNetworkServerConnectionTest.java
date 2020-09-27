@@ -18,7 +18,6 @@ package org.trainbeans.connection.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.trainbeans.beans.Fluent;
 
 /**
  *
@@ -33,6 +32,7 @@ class AbstractNetworkServerConnectionTest extends AbstractNetworkServerConnectio
         setupListeners();
     }
 
+    @Test
     @Override
     void testGetState() {
         assertThat(connection.getState()).isEqualTo(Connection.State.STOPPED);

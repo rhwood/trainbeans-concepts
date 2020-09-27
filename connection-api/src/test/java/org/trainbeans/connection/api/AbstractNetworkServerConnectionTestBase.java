@@ -52,20 +52,20 @@ abstract public class AbstractNetworkServerConnectionTestBase<C extends Abstract
         assertThat(connection.getPort()).isEqualTo(port1);
         connection.setPort(0);
         assertThat(connection.getPort()).isEqualTo(0);
-        connection.setPort(MAX_PORT);
-        assertThat(connection.getPort()).isEqualTo(MAX_PORT);
         assertThatCode(() -> connection.setPort(-1))
                 .isExactlyInstanceOf(IllegalArgumentException.class);
         assertThatCode(() -> connection.setPort(MAX_PORT + 1))
                 .isExactlyInstanceOf(IllegalArgumentException.class);
-        connection.start();
-        assertThatCode(() -> connection.setPort(0))
-                .isExactlyInstanceOf(IllegalStateException.class);
         try (ServerSocket ss = new ServerSocket(0)) {
             int port2 = ss.getLocalPort();
             assertThatCode(() -> connection.setPort(port2))
                     .isExactlyInstanceOf(IllegalStateException.class);
         }
+        // this should be last test, since API does not allow us to reliably set
+        // the state back to stopped within a test
+        connection.start();
+        assertThatCode(() -> connection.setPort(0))
+                .isExactlyInstanceOf(IllegalStateException.class);
     }
 
 }
