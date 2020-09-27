@@ -15,130 +15,155 @@
  */
 package org.trainbeans.connection.api;
 
-import java.beans.PropertyChangeEvent;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author rhwood
  */
-abstract class AbstractConnectionTest<C extends Connection, L extends Connection.Listener> {
+class AbstractConnectionTest extends AbstractConnectionTestBase<AbstractConnectionTestBase.AbstractConnectionImpl, AbstractConnectionTestBase.ConnectionListenerImpl> {
 
-    C connection;
-    PropertyChangeEvent lastEvent;
-    L listener;
-
-    void setupListeners() {
-        connection.addPropertyChangeListener(event -> lastEvent = event);
-        connection.addListener(listener);
-        lastEvent = null;
-    }
-
-    abstract void testGetState();
-
-    @Test
-    void testGetName() {
-        assertThat(connection.getName()).isNull();
-        connection.setName("foo");
-        assertThat(connection.getName()).isEqualTo("foo");
+    @BeforeEach
+    void setUp() {
+        connection = new AbstractConnectionImpl();
+        listener = new ConnectionListenerImpl();
+        setupListeners();
     }
 
     @Test
-    void testSetName() {
-        assertThat(connection.getName()).isNull();
-        assertThat(lastEvent).isNull();
-        assertThat((Object) connection.setName("foo")).isEqualTo(connection);
-        assertThat(connection.getName()).isEqualTo("foo");
-        assertThat(lastEvent.getSource()).isEqualTo(connection);
-        assertThat(lastEvent.getOldValue()).isNull();
-        assertThat(lastEvent.getNewValue()).isEqualTo("foo");
-        assertThat(lastEvent.getPropertyName()).isEqualTo("name");
+    void testSetStateToStarting() {
+        assertThat(connection.getState()).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.source).isNull();
+        assertThat(listener.state).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isTrue();
+        assertThat(connection.isStopping()).isFalse();
+        connection.setState(Connection.State.STARTING, null);
+        assertThat(connection.getState()).isEqualTo(Connection.State.STARTING);
+        assertThat(listener.source).isEqualTo(connection);
+        assertThat(listener.state).isEqualTo(Connection.State.STARTING);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isTrue();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isTrue();
+        assertThat(connection.isStopped()).isFalse();
+        assertThat(connection.isStopping()).isFalse();
     }
 
     @Test
-    void testAddListener() {
-        connection.removeListener(listener);
-        assertThat(connection.getListeners()).doesNotContain(listener);
-        assertThat((Object) connection.addListener(listener)).isEqualTo(connection);
-        assertThat(connection.getListeners()).contains(listener);
+    void testSetStateToStarted() {
+        assertThat(connection.getState()).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.source).isNull();
+        assertThat(listener.state).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isTrue();
+        assertThat(connection.isStopping()).isFalse();
+        connection.setState(Connection.State.STARTED, null);
+        assertThat(listener.source).isEqualTo(connection);
+        assertThat(listener.state).isEqualTo(Connection.State.STARTED);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isTrue();
+        assertThat(connection.isStarted()).isTrue();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isFalse();
+        assertThat(connection.isStopping()).isFalse();
     }
 
     @Test
-    void testRemoveListener() {
-        assertThat(connection.getListeners()).contains(listener);
-        assertThat((Object) connection.removeListener(listener)).isEqualTo(connection);
-        assertThat(connection.getListeners()).doesNotContain(listener);
+    void testSetStateToStopping() {
+        assertThat(connection.getState()).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.source).isNull();
+        assertThat(listener.state).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isTrue();
+        assertThat(connection.isStopping()).isFalse();
+        connection.setState(Connection.State.STOPPING, null);
+        assertThat(listener.source).isEqualTo(connection);
+        assertThat(listener.state).isEqualTo(Connection.State.STOPPING);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isFalse();
+        assertThat(connection.isStopping()).isTrue();
     }
 
     @Test
-    void testGetListeners() {
-        connection.removeListener(listener);
-        assertThat(connection.getListeners()).isEmpty();
-        connection.addListener(listener);
-        assertThat(connection.getListeners()).contains(listener);
+    void testSetStateToStopped() {
+        assertThat(connection.getState()).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.source).isNull();
+        assertThat(listener.state).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isTrue();
+        assertThat(connection.isStopping()).isFalse();
+        connection.setState(Connection.State.STOPPED, null);
+        assertThat(listener.source).isEqualTo(connection);
+        assertThat(listener.state).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isTrue();
+        assertThat(connection.isStopping()).isFalse();
     }
 
-    class AbstractConnectionImpl extends AbstractConnection {
-
-        @Override
-        public AbstractConnectionImpl getSelf() {
-            return this;
-        }
-
-        @Override
-        public void start() {
-            setState(State.STARTING, null);
-        }
-
-        @Override
-        public void stop() {
-            setState(State.STOPPING, null);
-        }
-
-        // expand scope for testing purposes
-        @Override
-        public void setState(State newState, Throwable cause) {
-            super.setState(newState, cause);
-        }
+    @Test
+    void testSetStateToFailed() {
+        assertThat(connection.getState()).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.source).isNull();
+        assertThat(listener.state).isEqualTo(Connection.State.STOPPED);
+        assertThat(listener.cause).isNull();
+        assertThat(connection.isFailed()).isFalse();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isTrue();
+        assertThat(connection.isStopping()).isFalse();
+        Throwable throwable = new RuntimeException();
+        connection.setState(Connection.State.FAILED, throwable);
+        assertThat(listener.source).isEqualTo(connection);
+        assertThat(listener.state).isEqualTo(Connection.State.FAILED);
+        assertThat(listener.cause).isEqualTo(throwable);
+        assertThat(connection.isFailed()).isTrue();
+        assertThat(connection.isRunning()).isFalse();
+        assertThat(connection.isStarted()).isFalse();
+        assertThat(connection.isStarting()).isFalse();
+        assertThat(connection.isStopped()).isFalse();
+        assertThat(connection.isStopping()).isFalse();
     }
 
-    class ConnectionListenerImpl implements Connection.Listener {
-
-        public Connection source = null;
-        public Connection.State state = Connection.State.STOPPED;
-        public Throwable cause = null;
-
-        @Override
-        public void connectionStarting(Connection source) {
-            this.source = source;
-            this.state = Connection.State.STARTING;
-        }
-
-        @Override
-        public void connectionStarted(Connection source) {
-            this.source = source;
-            this.state = Connection.State.STARTED;
-        }
-
-        @Override
-        public void connectionFailure(Connection source, Throwable cause) {
-            this.source = source;
-            this.state = Connection.State.FAILED;
-            this.cause = cause;
-        }
-
-        @Override
-        public void connectionStopping(Connection source) {
-            this.source = source;
-            this.state = Connection.State.STOPPING;
-        }
-
-        @Override
-        public void connectionStopped(Connection source) {
-            this.source = source;
-            this.state = Connection.State.STOPPED;
-        }
-
+    @Test
+    void testSetStateToNull() {
+        assertThatCode(() -> connection.setState(null, null)).isExactlyInstanceOf(NullPointerException.class);
     }
+
+    @Test
+    @Override
+    void testGetState() {
+        assertThat(connection.getState()).isEqualTo(Connection.State.STOPPED);
+    }
+
 }
