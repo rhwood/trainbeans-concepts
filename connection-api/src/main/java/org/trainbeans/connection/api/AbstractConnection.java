@@ -68,7 +68,7 @@ public abstract class AbstractConnection extends Bean implements Connection {
                 toNotify.forEach(listener -> listener.connectionStopped(this));
                 break;
             default:
-            // do nothing
+                throw new IllegalArgumentException("Using unhandled State.");
         }
         firePropertyChange("state", oldState, newState);
     }
