@@ -19,7 +19,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,6 +36,9 @@ abstract class AbstractNetworkClientConnectionTestBase<C extends AbstractNetwork
         }).isExactlyInstanceOf(IllegalArgumentException.class);
         assertThatCode(() -> {
             connection.validatedURI(new URI("http://:-1"));
+        }).isExactlyInstanceOf(IllegalArgumentException.class);
+        assertThatCode(() -> {
+            connection.validatedURI(new URI("http://:8080"));
         }).isExactlyInstanceOf(IllegalArgumentException.class);
     }
 
