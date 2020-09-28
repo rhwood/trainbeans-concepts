@@ -66,12 +66,13 @@ class DefaultModelTest {
         assertThat(model.getCache(Turnout.class)).isNull();
         assertThat(model.getAll(Turnout.class)).isEmpty();
         assertThat(model.getCache(Turnout.class)).isEmpty();
-        Turnout turnout = model.create(Turnout.class, "foo");
-        // assert that set is gotten and cache is populated
-        assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
-        assertThat(model.getCache(Turnout.class)).containsExactly(turnout);
+        Turnout turnout1 = model.create(Turnout.class, "foo");
+        Turnout turnout2 = model.create(Turnout.class, "bar");
+        // assert that set is gotten, is sorted by name, and cache is populated
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout2, turnout1);
+        assertThat(model.getCache(Turnout.class)).containsExactly(turnout2, turnout1);
         // assert that using cache works
-        assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout2, turnout1);
     }
 
     @Test

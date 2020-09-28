@@ -19,7 +19,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -91,7 +90,7 @@ public final class DefaultModel extends Bean implements Model,
         if (cache.containsKey(type)) {
             return (Set<T>) cache.get(type);
         } else {
-            Set<T> set = new HashSet<>();
+            Set<T> set = new TreeSet<>();
             elements.values().stream()
                     .filter(type::isInstance)
                     .forEach(e -> set.add((T) e));
