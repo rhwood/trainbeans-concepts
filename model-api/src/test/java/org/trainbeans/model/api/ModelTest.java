@@ -28,7 +28,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.Lookup;
 import org.trainbeans.beans.Bean;
-import org.trainbeans.beans.VetoableBean;
 import org.trainbeans.model.spi.ElementFactory;
 
 /**
@@ -53,7 +52,7 @@ class ModelTest {
     @Test
     void testCreate_Class_String() {
         // only really testing that null Lookup does not cause error
-        Element element = model.create(ElementImpl.class, "foo");
+        Element element = model.create(TestElementImpl.class, "foo");
         assertThat(model.last).isNull();
         assertThat(element.getName()).isEqualTo("foo");
     }
@@ -61,7 +60,7 @@ class ModelTest {
     @Test
     void testGetOrCreate_Class_String() {
         // only really testing that null Lookup does not cause error
-        Element element = model.getOrCreate(ElementImpl.class, "foo");
+        Element element = model.getOrCreate(TestElementImpl.class, "foo");
         assertThat(model.last).isNull();
         assertThat(element.getName()).isEqualTo("foo");
     }
@@ -71,50 +70,30 @@ class ModelTest {
         // test the vetoableChange throws if PropertyChangeEvent has property
         // "name" and an element with the same name
         // first verify does not throw if name is ok
-        ElementImpl element = new ElementImpl();
+        TestElementImpl element = new TestElementImpl();
         PropertyChangeEvent event = new PropertyChangeEvent(element, "name", null, "foo");
         assertThatCode(() -> model.vetoableChange(event)).doesNotThrowAnyException();
         // did not throw, create an element named "foo" and try again
-        model.create(ElementImpl.class, "foo");
+        model.create(TestElementImpl.class, "foo");
         PropertyVetoException ex = catchThrowableOfType(() -> model.vetoableChange(event), PropertyVetoException.class);
         assertThat(ex.getPropertyChangeEvent()).isEqualTo(event);
         assertThat(ex.getMessage()).isEqualTo("Element with name \"foo\" already exists.");
-        assertThat(model.getAll(ElementImpl.class)).hasSize(1);
+        assertThat(model.getAll(TestElementImpl.class)).hasSize(1);
         // does not thrown if property is not "name"
         assertThatCode(() -> model.vetoableChange(new PropertyChangeEvent(element, "bar", null, "foo"))).doesNotThrowAnyException();
     }
 
-    class ElementImpl extends VetoableBean implements Element {
 
-        String name;
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public ElementImpl setName(String name) {
-            this.name = name;
-            return getSelf();
-        }
-        
-        @Override
-        public ElementImpl getSelf() {
-            return this;
-        }
-    }
-
-    class ElementFactoryImpl implements ElementFactory<ElementImpl> {
+    class ElementFactoryImpl implements ElementFactory<TestElementImpl> {
 
         @Override
         public Class getElementClass() {
-            return ElementImpl.class;
+            return TestElementImpl.class;
         }
 
         @Override
-        public ElementImpl create(String name, Lookup lookup) {
-            return new ElementImpl().setName(name);
+        public TestElementImpl create(String name, Lookup lookup) {
+            return new TestElementImpl().setName(name);
         }
     }
 
@@ -128,8 +107,8 @@ class ModelTest {
         public <T extends Element> T create(Class<T> type, String name, Lookup lookup) {
             last = lookup;
             // do not use factory in test model
-            if (ElementImpl.class.equals(type)) {
-                ElementImpl impl = factory.create(name, lookup);
+            if (TestElementImpl.class.equals(type)) {
+                TestElementImpl impl = factory.create(name, lookup);
                 elements.add(impl);
                 return (T) impl;
             } else {
@@ -180,7 +159,7 @@ class ModelTest {
 
         @Override
         public Set<Class<? extends Element>> getCreatableClasses() {
-            return new HashSet(Arrays.asList(ElementImpl.class));
+            return new HashSet(Arrays.asList(TestElementImpl.class));
         }
     }
     
