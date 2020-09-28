@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.trainbeans.model.api.AbstractDiscreteStateDelegate;
-import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.api.TurnoutDelegate;
 
@@ -65,7 +64,7 @@ class TurnoutFactoryTest {
         assertThat(factory.create(null, lookup).getName()).isEqualTo("delegate");
         assertThat(factory.create("test", lookup).getName()).isEqualTo("test");
     }
-    
+
     private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
 
         @Override

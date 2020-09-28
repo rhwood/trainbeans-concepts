@@ -83,7 +83,7 @@ class DefaultModelTest {
             public String getName() {
                 return "bar";
             }
-            
+
             @Override
             public AbstractDelegatingDiscreteStateElement getSelf() {
                 return this;
@@ -163,4 +163,8 @@ class DefaultModelTest {
         assertThat(model.get(Element.class, "bar")).isEqualTo(turnout);
     }
 
+    @Test
+    void testGetCreatableClasses() {
+        assertThat(model.getCreatableClasses()).containsExactly(Turnout.class);
+    }
 }

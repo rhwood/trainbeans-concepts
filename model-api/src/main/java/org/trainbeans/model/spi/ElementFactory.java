@@ -23,9 +23,9 @@ import org.trainbeans.model.api.Element;
  * {@link org.trainbeans.model.api.Model}.
  *
  * @author rhwood
- * @param <T> the Element type this ElementFactory supports
+ * @param <E> the Element type this ElementFactory supports
  */
-public interface ElementFactory<T extends Element> extends Comparable<ElementFactory<T>> {
+public interface ElementFactory<E extends Element> {
 
     /**
      * Get the most specific class of object created by the
@@ -33,7 +33,7 @@ public interface ElementFactory<T extends Element> extends Comparable<ElementFac
      *
      * @return the class of object created by this factory
      */
-    Class<T> getElementClass();
+    Class<E> getElementClass();
 
     /**
      * Create an element with the given name. If this Factory supports a
@@ -47,10 +47,5 @@ public interface ElementFactory<T extends Element> extends Comparable<ElementFac
      * @throws IllegalArgumentException if name is blank and the lookup does not
      * contain a Delegate
      */
-    T create(String name, Lookup lookup);
-
-    @Override
-    default int compareTo(ElementFactory<T> other) {
-        return this.getElementClass().getSimpleName().compareTo(other.getElementClass().getSimpleName());
-    }
+    E create(String name, Lookup lookup);
 }

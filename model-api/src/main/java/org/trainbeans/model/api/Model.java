@@ -22,7 +22,6 @@ import java.util.Set;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.trainbeans.beans.PropertyChangeProvider;
-import org.trainbeans.model.spi.ElementFactory;
 
 /**
  * A Model is the internal model of an external Model Railroad.
@@ -147,6 +146,14 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @return this object
      */
     <T extends Element, M extends Model> M remove(T element);
+
+    /**
+     * Get the set of element classes that have factories allowing them to be
+     * created.
+     *
+     * @return the set of all creatable element classes
+     */
+    Set<Class<? extends Element>> getCreatableClasses();
 
     @Override
     default void vetoableChange(PropertyChangeEvent evt)

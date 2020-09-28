@@ -138,6 +138,11 @@ public final class DefaultModel extends Bean implements Model,
     }
 
     @Override
+    public Set<Class<? extends Element>> getCreatableClasses() {
+        return factories.keySet();
+    }
+
+    @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("name")) {
             Element element = elements.get(evt.getOldValue().toString());

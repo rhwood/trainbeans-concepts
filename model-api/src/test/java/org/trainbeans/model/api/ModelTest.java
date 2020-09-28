@@ -17,9 +17,9 @@ package org.trainbeans.model.api;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
@@ -176,6 +176,11 @@ class ModelTest {
         @Override
         public ModelImpl getSelf() {
             return this;
+        }
+
+        @Override
+        public Set<Class<? extends Element>> getCreatableClasses() {
+            return new HashSet(Arrays.asList(ElementImpl.class));
         }
     }
     
