@@ -20,7 +20,8 @@ package org.trainbeans.model.api;
  * @author rhwood
  */
 public final class Turnout extends
-        AbstractDelegatingDiscreteStateElement<Turnout, TurnoutDelegate> implements Element {
+        AbstractDelegatingDiscreteStateElement<Turnout, TurnoutDelegate>
+        implements Element {
 
     public enum State implements DiscreteState {
         /**
