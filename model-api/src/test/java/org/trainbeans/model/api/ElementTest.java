@@ -29,9 +29,9 @@ class ElementTest {
         Element e1 = new TestElementImpl().setName("foo");
         Element e2 = new TestElementImpl().setName("bar");
         Element e3 = new TestElementImpl().setName("foo");
-        assertThat(e1.compareTo(e2)).isGreaterThan(0);
-        assertThat(e2.compareTo(e1)).isLessThan(0);
-        assertThat(e1.compareTo(e3)).isZero();
-        assertThat(e3.compareTo(e1)).isZero();
+        assertThat(e1.compareTo(e2)).isPositive();
+        assertThat(e2.compareTo(e1)).isNegative();
+        assertThat(e1.compareTo(e3)).isEqualTo(0);
+        assertThat(e3.compareTo(e1)).isEqualTo(0);
     }
 }
