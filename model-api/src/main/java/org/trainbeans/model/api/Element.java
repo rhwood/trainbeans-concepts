@@ -24,7 +24,7 @@ import org.trainbeans.beans.VetoableChangeProvider;
  * @author rhwood
  */
 public interface Element extends PropertyChangeProvider,
-        VetoableChangeProvider {
+        VetoableChangeProvider, Comparable<Element> {
 
     /**
      * Get the name of the element.
@@ -47,4 +47,9 @@ public interface Element extends PropertyChangeProvider,
      * the same name
      */
     <E extends Element> E setName(String name);
+
+    @Override
+    default int compareTo(Element other) {
+        return this.getName().compareTo(other.getName());
+    }
 }

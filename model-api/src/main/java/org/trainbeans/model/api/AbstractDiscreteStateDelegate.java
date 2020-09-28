@@ -26,7 +26,7 @@ import org.trainbeans.beans.VetoableBean;
  * @param <E> the type of supported element
  */
 @SuppressWarnings("checkstyle:linelength") // generic definition on one line
-public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement & DiscreteStateElement>
+public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement & DiscreteStateElement & Element>
         extends VetoableBean implements DiscreteStateDelegate<E> {
 
     /**

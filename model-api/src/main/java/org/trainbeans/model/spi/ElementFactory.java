@@ -25,7 +25,7 @@ import org.trainbeans.model.api.Element;
  * @author rhwood
  * @param <T> the Element type this ElementFactory supports
  */
-public interface ElementFactory<T extends Element> {
+public interface ElementFactory<T extends Element> extends Comparable<ElementFactory<T>> {
 
     /**
      * Get the most specific class of object created by the
@@ -48,4 +48,9 @@ public interface ElementFactory<T extends Element> {
      * contain a Delegate
      */
     T create(String name, Lookup lookup);
+
+    @Override
+    default int compareTo(ElementFactory<T> other) {
+        return this.getElementClass().getSimpleName().compareTo(other.getElementClass().getSimpleName());
+    }
 }

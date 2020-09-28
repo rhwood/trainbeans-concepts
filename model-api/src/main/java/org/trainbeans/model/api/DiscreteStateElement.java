@@ -21,7 +21,7 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public interface DiscreteStateElement extends Element {
+public interface DiscreteStateElement {
 
     /**
      * Get the state.
@@ -37,7 +37,7 @@ public interface DiscreteStateElement extends Element {
      * @param state the state to set
      * @return this object
      */
-    <T extends DiscreteStateElement> T setState(DiscreteState state);
+    <T extends DiscreteStateElement & Element> T setState(DiscreteState state);
 
     /**
      * Get the the state that was last set. This may differ from

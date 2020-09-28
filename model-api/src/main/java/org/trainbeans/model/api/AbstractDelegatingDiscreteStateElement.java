@@ -26,9 +26,9 @@ import org.trainbeans.beans.VetoableBean;
  * @param <D> type of delegate
  */
 @SuppressWarnings("linelength") // generic definitions on single line
-public abstract class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement, D extends DiscreteStateDelegate<E>>
+public abstract class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement & Element, D extends DiscreteStateDelegate<E>>
         extends VetoableBean
-        implements DelegatingElement<E, D>, DiscreteStateElement {
+        implements DelegatingElement<E, D>, DiscreteStateElement, Element {
 
     /**
      * The state if not handled by a delegate.
@@ -53,7 +53,7 @@ public abstract class AbstractDelegatingDiscreteStateElement<E extends Delegatin
     }
 
     @Override
-    public final <T extends DelegatingElement<E, D>> T
+    public final <T extends DelegatingElement<E, D> & Element> T
             setDelegate(final D newDelegate) {
         D oldDelegate = delegate;
         if (oldDelegate != null) {
@@ -116,7 +116,7 @@ public abstract class AbstractDelegatingDiscreteStateElement<E extends Delegatin
      * {@inheritDoc}
      */
     @Override
-    public AbstractDelegatingDiscreteStateElement<E, D>
+    public <T extends DiscreteStateElement & Element> T
             setState(final DiscreteState newState) {
         DiscreteState oldState = state;
         state = newState;

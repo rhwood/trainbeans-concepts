@@ -85,6 +85,12 @@ class DefaultModelTest {
             public AbstractDelegatingDiscreteStateElement getSelf() {
                 return this;
             }
+
+            // TODO: this should not be needed, but why is it needed?
+            @Override
+            public int compareTo(Object o) {
+                return getName().compareTo(((Element) o).getName());
+            }
         });
         assertThat(model.get(Turnout.class, "bar")).isNull();
         Turnout turnout = new Turnout();

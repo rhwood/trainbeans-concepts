@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.openide.util.Lookup;
 import org.trainbeans.beans.Bean;
 import org.trainbeans.beans.VetoableBean;
+import org.trainbeans.model.spi.ElementFactory;
 
 /**
  * Test of the default methods of Model and nothing else.
@@ -103,17 +104,31 @@ class ModelTest {
         }
     }
 
+    class ElementFactoryImpl implements ElementFactory<ElementImpl> {
+
+        @Override
+        public Class getElementClass() {
+            return ElementImpl.class;
+        }
+
+        @Override
+        public ElementImpl create(String name, Lookup lookup) {
+            return new ElementImpl().setName(name);
+        }
+    }
+
     class ModelImpl extends Bean implements Model {
 
         Lookup last = Lookup.EMPTY;
         Set<Element> elements = new HashSet<>();
+        ElementFactoryImpl factory = new ElementFactoryImpl();
         
         @Override
         public <T extends Element> T create(Class<T> type, String name, Lookup lookup) {
             last = lookup;
             // do not use factory in test model
             if (ElementImpl.class.equals(type)) {
-                ElementImpl impl = new ElementImpl().setName(name);
+                ElementImpl impl = factory.create(name, lookup);
                 elements.add(impl);
                 return (T) impl;
             } else {
@@ -155,6 +170,13 @@ class ModelTest {
         public <T extends Element, M extends Model> M remove(T element) {
             // no effect
             return (M) getSelf();
+        }
+
+        @Override
+        public Set<ElementFactory> getFactories() {
+            HashSet<ElementFactory> set = new HashSet<>();
+            set.add(factory);
+            return set;
         }
 
         @Override

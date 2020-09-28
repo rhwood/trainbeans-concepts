@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import org.openide.util.Lookup;
 import org.trainbeans.beans.Bean;
 import org.trainbeans.model.api.Element;
@@ -43,7 +44,8 @@ public final class DefaultModel extends Bean implements Model,
      * factory can create.
      */
     @SuppressWarnings("checkstyle:linelength") // generic defintion on one line
-    private final Map<Class<? extends Element>, ElementFactory<? extends Element>> factories = new HashMap<>();
+    private final Map<Class<? extends Element>, ElementFactory<? extends Element>> factories
+            = new HashMap<>();
     /**
      * Map of elements, keyed by name.
      */
@@ -53,8 +55,8 @@ public final class DefaultModel extends Bean implements Model,
      * Cache of sets of all elements by requested interface. All caches are
      * invalidated by adding or removing an element.
      */
-    @SuppressWarnings("checkstyle:linelength") // generic defintion on one line
-    private final Map<Class<? extends Element>, Set<? extends Element>> cache = new HashMap<>();
+    private final Map<Class<? extends Element>, Set<? extends Element>> cache
+            = new HashMap<>();
 
     /**
      * Create a model.
@@ -142,6 +144,11 @@ public final class DefaultModel extends Bean implements Model,
             elements.remove(evt.getOldValue().toString());
             elements.put(element.getName(), element);
         }
+    }
+
+    @Override
+    public Set<ElementFactory> getFactories() {
+        return new TreeSet<>(factories.values());
     }
 
     @Override
