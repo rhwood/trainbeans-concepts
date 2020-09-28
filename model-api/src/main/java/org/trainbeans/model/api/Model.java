@@ -147,8 +147,6 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      */
     <T extends Element, M extends Model> M remove(T element);
 
-    Set<ElementFactory> getFactories();
-
     @Override
     default void vetoableChange(PropertyChangeEvent evt)
             throws PropertyVetoException {

@@ -34,10 +34,12 @@ import org.trainbeans.model.api.Turnout;
 class DefaultModelTest {
 
     DefaultModel model;
+    TurnoutFactory turnoutFactory;
 
     @BeforeEach
     void setUp() {
-        model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
+        turnoutFactory = new TurnoutFactory();
+        model = new DefaultModel(Lookups.fixed(turnoutFactory));
     }
 
     @AfterEach
@@ -86,7 +88,7 @@ class DefaultModelTest {
                 return this;
             }
 
-            // TODO: this should not be needed, but why is it needed?
+            // TODO: this should not be needed, so why is it needed?
             @Override
             public int compareTo(Object o) {
                 return getName().compareTo(((Element) o).getName());

@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.openide.util.Lookup;
 import org.trainbeans.beans.Bean;
 import org.trainbeans.model.api.Element;
@@ -144,11 +145,6 @@ public final class DefaultModel extends Bean implements Model,
             elements.remove(evt.getOldValue().toString());
             elements.put(element.getName(), element);
         }
-    }
-
-    @Override
-    public Set<ElementFactory> getFactories() {
-        return new TreeSet<>(factories.values());
     }
 
     @Override

@@ -19,6 +19,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
@@ -170,13 +171,6 @@ class ModelTest {
         public <T extends Element, M extends Model> M remove(T element) {
             // no effect
             return (M) getSelf();
-        }
-
-        @Override
-        public Set<ElementFactory> getFactories() {
-            HashSet<ElementFactory> set = new HashSet<>();
-            set.add(factory);
-            return set;
         }
 
         @Override
