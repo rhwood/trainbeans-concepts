@@ -23,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.lookup.Lookups;
 import org.trainbeans.model.api.Element;
-import org.trainbeans.model.api.Model;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.impl.DefaultModel;
 import org.trainbeans.model.impl.TurnoutFactory;

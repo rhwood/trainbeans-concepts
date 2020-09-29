@@ -17,12 +17,8 @@ package org.trainbeans.model.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.swing.edt.GuiActionRunner;
-import org.assertj.swing.hierarchy.ComponentHierarchy;
-import org.assertj.swing.hierarchy.SingleComponentHierarchy;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openide.explorer.view.BeanTreeView;
 
 /**
  *
