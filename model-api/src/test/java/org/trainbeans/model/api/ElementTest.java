@@ -31,7 +31,7 @@ class ElementTest {
         Element e3 = new TestElementImpl().setName("foo");
         assertThat(e1.compareTo(e2)).isPositive();
         assertThat(e2.compareTo(e1)).isNegative();
-        assertThat(e1.compareTo(e3)).isEqualTo(0);
-        assertThat(e3.compareTo(e1)).isEqualTo(0);
+        assertThat(e1.compareTo(e3)).isZero();
+        assertThat(e3.compareTo(e1)).isZero();
     }
 }
