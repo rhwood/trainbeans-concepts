@@ -29,9 +29,10 @@ class ElementTest {
         Element e1 = new TestElementImpl().setName("foo");
         Element e2 = new TestElementImpl().setName("bar");
         Element e3 = new TestElementImpl().setName("foo");
-        assertThat(e1.compareTo(e2)).isPositive();
-        assertThat(e2.compareTo(e1)).isNegative();
-        assertThat(e1.compareTo(e3)).isZero();
-        assertThat(e3.compareTo(e1)).isZero();
+        // assertj uses these methods to implicitly invoke compareTo()
+        assertThat(e1).isGreaterThan(e2);
+        assertThat(e2).isLessThan(e1);
+        assertThat(e1).isEqualByComparingTo(e3);
+        assertThat(e3).isEqualByComparingTo(e1);
     }
 }
