@@ -32,7 +32,7 @@ import org.trainbeans.model.impl.TurnoutFactory;
  *
  * @author rhwood
  */
-public class ElementClassChildFactoryTest {
+class ElementClassChildFactoryTest {
 
     private ElementClassChildFactory factory;
     private DefaultModel model;

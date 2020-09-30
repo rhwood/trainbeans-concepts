@@ -15,11 +15,13 @@
  */
 package org.trainbeans.model.ui;
 
-import java.beans.IntrospectionException;
+import java.util.ArrayList;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.lookup.Lookups;
+import org.trainbeans.model.api.Model;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.impl.DefaultModel;
 import org.trainbeans.model.impl.TurnoutFactory;
@@ -28,8 +30,9 @@ import org.trainbeans.model.impl.TurnoutFactory;
  *
  * @author rhwood
  */
-class ElementClassNodeTest {
+class ModelChildFactoryTest {
 
+    private ModelChildFactory factory;
     private DefaultModel model;
 
     @BeforeEach
@@ -37,13 +40,20 @@ class ElementClassNodeTest {
         model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
         model.create(Turnout.class, "foo");
         model.create(Turnout.class, "bar");
+        factory = new ModelChildFactory();
     }
-    
+
     @Test
-    void testConstructor() throws IntrospectionException {
-        ElementClassNode node = new ElementClassNode(model, Turnout.class);
-        assertThat(node).isNotNull();
-        assertThat(node.getName()).isEqualTo(Turnout.class.getSimpleName());
+    void testCreateKeys() {
+        List<Model> list = new ArrayList<>();
+        assertThat(list).isEmpty();
+        assertThat(factory.createKeys(list)).isTrue();
+        assertThat(list).isNotEmpty();
     }
-    
+
+    @Test
+    void testCreateNodeForKey() {
+        assertThat(factory.createNodeForKey(model)).isNotNull();
+    }
+
 }
