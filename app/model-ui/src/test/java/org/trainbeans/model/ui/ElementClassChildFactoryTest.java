@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 rhwood.
  *
@@ -15,11 +16,14 @@
  */
 package org.trainbeans.model.ui;
 
-import java.beans.IntrospectionException;
+import java.util.ArrayList;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.lookup.Lookups;
+import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.impl.DefaultModel;
 import org.trainbeans.model.impl.TurnoutFactory;
@@ -28,8 +32,9 @@ import org.trainbeans.model.impl.TurnoutFactory;
  *
  * @author rhwood
  */
-public class ElementClassNodeTest {
+public class ElementClassChildFactoryTest {
 
+    private ElementClassChildFactory factory;
     private DefaultModel model;
 
     @BeforeEach
@@ -37,13 +42,26 @@ public class ElementClassNodeTest {
         model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
         model.create(Turnout.class, "foo");
         model.create(Turnout.class, "bar");
+        factory = new ElementClassChildFactory(model);
     }
-    
+
     @Test
-    public void testConstructor() throws IntrospectionException {
-        ElementClassNode node = new ElementClassNode(model, Turnout.class);
-        assertThat(node).isNotNull();
-        assertThat(node.getName()).isEqualTo(Turnout.class.getSimpleName());
+    void testCreateKeys() {
+        List<Class<? extends Element>> list = new ArrayList<>();
+        assertThat(factory.createKeys(list)).isTrue();
+        assertThat(list)
+                .containsExactlyInAnyOrder(model.getCreatableClasses()
+                        .toArray(new Class[0]));
     }
-    
+
+    @Test
+    void testCreateNodeForKey() {
+        assertThat(factory.createNodeForKey(Turnout.class))
+                .isNotNull()
+                .isInstanceOf(ElementClassNode.class);
+        assertThatCode(()
+                -> factory.createNodeForKey(null))
+                .isExactlyInstanceOf(NullPointerException.class);
+    }
+
 }
