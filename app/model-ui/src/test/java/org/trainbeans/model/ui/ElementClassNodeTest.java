@@ -15,14 +15,11 @@
  */
 package org.trainbeans.model.ui;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.beans.IntrospectionException;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.lookup.Lookups;
-import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.impl.DefaultModel;
 import org.trainbeans.model.impl.TurnoutFactory;
@@ -31,9 +28,8 @@ import org.trainbeans.model.impl.TurnoutFactory;
  *
  * @author rhwood
  */
-class ElementChildFactoryTest {
+public class ElementClassNodeTest {
 
-    private ElementChildFactory factory;
     private DefaultModel model;
 
     @BeforeEach
@@ -41,26 +37,13 @@ class ElementChildFactoryTest {
         model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
         model.create(Turnout.class, "foo");
         model.create(Turnout.class, "bar");
-        factory = new ElementChildFactory(model, Turnout.class);
     }
-
+    
     @Test
-    void testCreateKeys() {
-        List<Element> list = new ArrayList<>();
-        assertThat(factory.createKeys(list)).isTrue();
-        assertThat(list)
-                .containsExactlyInAnyOrder(model.getAll(Turnout.class)
-                        .toArray(new Element[0]));
+    public void testConstructor() throws IntrospectionException {
+        ElementClassNode node = new ElementClassNode(model, Turnout.class);
+        assertThat(node).isNotNull();
+        assertThat(node.getChildren().getNodes().length).isEqualTo(2);
     }
-
-    @Test
-    void testCreateNodeForKey() {
-        assertThat(factory.createNodeForKey(model.get(Turnout.class, "foo")))
-                .isNotNull()
-                .isInstanceOf(ElementNode.class);
-        assertThatCode(()
-                -> factory.createNodeForKey(null))
-                .isExactlyInstanceOf(NullPointerException.class);
-    }
-
+    
 }
