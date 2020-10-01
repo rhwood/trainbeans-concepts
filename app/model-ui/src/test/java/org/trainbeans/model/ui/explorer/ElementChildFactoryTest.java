@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.ui;
+package org.trainbeans.model.ui.explorer;
 
-import java.beans.IntrospectionException;
+import org.trainbeans.model.ui.explorer.ElementChildFactory;
+import org.trainbeans.model.ui.explorer.ElementNode;
+import java.util.ArrayList;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.lookup.Lookups;
+import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.impl.DefaultModel;
 import org.trainbeans.model.impl.TurnoutFactory;
@@ -28,8 +33,9 @@ import org.trainbeans.model.impl.TurnoutFactory;
  *
  * @author rhwood
  */
-class ElementClassNodeTest {
+class ElementChildFactoryTest {
 
+    private ElementChildFactory factory;
     private DefaultModel model;
 
     @BeforeEach
@@ -37,13 +43,26 @@ class ElementClassNodeTest {
         model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
         model.create(Turnout.class, "foo");
         model.create(Turnout.class, "bar");
+        factory = new ElementChildFactory(model, Turnout.class);
     }
-    
+
     @Test
-    void testConstructor() throws IntrospectionException {
-        ElementClassNode node = new ElementClassNode(model, Turnout.class);
-        assertThat(node).isNotNull();
-        assertThat(node.getName()).isEqualTo(Turnout.class.getSimpleName());
+    void testCreateKeys() {
+        List<Element> list = new ArrayList<>();
+        assertThat(factory.createKeys(list)).isTrue();
+        assertThat(list)
+                .containsExactlyInAnyOrder(model.getAll(Turnout.class)
+                        .toArray(new Element[0]));
     }
-    
+
+    @Test
+    void testCreateNodeForKey() {
+        assertThat(factory.createNodeForKey(model.get(Turnout.class, "foo")))
+                .isNotNull()
+                .isInstanceOf(ElementNode.class);
+        assertThatCode(()
+                -> factory.createNodeForKey(null))
+                .isExactlyInstanceOf(NullPointerException.class);
+    }
+
 }

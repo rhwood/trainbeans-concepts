@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.ui;
+package org.trainbeans.model.ui.explorer;
 
 import java.beans.IntrospectionException;
 import org.openide.nodes.BeanNode;
-import org.openide.nodes.Children;
 import org.trainbeans.model.api.Element;
-import org.trainbeans.model.api.Model;
 
 /**
  *
  * @author rhwood
  */
-public class ElementClassNode extends BeanNode<Class<? extends Element>> {
-
-    ElementClassNode(Model model, Class<? extends Element> elementClass) throws IntrospectionException {
-        super(elementClass, Children.create(new ElementChildFactory(model, elementClass), true));
-        // TODO: create mechanism for getting "nice" names for elementClasses
-        setName(elementClass.getSimpleName());
-    }
+class ElementNode extends BeanNode<Element> {
     
+    public ElementNode(Element bean) throws IntrospectionException {
+        super(bean);
+    }
+
 }

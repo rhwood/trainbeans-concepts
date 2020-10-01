@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2020 rhwood.
  *
@@ -14,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.ui;
+package org.trainbeans.model.ui.explorer;
 
+import org.trainbeans.model.ui.explorer.ModelChildFactory;
 import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openide.util.lookup.Lookups;
-import org.trainbeans.model.api.Element;
+import org.trainbeans.model.api.Model;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.impl.DefaultModel;
 import org.trainbeans.model.impl.TurnoutFactory;
@@ -32,9 +31,9 @@ import org.trainbeans.model.impl.TurnoutFactory;
  *
  * @author rhwood
  */
-class ElementClassChildFactoryTest {
+class ModelChildFactoryTest {
 
-    private ElementClassChildFactory factory;
+    private ModelChildFactory factory;
     private DefaultModel model;
 
     @BeforeEach
@@ -42,26 +41,20 @@ class ElementClassChildFactoryTest {
         model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
         model.create(Turnout.class, "foo");
         model.create(Turnout.class, "bar");
-        factory = new ElementClassChildFactory(model);
+        factory = new ModelChildFactory();
     }
 
     @Test
     void testCreateKeys() {
-        List<Class<? extends Element>> list = new ArrayList<>();
+        List<Model> list = new ArrayList<>();
+        assertThat(list).isEmpty();
         assertThat(factory.createKeys(list)).isTrue();
-        assertThat(list)
-                .containsExactlyInAnyOrder(model.getCreatableClasses()
-                        .toArray(new Class[0]));
+        assertThat(list).isNotEmpty();
     }
 
     @Test
     void testCreateNodeForKey() {
-        assertThat(factory.createNodeForKey(Turnout.class))
-                .isNotNull()
-                .isInstanceOf(ElementClassNode.class);
-        assertThatCode(()
-                -> factory.createNodeForKey(null))
-                .isExactlyInstanceOf(NullPointerException.class);
+        assertThat(factory.createNodeForKey(model)).isNotNull();
     }
 
 }

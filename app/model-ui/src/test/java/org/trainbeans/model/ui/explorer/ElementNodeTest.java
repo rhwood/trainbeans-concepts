@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.ui;
+package org.trainbeans.model.ui.explorer;
 
+import org.trainbeans.model.ui.explorer.ElementNode;
 import java.beans.IntrospectionException;
-import org.openide.nodes.BeanNode;
-import org.openide.nodes.Children;
-import org.openide.util.NbBundle;
-import org.trainbeans.model.api.Model;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.trainbeans.model.api.Turnout;
 
 /**
  *
  * @author rhwood
  */
-class ModelNode extends BeanNode<Model> {
+class ElementNodeTest {
 
-    @NbBundle.Messages("MSG_DESC=A model")
-    public ModelNode(Model bean) throws IntrospectionException {
-        super(bean, Children.create(new ElementClassChildFactory(bean), true));
-        // TODO: determine how Models should be named and use that here
-        setDisplayName("A model");
-        setShortDescription(Bundle.MSG_DESC());
+    @Test
+    void testConstructor() throws IntrospectionException {
+        assertThat(new ElementNode(new Turnout())).isNotNull();
     }
-    
+
 }

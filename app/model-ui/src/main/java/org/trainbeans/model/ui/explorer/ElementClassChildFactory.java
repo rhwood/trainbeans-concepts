@@ -13,44 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.ui;
+package org.trainbeans.model.ui.explorer;
 
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
+import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Model;
-import org.trainbeans.model.api.Turnout;
-import org.trainbeans.model.impl.DefaultModel;
 
 /**
  *
  * @author rhwood
  */
-public class ModelChildFactory extends ChildFactory<Model> {
+public class ElementClassChildFactory extends ChildFactory<Class<? extends Element>> {
 
-    public ModelChildFactory() {
-        // nothing to do
+    private final Model model;
+
+    public ElementClassChildFactory(Model bean) {
+        model = bean;
     }
 
     @Override
-    protected boolean createKeys(List<Model> list) {
-        // TODO: dynamically get list of Models
-        //       for now, generate a new Model
-        Model model = new DefaultModel(Lookup.getDefault());
-        model.create(Turnout.class, "North Boylan Siding");
-        model.create(Turnout.class, "South Boylan Siding");
-        list.add(model);
+    protected boolean createKeys(List<Class<? extends Element>> list) {
+        // TODO: sort getFactories() results before adding
+        list.addAll(model.getCreatableClasses());
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(Model key) {
-        ModelNode node = null;
+    protected Node createNodeForKey(Class<? extends Element> key) {
+        ElementClassNode node = null;
         try {
-            node = new ModelNode(key);
+            node = new ElementClassNode(model, key);
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }

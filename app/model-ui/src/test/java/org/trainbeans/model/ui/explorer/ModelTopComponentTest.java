@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.ui;
+package org.trainbeans.model.ui.explorer;
 
+import org.trainbeans.model.ui.explorer.ModelTopComponent;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.junit.jupiter.api.BeforeEach;

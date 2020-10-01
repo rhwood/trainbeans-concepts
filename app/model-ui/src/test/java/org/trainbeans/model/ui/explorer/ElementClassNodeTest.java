@@ -13,22 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.ui;
+package org.trainbeans.model.ui.explorer;
 
+import org.trainbeans.model.ui.explorer.ElementClassNode;
 import java.beans.IntrospectionException;
 import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openide.util.lookup.Lookups;
 import org.trainbeans.model.api.Turnout;
+import org.trainbeans.model.impl.DefaultModel;
+import org.trainbeans.model.impl.TurnoutFactory;
 
 /**
  *
  * @author rhwood
  */
-class ElementNodeTest {
+class ElementClassNodeTest {
 
+    private DefaultModel model;
+
+    @BeforeEach
+    void setUp() {
+        model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
+        model.create(Turnout.class, "foo");
+        model.create(Turnout.class, "bar");
+    }
+    
     @Test
     void testConstructor() throws IntrospectionException {
-        assertThat(new ElementNode(new Turnout())).isNotNull();
+        ElementClassNode node = new ElementClassNode(model, Turnout.class);
+        assertThat(node).isNotNull();
+        assertThat(node.getName()).isEqualTo(Turnout.class.getSimpleName());
     }
-
+    
 }
