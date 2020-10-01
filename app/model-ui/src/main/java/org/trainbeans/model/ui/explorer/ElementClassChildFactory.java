@@ -27,23 +27,32 @@ import org.trainbeans.model.api.Model;
  *
  * @author rhwood
  */
-public class ElementClassChildFactory extends ChildFactory<Class<? extends Element>> {
+public final class ElementClassChildFactory
+        extends ChildFactory<Class<? extends Element>> {
 
+    /**
+     * The model containing classes this factory supports.
+     */
     private final Model model;
 
-    public ElementClassChildFactory(Model bean) {
+    /**
+     * Create the factory for the given model.
+     *
+     * @param bean the model
+     */
+    public ElementClassChildFactory(final Model bean) {
         model = bean;
     }
 
     @Override
-    protected boolean createKeys(List<Class<? extends Element>> list) {
-        // TODO: sort getFactories() results before adding
+    protected boolean createKeys(final List<Class<? extends Element>> list) {
+        // TODO: sort getCreatableClasses() results before adding
         list.addAll(model.getCreatableClasses());
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(Class<? extends Element> key) {
+    protected Node createNodeForKey(final Class<? extends Element> key) {
         ElementClassNode node = null;
         try {
             node = new ElementClassNode(model, key);

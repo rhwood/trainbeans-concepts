@@ -29,14 +29,17 @@ import org.trainbeans.model.impl.DefaultModel;
  *
  * @author rhwood
  */
-public class ModelChildFactory extends ChildFactory<Model> {
+public final class ModelChildFactory extends ChildFactory<Model> {
 
+    /**
+     * Create this factory.
+     */
     public ModelChildFactory() {
         // nothing to do
     }
 
     @Override
-    protected boolean createKeys(List<Model> list) {
+    protected boolean createKeys(final List<Model> list) {
         // TODO: dynamically get list of Models
         //       for now, generate a new Model
         Model model = new DefaultModel(Lookup.getDefault());
@@ -47,7 +50,7 @@ public class ModelChildFactory extends ChildFactory<Model> {
     }
 
     @Override
-    protected Node createNodeForKey(Model key) {
+    protected Node createNodeForKey(final Model key) {
         ModelNode node = null;
         try {
             node = new ModelNode(key);

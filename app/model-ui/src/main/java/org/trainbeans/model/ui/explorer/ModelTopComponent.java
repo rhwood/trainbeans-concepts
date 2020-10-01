@@ -46,10 +46,17 @@ import org.openide.util.NbBundle.Messages;
     "CTL_ModelTopComponent=Layouts",
     "HINT_ModelTopComponent=This is a Model window"
 })
-public final class ModelTopComponent extends TopComponent implements ExplorerManager.Provider {
+public final class ModelTopComponent extends TopComponent
+        implements ExplorerManager.Provider {
 
-    ExplorerManager modelExplorerManager = new ExplorerManager();
+    /**
+     * The manager for the tree view within this component.
+     */
+    private ExplorerManager modelExplorerManager = new ExplorerManager();
 
+    /**
+     * Create the component.
+     */
     public ModelTopComponent() {
         setName(Bundle.CTL_ModelTopComponent());
         setToolTipText(Bundle.HINT_ModelTopComponent());

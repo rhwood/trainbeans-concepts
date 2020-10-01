@@ -24,8 +24,8 @@ import org.trainbeans.model.api.Element;
  * @author rhwood
  */
 class ElementNode extends BeanNode<Element> {
-    
-    public ElementNode(Element bean) throws IntrospectionException {
+
+    ElementNode(final Element bean) throws IntrospectionException {
         super(bean);
     }
 

@@ -27,10 +27,14 @@ import org.trainbeans.model.api.Model;
  */
 public class ElementClassNode extends BeanNode<Class<? extends Element>> {
 
-    ElementClassNode(Model model, Class<? extends Element> elementClass) throws IntrospectionException {
-        super(elementClass, Children.create(new ElementChildFactory(model, elementClass), true));
+    ElementClassNode(final Model model,
+            final Class<? extends Element> elementClass)
+            throws IntrospectionException {
+        super(elementClass,
+                Children.create(new ElementChildFactory(model, elementClass),
+                        true));
         // TODO: create mechanism for getting "nice" names for elementClasses
         setName(elementClass.getSimpleName());
     }
-    
+
 }

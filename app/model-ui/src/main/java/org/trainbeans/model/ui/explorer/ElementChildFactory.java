@@ -27,24 +27,37 @@ import org.trainbeans.model.api.Model;
  *
  * @author rhwood
  */
-public class ElementChildFactory extends ChildFactory<Element> {
+public final class ElementChildFactory extends ChildFactory<Element> {
 
+    /**
+     * The model containing the elements that this factory can create.
+     */
     private final Model model;
+    /**
+     * The class or element that this factory can create.
+     */
     private final Class<? extends Element> elementClass;
 
-    public ElementChildFactory(Model bean, Class<? extends Element> clazz) {
+    /**
+     * Create the factory for the given model and class.
+     *
+     * @param bean the model containing the elements
+     * @param clazz the class of element
+     */
+    public ElementChildFactory(final Model bean,
+            final Class<? extends Element> clazz) {
         model = bean;
         elementClass = clazz;
     }
 
     @Override
-    protected boolean createKeys(List<Element> list) {
+    protected boolean createKeys(final List<Element> list) {
         list.addAll(model.getAll(elementClass));
         return true;
     }
-    
+
     @Override
-    protected Node createNodeForKey(Element key) {
+    protected Node createNodeForKey(final Element key) {
         ElementNode node = null;
         try {
             node = new ElementNode(key);
