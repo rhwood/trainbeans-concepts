@@ -50,6 +50,7 @@
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
+                        <showDeprecation>true</showDeprecation>
                         <compilerArgs>
                             <!-- Prevents recompilation due to missing package-info.class, see MCOMPILER-205 -->
                             <arg>-Xpkginfo:always</arg>
