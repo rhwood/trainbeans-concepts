@@ -29,11 +29,16 @@ public final class JmriJsonClient extends AbstractNetworkClientConnection
     /**
      * The web socket client.
      */
-    private WebSocketClient client;
+    private final WebSocketClient client;
     /**
      * The web socket handler.
      */
-    private JmriJsonSocket socket;
+    private final JmriJsonSocket socket = new JmriJsonSocket();
+
+    public JmriJsonClient() {
+        client = new WebSocketClient();
+        client.addLifeCycleListener(this);
+    }
 
     @Override
     public JmriJsonClient getSelf() {
@@ -43,13 +48,6 @@ public final class JmriJsonClient extends AbstractNetworkClientConnection
     @Override
     public void start() {
         setState(State.STARTING, null);
-        if (client == null) {
-            client = new WebSocketClient();
-            client.addLifeCycleListener(this);
-        }
-        if (socket == null) {
-            socket = new JmriJsonSocket();
-        }
         if (!client.isStarted()) {
             try {
                 client.start();
