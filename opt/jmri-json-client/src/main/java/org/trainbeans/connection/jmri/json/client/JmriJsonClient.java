@@ -15,7 +15,6 @@
  */
 package org.trainbeans.connection.jmri.json.client;
 
-import java.io.IOException;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.trainbeans.connection.api.AbstractNetworkClientConnection;
@@ -51,10 +50,11 @@ public final class JmriJsonClient extends AbstractNetworkClientConnection
         if (socket == null) {
             socket = new JmriJsonSocket();
         }
-        if (!client.isRunning()) {
+        if (!client.isStarted()) {
             try {
+                client.start();
                 client.connect(socket, getURI());
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 setState(State.FAILED, ex);
             }
         }
