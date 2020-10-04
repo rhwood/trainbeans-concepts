@@ -29,6 +29,7 @@
         <module>model</module>
         <module>beans</module>
         <module>connection-api</module>
+        <module>opt/jmri-json-client</module>
     </modules>
 
     <build>
