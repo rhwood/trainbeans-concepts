@@ -18,9 +18,10 @@ package org.trainbeans.model.api;
 /**
  *
  * @author rhwood
- * @param <T> the type of Element being delegated
+ * @param <S> the type of supported state
+ * @param <D> the type of Element being delegated
  */
-public interface DiscreteStateDelegate<T extends DelegatingElement
-        & DiscreteStateElement> extends Delegate<T>, DiscreteStateElement {
+@SuppressWarnings("linelength") // generic definitions on single line
+public interface DiscreteStateDelegate<S extends DiscreteState, D extends DelegatingElement & DiscreteStateElement<S>> extends Delegate<D>, DiscreteStateElement<S> {
 
 }

@@ -72,7 +72,7 @@ class TurnoutDelegateTest extends AbstractDiscreteStateDelegateTest<Turnout, Tur
         // no need to test, tested in TurnoutTest#testGetRequestedState()
     }
     
-    private class TurnoutDelegateImpl extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
+    private class TurnoutDelegateImpl extends AbstractDiscreteStateDelegate<Turnout.State, Turnout> implements TurnoutDelegate {
 
         @Override
         protected boolean isValidName(String name) {
