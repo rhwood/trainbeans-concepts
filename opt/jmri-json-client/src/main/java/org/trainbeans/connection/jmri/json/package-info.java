@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Connection that connects to a JMRI web server as a JSON WebSocket client.
+ * Support for interacting with JMRI JSON services.
  */
-package org.trainbeans.connection.jmri.json.client;
+package org.trainbeans.connection.jmri.json;
