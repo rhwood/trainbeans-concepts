@@ -79,7 +79,7 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement 
      * {@inheritDoc}
      */
     @Override
-    public AbstractDiscreteStateDelegate<E> setName(final String name) {
+    public <D extends Element> D setName(final String name) {
         String oldName = this.name;
         if (isValidName(name)) {
             this.name = name;
@@ -87,7 +87,7 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement 
             throw new IllegalArgumentException();
         }
         firePropertyChange("name", oldName, name);
-        return this;
+        return getSelf();
     }
 
     /**
@@ -102,12 +102,12 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement 
      * {@inheritDoc}
      */
     @Override
-    public AbstractDiscreteStateDelegate<E>
+    public <D extends DiscreteStateElement> D
             setState(final DiscreteState newState) {
         DiscreteState oldState = state;
         state = newState;
         firePropertyChange("state", oldState, newState);
-        return this;
+        return getSelf();
     }
 
     /**
