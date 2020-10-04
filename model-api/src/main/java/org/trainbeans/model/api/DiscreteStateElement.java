@@ -20,15 +20,16 @@ package org.trainbeans.model.api;
  * integers.
  *
  * @author rhwood
+ * @param <S> the supported subclass of DiscreteState
  */
-public interface DiscreteStateElement extends Element {
+public interface DiscreteStateElement<S extends DiscreteState> extends Element {
 
     /**
      * Get the state.
      *
      * @return the state
      */
-    DiscreteState getState();
+    S getState();
 
     /**
      * Set the state.
@@ -37,7 +38,7 @@ public interface DiscreteStateElement extends Element {
      * @param state the state to set
      * @return this object
      */
-    <T extends DiscreteStateElement> T setState(DiscreteState state);
+    <T extends DiscreteStateElement> T setState(S state);
 
     /**
      * Get the the state that was last set. This may differ from
@@ -48,5 +49,5 @@ public interface DiscreteStateElement extends Element {
      *
      * @return the requested set
      */
-    DiscreteState getRequestedState();
+    S getRequestedState();
 }

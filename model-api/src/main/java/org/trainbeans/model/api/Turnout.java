@@ -19,8 +19,8 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public final class Turnout extends
-        AbstractDelegatingDiscreteStateElement<Turnout, TurnoutDelegate> {
+@SuppressWarnings("linelength") // generic definitions on single line
+public final class Turnout extends AbstractDelegatingDiscreteStateElement<Turnout.State, Turnout, TurnoutDelegate> {
 
     public enum State implements DiscreteState {
         /**

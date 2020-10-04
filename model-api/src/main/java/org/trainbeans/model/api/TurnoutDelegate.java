@@ -19,6 +19,7 @@ package org.trainbeans.model.api;
  *
  * @author rhwood
  */
-public interface TurnoutDelegate extends DiscreteStateDelegate<Turnout> {
+@SuppressWarnings("linelength") // generic definitions on single line
+public interface TurnoutDelegate extends DiscreteStateDelegate<Turnout.State, Turnout> {
 
 }
