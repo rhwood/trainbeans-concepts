@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.jmri.json.client;
+package org.trainbeans.connection.jmri.json;
 
 /**
  *
  * @author rhwood
  */
-final class Constant {
+public final class Constant {
 
     /**
      * JMRI JSON unknown value. {@value #UNKNOWN}
      */
-    static final int UNKNOWN = 0;
+    public static final int UNKNOWN = 0;
     /**
      * JMRI JSON on/thrown value. {@value #ON}
      */
-    static final int ON = 4;
+    public static final int ON = 4;
     /**
      * JMRI JSON off/closed value. {@value #OFF}
      */
-    static final int OFF = 2;
+    public static final int OFF = 2;
     /**
      * JMRI JSON conflicted/indeterminate value. {@value #CONFLICTED}
      */
-    static final int CONFLICTED = 8;
+    public static final int CONFLICTED = 8;
 
     private Constant() {
         // prevent construction
+        throw new UnsupportedOperationException();
     }
 }

@@ -17,4 +17,4 @@
  * Connection that uses a WebSocket to connect to a JMRI web server as a JSON
  * client.
  */
-package org.trainbeans.jmri.json.client;
+package org.trainbeans.connection.jmri.json.client;
