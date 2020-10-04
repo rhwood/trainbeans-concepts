@@ -94,7 +94,20 @@ class JmriJsonClientTest {
     }
 
     @Test
-    void testStop() {
+    void testStartWithHttpURI() throws URISyntaxException {
+        client.setURI(new URI("http://localhost:12080/json"));
+        client.start();
+        assertThat(state).isEqualTo(Connection.State.FAILED);
+        assertThat(thrown).isExactlyInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void testStop() throws URISyntaxException {
+        client.setURI(new URI("ws://localhost:12080/json"));
+        client.start();
+        assertThat(state).isEqualTo(Connection.State.STARTED);
+        client.stop();
+        assertThat(state).isEqualTo(Connection.State.STOPPED);
     }
 
     @Test
@@ -156,7 +169,7 @@ class JmriJsonClientTest {
         Field field = client.getClass().getDeclaredField("client");
         field.setAccessible(true);
         field.set(client, new WebSocketClient());
-        return (WebSocketClient) field.get(client);
+        return client.getClient();
     }
 
     void setState(Connection.State state, Throwable throwable) throws Exception {

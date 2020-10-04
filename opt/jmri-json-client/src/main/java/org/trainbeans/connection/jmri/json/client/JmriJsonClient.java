@@ -107,4 +107,13 @@ public final class JmriJsonClient extends AbstractNetworkClientConnection
         }
     }
 
+    // package protected for testing
+    WebSocketClient getClient() {
+        return client;
+    }
+
+    // package protected for testing
+    JmriJsonSocket getSocket() {
+        return socket;
+    }
 }

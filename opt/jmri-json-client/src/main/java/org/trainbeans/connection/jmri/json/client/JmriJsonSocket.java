@@ -119,4 +119,8 @@ public class JmriJsonSocket {
         // handle appropriately
     }
 
+    // package protected
+    Session getSession() {
+        return session;
+    }
 }
