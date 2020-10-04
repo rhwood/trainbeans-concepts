@@ -47,20 +47,22 @@ public final class JmriJsonClient extends AbstractNetworkClientConnection
 
     @Override
     public void start() {
-        setState(State.STARTING, null);
-        if (!client.isStarted()) {
-            try {
-                client.start();
-                client.connect(socket, getURI());
-            } catch (Exception ex) {
-                setState(State.FAILED, ex);
+        if (!isRunning()) {
+            setState(State.STARTING, null);
+            if (!client.isStarted()) {
+                try {
+                    client.start();
+                    client.connect(socket, getURI());
+                } catch (Exception ex) {
+                    setState(State.FAILED, ex);
+                }
             }
         }
     }
 
     @Override
     public void stop() {
-        if (client != null) {
+        if (isRunning()) {
             setState(State.STOPPING, null);
             try {
                 client.stop();

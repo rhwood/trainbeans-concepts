@@ -35,14 +35,14 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
  * @author rhwood
  */
 @WebSocket
-class JmriJsonSocket {
+public class JmriJsonSocket {
 
     /**
      * JSON object factory.
      */
     private final ObjectMapper mapper = new ObjectMapper();
     /**
-     * A ping frame for the heartbeat.
+     * A ping element for the heartbeat.
      */
     private final String ping = mapper.createObjectNode()
             .put("type", "ping")
@@ -100,7 +100,6 @@ class JmriJsonSocket {
                         .toString());
                 break;
             case "turnout":
-                // if turnout is unknown, add it, else update it
                 String name = node.path("data").path("name").asText();
                 turnouts.getOrDefault(name, new JmriJsonTurnout(name,
                         session,
