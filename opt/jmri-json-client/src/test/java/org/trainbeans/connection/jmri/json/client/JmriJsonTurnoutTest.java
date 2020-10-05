@@ -16,11 +16,13 @@
 package org.trainbeans.connection.jmri.json.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.FutureTask;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.Mockito;
 import org.trainbeans.connection.jmri.json.Constant;
 import org.trainbeans.model.api.Turnout;
@@ -32,13 +34,19 @@ import org.trainbeans.model.api.Turnout;
 class JmriJsonTurnoutTest {
 
     private JmriJsonTurnout delegate;
+    private String setStateMessage;
 
     @BeforeEach
     void setUp() {
         RemoteEndpoint re = Mockito.mock(RemoteEndpoint.class);
         Session session = Mockito.mock(Session.class);
         Mockito.when(session.getRemote()).thenReturn(re);
+        Mockito.when(re.sendStringByFuture(anyString())).then((invocation) -> {
+            setStateMessage = invocation.getArgument(0);
+            return new FutureTask<>(() -> null);
+        });
         delegate = new JmriJsonTurnout("IT1", session, new ObjectMapper());
+        setStateMessage = null;
     }
 
     @Test
@@ -55,6 +63,15 @@ class JmriJsonTurnoutTest {
 
     @Test
     void testSetState_TurnoutState() {
+        delegate.setState(Turnout.State.CLOSED);
+        assertThat(setStateMessage).isEqualTo("{\"type\":\"turnout\",\"data\":{\"state\":2,\"name\":\"IT1\"}}");
+        delegate.setState(Turnout.State.THROWN);
+        assertThat(setStateMessage).isEqualTo("{\"type\":\"turnout\",\"data\":{\"state\":4,\"name\":\"IT1\"}}");
+        delegate.setState(Turnout.State.CONFLICTED);
+        assertThat(setStateMessage).isEqualTo("{\"type\":\"turnout\",\"data\":{\"state\":0,\"name\":\"IT1\"}}");
+        setStateMessage = null; // reset
+        delegate.setState(Turnout.State.UNKNOWN);
+        assertThat(setStateMessage).isEqualTo("{\"type\":\"turnout\",\"data\":{\"state\":0,\"name\":\"IT1\"}}");
     }
 
     @Test

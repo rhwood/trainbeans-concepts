@@ -29,7 +29,7 @@ class ConstantTest {
 
     @Test
     void testUnknown() {
-        assertThat(Constant.UNKNOWN).isEqualTo(0);
+        assertThat(Constant.UNKNOWN).isZero();
     }
 
     @Test
