@@ -17,6 +17,7 @@ package org.trainbeans.connection.jmri.json;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,26 @@ import org.junit.jupiter.api.Test;
  * @author rhwood
  */
 class ConstantTest {
+
+    @Test
+    void testUnknown() {
+        assertThat(Constant.UNKNOWN).isEqualTo(0);
+    }
+
+    @Test
+    void testConflicted() {
+        assertThat(Constant.CONFLICTED).isEqualTo(8);
+    }
+
+    @Test
+    void testOff() {
+        assertThat(Constant.OFF).isEqualTo(2);
+    }
+
+    @Test
+    void testOn() {
+        assertThat(Constant.ON).isEqualTo(4);
+    }
 
     @Test
     void testConstructor() throws NoSuchMethodException {

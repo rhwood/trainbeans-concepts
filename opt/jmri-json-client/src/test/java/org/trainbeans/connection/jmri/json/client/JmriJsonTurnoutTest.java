@@ -16,46 +16,57 @@
 package org.trainbeans.connection.jmri.json.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import static org.assertj.core.api.Assertions.assertThat;
-import org.eclipse.jetty.websocket.api.CloseStatus;
 import org.eclipse.jetty.websocket.api.RemoteEndpoint;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.SuspendToken;
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.UpgradeResponse;
-import org.eclipse.jetty.websocket.api.WebSocketPolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.trainbeans.connection.jmri.json.Constant;
+import org.trainbeans.model.api.Turnout;
 
 /**
  *
  * @author rhwood
  */
-public class JmriJsonTurnoutTest {
+class JmriJsonTurnoutTest {
 
     private JmriJsonTurnout delegate;
 
     @BeforeEach
     void setUp() {
-        delegate = new JmriJsonTurnout("IT1", new SessionImpl(), new ObjectMapper());
+        RemoteEndpoint re = Mockito.mock(RemoteEndpoint.class);
+        Session session = Mockito.mock(Session.class);
+        Mockito.when(session.getRemote()).thenReturn(re);
+        delegate = new JmriJsonTurnout("IT1", session, new ObjectMapper());
     }
 
     @Test
-    public void testSetState_int() {
+    void testSetState_int() {
+        assertThat(delegate.setState(Constant.UNKNOWN)).isEqualTo(delegate);
+        assertThat(delegate.getState()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(delegate.setState(Constant.OFF)).isEqualTo(delegate);
+        assertThat(delegate.getState()).isEqualTo(Turnout.State.CLOSED);
+        assertThat(delegate.setState(Constant.ON)).isEqualTo(delegate);
+        assertThat(delegate.getState()).isEqualTo(Turnout.State.THROWN);
+        assertThat(delegate.setState(Constant.CONFLICTED)).isEqualTo(delegate);
+        assertThat(delegate.getState()).isEqualTo(Turnout.State.CONFLICTED);
     }
 
     @Test
-    public void testSetState_TurnoutState() {
+    void testSetState_TurnoutState() {
     }
 
     @Test
-    public void testGetRequestedState() {
+    void testGetRequestedState() {
+        assertThat(delegate.getRequestedState()).isEqualTo(Turnout.State.UNKNOWN);
+        delegate.setState(Turnout.State.CLOSED);
+        assertThat(delegate.getState()).isEqualTo(Turnout.State.UNKNOWN);
+        assertThat(delegate.getRequestedState()).isEqualTo(Turnout.State.CLOSED);
     }
 
     @Test
-    public void testIsValidName() {
+    void testIsValidName() {
         assertThat(delegate.isValidName("ITfoo")).isTrue();
         assertThat(delegate.isValidName("I2Tfoo")).isTrue();
         assertThat(delegate.isValidName("IT1")).isTrue();
@@ -66,91 +77,8 @@ public class JmriJsonTurnoutTest {
     }
 
     @Test
-    public void testGetSelf() {
+    void testGetSelf() {
         assertThat(delegate.getSelf()).isEqualTo(delegate);
     }
 
-    private static class SessionImpl implements Session {
-
-        @Override
-        public void close() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void close(CloseStatus cs) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void close(int i, String string) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void disconnect() throws IOException {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public long getIdleTimeout() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public InetSocketAddress getLocalAddress() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public WebSocketPolicy getPolicy() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public String getProtocolVersion() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public RemoteEndpoint getRemote() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public InetSocketAddress getRemoteAddress() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public UpgradeRequest getUpgradeRequest() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public UpgradeResponse getUpgradeResponse() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isOpen() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean isSecure() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void setIdleTimeout(long l) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public SuspendToken suspend() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-        
-    }
 }

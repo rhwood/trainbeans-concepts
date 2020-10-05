@@ -29,6 +29,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.trainbeans.model.api.Turnout;
 
 /**
  *
@@ -117,9 +118,11 @@ public final class JmriJsonSocket {
                 break;
             case "turnout":
                 String name = node.path("data").path("name").asText();
-                turnouts.getOrDefault(name, new JmriJsonTurnout(name,
-                        session,
-                        mapper))
+                turnouts.getOrDefault(name,
+                        new JmriJsonTurnout(name, session, mapper)
+                                // trigger updated from JMRI for new turnouts
+                                .setState(Turnout.State.UNKNOWN))
+                        // set the turnout to the reported state
                         .setState(node.path("data").path("state").asInt(0));
                 break;
             case "pong":

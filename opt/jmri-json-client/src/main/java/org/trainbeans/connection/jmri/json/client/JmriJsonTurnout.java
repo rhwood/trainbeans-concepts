@@ -55,6 +55,8 @@ public final class JmriJsonTurnout extends AbstractDiscreteStateDelegate<State, 
     JmriJsonTurnout(final String name, final Session aSession,
             final ObjectMapper aMapper) {
         setName(name);
+        // set the internal state, but do not trigger a query
+        super.setState(State.UNKNOWN);
         session = aSession;
         mapper = aMapper;
     }
@@ -104,7 +106,7 @@ public final class JmriJsonTurnout extends AbstractDiscreteStateDelegate<State, 
                 .put("type", "turnout")
                 .set("data", data);
         session.getRemote().sendStringByFuture(root.toString());
-        return super.setState(state);
+        return getSelf();
     }
 
     @Override
