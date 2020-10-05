@@ -19,6 +19,7 @@ import org.trainbeans.connection.jmri.json.Constant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.eclipse.jetty.websocket.api.Session;
+import org.trainbeans.connection.jmri.json.JmriJsonUtil;
 import org.trainbeans.model.api.AbstractDiscreteStateDelegate;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.api.Turnout.State;
@@ -106,7 +107,7 @@ public final class JmriJsonTurnout extends AbstractDiscreteStateDelegate<State, 
 
     @Override
     protected boolean isValidName(final String aName) {
-        return true;
+        return JmriJsonUtil.isValidName(aName, "T");
     }
 
     @Override
