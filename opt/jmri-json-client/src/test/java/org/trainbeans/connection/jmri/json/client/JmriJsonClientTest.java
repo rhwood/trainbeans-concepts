@@ -91,6 +91,12 @@ class JmriJsonClientTest {
         client.setURI(new URI("ws://localhost:12080/json"));
         client.start();
         assertThat(state).isEqualTo(Connection.State.STARTED);
+        // test that calling start in started state does not fire change
+        state = null;
+        assertThat(client.getState()).isEqualTo(Connection.State.STARTED);
+        client.start();
+        assertThat(client.getState()).isEqualTo(Connection.State.STARTED);
+        assertThat(state).isNull();
     }
 
     @Test
@@ -102,12 +108,15 @@ class JmriJsonClientTest {
     }
 
     @Test
-    void testStop() throws URISyntaxException {
+    void testStop() throws Exception {
         client.setURI(new URI("ws://localhost:12080/json"));
         client.start();
         assertThat(state).isEqualTo(Connection.State.STARTED);
         client.stop();
         assertThat(state).isEqualTo(Connection.State.STOPPED);
+        setState(Connection.State.FAILED, new Exception());
+        client.stop();
+        assertThat(state).isEqualTo(Connection.State.FAILED);
     }
 
     @Test
