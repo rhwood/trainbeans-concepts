@@ -45,6 +45,13 @@ public final class JmriJsonTurnout extends AbstractDiscreteStateDelegate<State, 
      */
     private final ObjectMapper mapper;
 
+    /**
+     * Create a JMRI JSON Turnout.
+     *
+     * @param name the JMRI system name
+     * @param aSession the connected session
+     * @param aMapper the JSON object factory
+     */
     JmriJsonTurnout(final String name, final Session aSession,
             final ObjectMapper aMapper) {
         setName(name);

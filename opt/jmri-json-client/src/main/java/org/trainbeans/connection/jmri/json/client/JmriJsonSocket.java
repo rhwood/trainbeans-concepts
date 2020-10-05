@@ -35,7 +35,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
  * @author rhwood
  */
 @WebSocket
-public class JmriJsonSocket {
+public final class JmriJsonSocket {
 
     /**
      * JSON object factory.
@@ -60,16 +60,32 @@ public class JmriJsonSocket {
      */
     private final Map<String, JmriJsonTurnout> turnouts = new HashMap<>();
 
+    /**
+     * Handle a closing web socket.
+     *
+     * @param statusCode the closing code
+     * @param reason a loggable closing reason
+     */
     @OnWebSocketClose
     public void onClose(final int statusCode, final String reason) {
         heartbeat.cancel(true);
     }
 
+    /**
+     * Handle the initial connection to the web socket.
+     *
+     * @param aSession the session for the connection
+     */
     @OnWebSocketConnect
     public void onConnect(final Session aSession) {
         session = aSession;
     }
 
+    /**
+     * Handle a message from the web socket.
+     *
+     * @param msg the message
+     */
     @OnWebSocketMessage
     public void onMessage(final String msg) {
         try {
@@ -114,6 +130,11 @@ public class JmriJsonSocket {
             }
     }
 
+    /**
+     * Handle an error in the web socket.
+     *
+     * @param cause the error
+     */
     @OnWebSocketError
     public void onError(final Throwable cause) {
         // handle appropriately

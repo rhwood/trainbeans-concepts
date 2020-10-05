@@ -35,6 +35,9 @@ public final class JmriJsonClient extends AbstractNetworkClientConnection
      */
     private final JmriJsonSocket socket = new JmriJsonSocket();
 
+    /**
+     * Create the client.
+     */
     public JmriJsonClient() {
         client = new WebSocketClient();
         client.addLifeCycleListener(this);

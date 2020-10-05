@@ -16,12 +16,23 @@
 package org.trainbeans.connection.jmri.json;
 
 /**
+ * Utility methods for JMRI JSON connections.
  *
  * @author rhwood
  */
-public class JmriJsonUtil {
+public final class JmriJsonUtil {
 
-    public static boolean isValidName(String name, String typeLetter) {
+    /**
+     * Common method to validate a Delegate name. Note that this method cannot
+     * tell if the name would be valid for a specific type of JMRI connection,
+     * only that the name matches the pattern of all valid JMRI system names.
+     *
+     * @param name the name to validate
+     * @param typeLetter the JMRI NamedBean type letter
+     * @return true if valid; false otherwise
+     */
+    public static boolean isValidName(final String name,
+            final String typeLetter) {
         return name.matches("[A-Z][0-9]*" + typeLetter + ".+");
     }
 
