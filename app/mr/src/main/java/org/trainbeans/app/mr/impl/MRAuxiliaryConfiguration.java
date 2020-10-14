@@ -71,7 +71,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     }
 
     @Override
-    public void putConfigurationFragment(Element fragment, boolean shared) throws IllegalArgumentException {
+    public void putConfigurationFragment(Element fragment, boolean shared) {
         // Should use NetBeans Mutex to lock file
         String elementName = fragment.getLocalName();
         String namespace = fragment.getNamespaceURI();
@@ -128,7 +128,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     }
 
     @Override
-    public boolean removeConfigurationFragment(String elementName, String namespace, boolean shared) throws IllegalArgumentException {
+    public boolean removeConfigurationFragment(String elementName, String namespace, boolean shared) {
         // Should use NetBeans Mutex to lock file
         FileObject file = this.getConfigurationFile(shared);
         if (file.canWrite()) {
