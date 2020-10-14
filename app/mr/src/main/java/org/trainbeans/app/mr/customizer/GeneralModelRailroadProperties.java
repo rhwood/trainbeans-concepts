@@ -22,14 +22,17 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
+ * Panel for general properties of a Model Railroad project.
  *
  * @author rhwood
  */
-public class GeneralModelRailroadProperties implements ProjectCustomizer.CompositeCategoryProvider {
+public final class GeneralModelRailroadProperties
+        implements ProjectCustomizer.CompositeCategoryProvider {
 
     private static final String GENERAL = "General";
 
-    @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType = "org-trainbeans-app-mr", position = 10)
+    @ProjectCustomizer.CompositeCategoryProvider.Registration(
+            projectType = "org-trainbeans-app-mr", position = 10)
     public static GeneralModelRailroadProperties createGeneral() {
         return new GeneralModelRailroadProperties();
     }
@@ -37,13 +40,14 @@ public class GeneralModelRailroadProperties implements ProjectCustomizer.Composi
     @NbBundle.Messages("LBL_Config_General=General")
     @Override
     public ProjectCustomizer.Category createCategory(Lookup context) {
-return ProjectCustomizer.Category.create(GENERAL,
-        Bundle.LBL_Config_General(),
-        null);
+        return ProjectCustomizer.Category.create(GENERAL,
+                Bundle.LBL_Config_General(),
+                null);
     }
 
     @Override
-    public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
+    public JComponent createComponent(ProjectCustomizer.Category category,
+            Lookup context) {
         return new JPanel();
     }
 
