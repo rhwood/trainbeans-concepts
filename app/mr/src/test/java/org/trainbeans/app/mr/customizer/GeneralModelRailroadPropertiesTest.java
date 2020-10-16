@@ -17,9 +17,11 @@ package org.trainbeans.app.mr.customizer;
 
 import javax.swing.JPanel;
 import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.assertj.swing.edt.GuiActionRunner;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
 
 /**
@@ -29,6 +31,11 @@ import org.openide.util.Lookup;
 class GeneralModelRailroadPropertiesTest {
 
     private GeneralModelRailroadProperties gmrp;
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     @BeforeEach
     void setUp() {
@@ -50,8 +57,9 @@ class GeneralModelRailroadPropertiesTest {
 
     @Test
     void testCreateComponent() {
-        assertThat(gmrp.createComponent(gmrp.createCategory(Lookup.EMPTY),
-                Lookup.EMPTY)).isExactlyInstanceOf(JPanel.class);
+        GuiActionRunner.execute(() ->
+            assertThat(gmrp.createComponent(gmrp.createCategory(Lookup.EMPTY),
+                    Lookup.EMPTY)).isExactlyInstanceOf(JPanel.class));
     }
 
 }

@@ -18,6 +18,7 @@ package org.trainbeans.app.mr;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Objects;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -51,6 +52,7 @@ public class ModelRailroadProject implements Project {
     private Lookup lookup;
 
     public ModelRailroadProject(FileObject fo) {
+        Objects.requireNonNull(fo, "Project directory must exist");
         projectDir = fo;
     }
 
