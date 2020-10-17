@@ -44,6 +44,7 @@ jobs:
     - name: Build with Maven
       if: runner.os == 'Linux'
       run: xvfb-run mvn -B package --file pom.xml
+    - name: Build with Maven
       if: runner.os != 'Linux'
       run: mvn -B package --file pom.xml
     - name: Analyse with SonarCloud
