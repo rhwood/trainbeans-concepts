@@ -34,6 +34,7 @@ public class ModelRailroadCustomizerProvider implements CustomizerProvider {
     public static final String CUSTOMIZER_FOLDER_PATH
             = "Projects/org-trainbeans-app-mr/Customizer";
     private final ModelRailroadProject project;
+    private Dialog dialog;
 
     public ModelRailroadCustomizerProvider(ModelRailroadProject aProject) {
         project = aProject;
@@ -41,7 +42,7 @@ public class ModelRailroadCustomizerProvider implements CustomizerProvider {
 
     @Override
     public void showCustomizer() {
-        Dialog dialog = ProjectCustomizer.createCustomizerDialog(
+        dialog = ProjectCustomizer.createCustomizerDialog(
                 // path to layer folder
                 CUSTOMIZER_FOLDER_PATH,
                 // Lookup that contains, at a minimum, the project
@@ -58,12 +59,19 @@ public class ModelRailroadCustomizerProvider implements CustomizerProvider {
         dialog.setVisible(true);
     }
 
+    // package protected for testing
+    Dialog getDialog() {
+        return dialog;
+    }
+
     private class OKOptionListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             StatusDisplayer.getDefault().setStatusText("OK button clicked for "
                     + project.getProjectDirectory().getName() + " customizer!");
+            // release dialog for eventual garbage collection
+            dialog = null;
         }
     }
 

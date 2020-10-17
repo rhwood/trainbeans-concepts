@@ -15,9 +15,17 @@
  */
 package org.trainbeans.app.mr.customizer;
 
+import java.awt.Dialog;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.assertj.swing.edt.GuiActionRunner;
+import org.assertj.swing.finder.WindowFinder;
+import org.assertj.swing.fixture.DialogFixture;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +34,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.modules.openide.util.NbMutexEventProvider;
 import org.netbeans.spi.project.ProjectInformationProvider;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.Lookups;
 import org.trainbeans.app.mr.ModelRailroadProject;
@@ -38,6 +45,7 @@ import org.trainbeans.app.mr.ModelRailroadProject;
 class ModelRailroadCustomizerProviderTest {
 
     private ModelRailroadCustomizerProvider provider;
+    private ModelRailroadProject project;
 
     @BeforeAll
     public static void setUpOnce() {
@@ -46,8 +54,7 @@ class ModelRailroadCustomizerProviderTest {
 
     @BeforeEach
     void setUp(@TempDir File projectDir) {
-        ModelRailroadProject project
-                = new ModelRailroadProject(FileUtil.toFileObject(projectDir));
+        project = new ModelRailroadProject(FileUtil.toFileObject(projectDir));
         MockLookup.setLookup(Lookups.fixed(project.getLookup()));
         MockLookup.setInstances(new TestUtil.MockProjectManager(),
                 new NbMutexEventProvider(),
@@ -57,9 +64,14 @@ class ModelRailroadCustomizerProviderTest {
 
     @Test
     void testShowCustomizer() {
-        GuiActionRunner.execute(() -> {
+        assertThat(provider.getDialog()).isNull();
+        Dialog dialog = GuiActionRunner.execute(() -> {
             provider.showCustomizer();
+            return provider.getDialog();
         });
+        assertThat(provider.getDialog()).isNotNull().isInstanceOf(Dialog.class);
+        DialogFixture fixture = new DialogFixture(dialog);
+        fixture.button(JButtonMatcher.withText("OK")).click();
     }
 
     private static class ProjectInformationProviderImpl implements ProjectInformationProvider {
