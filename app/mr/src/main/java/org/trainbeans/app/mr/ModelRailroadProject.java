@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
@@ -180,7 +181,7 @@ public class ModelRailroadProject implements Project {
 
             @Override
             public String getDisplayName() {
-                return project.getProjectDirectory().getName();
+                return ProjectUtils.getInformation(project).getDisplayName();
             }
         }
     }
