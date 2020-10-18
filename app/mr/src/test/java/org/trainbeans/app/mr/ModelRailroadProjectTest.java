@@ -23,12 +23,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
-import org.netbeans.modules.openide.util.NbMutexEventProvider;
 import org.netbeans.spi.project.ProjectInformationProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileUtil;
-import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -97,12 +96,32 @@ class ModelRailroadProjectTest {
     }
 
     @Test
-    void testLogicalViewProvider() {
+    void testLogicalViewProviderGetActions() {
         Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-        assertThat(node).isInstanceOf(FilterNode.class);
         assertThat(node.getActions(true)).hasSize(5);
         assertThat(node.getActions(false)).hasSize(5);
+    }
+
+    @Test
+    void testLogicalViewProviderGetDisplayName() {
+        Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
         assertThat(node.getDisplayName()).isEqualTo(testDir.getName());
+    }
+
+    @Test
+    void testLogicalViewProviderGetIcon() {
+        Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
+        for (int i = 0; i < 10; i++) {
+            assertThat(node.getIcon(i)).isEqualTo(ImageUtilities.loadImage("org/trainbeans/app/mr/icon.png"));
+        }
+    }
+
+    @Test
+    void testLogicalViewProviderOpenedIcon() {
+        Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
+        for (int i = 0; i < 10; i++) {
+            assertThat(node.getOpenedIcon(i)).isEqualTo(node.getIcon(i));
+        }
     }
 
     private static class ProjectInformationProviderImpl implements ProjectInformationProvider {
