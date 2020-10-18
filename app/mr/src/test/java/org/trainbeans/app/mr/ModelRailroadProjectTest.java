@@ -16,15 +16,21 @@
 package org.trainbeans.app.mr;
 
 import java.io.File;
-import javax.swing.ImageIcon;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.modules.openide.util.NbMutexEventProvider;
+import org.netbeans.spi.project.ProjectInformationProvider;
+import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileUtil;
+import org.openide.nodes.FilterNode;
+import org.openide.nodes.Node;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -39,6 +45,9 @@ class ModelRailroadProjectTest {
     void setUp(@TempDir File projectDir) {
         testDir = projectDir;
         project = new ModelRailroadProject(FileUtil.toFileObject(projectDir));
+        MockLookup.setLookup(Lookups.fixed(project.getLookup()));
+        MockLookup.setInstances(new TestUtil.MockProjectManager(),
+                new ProjectInformationProviderImpl());
     }
 
     @Test
@@ -58,6 +67,8 @@ class ModelRailroadProjectTest {
         assertThat(project.getLookup()).isNotNull();
         Lookup lookup = project.getLookup();
         assertThat(lookup.lookup(ModelRailroadProject.class)).isEqualTo(project);
+        assertThat(lookup.lookup(ProjectInformation.class)).isNotNull();
+        assertThat(lookup.lookup(LogicalViewProvider.class)).isNotNull();
     }
 
     @Test
@@ -83,5 +94,25 @@ class ModelRailroadProjectTest {
     void testProjectInformationGetProject() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
         assertThat(pi.getProject()).isEqualTo(project);
+    }
+
+    @Test
+    void testLogicalViewProvider() {
+        Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
+        assertThat(node).isInstanceOf(FilterNode.class);
+        assertThat(node.getActions(true)).hasSize(5);
+        assertThat(node.getActions(false)).hasSize(5);
+        assertThat(node.getDisplayName()).isEqualTo(testDir.getName());
+    }
+
+    private static class ProjectInformationProviderImpl implements ProjectInformationProvider {
+
+        @Override
+        public ProjectInformation getProjectInformation(final Project project) {
+            // DO NOT use the recommended method
+            // org.netbeans.api.project.ProjectUtils.getInformation(project)
+            // since that requires excessive setup for a test
+            return project.getLookup().lookup(ProjectInformation.class);
+        }
     }
 }
