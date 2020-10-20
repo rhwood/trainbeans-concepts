@@ -96,6 +96,11 @@ class ModelRailroadProjectTest {
     }
 
     @Test
+    void testLogicalViewProviderFindPath() {
+        assertThat(project.getLookup().lookup(LogicalViewProvider.class).findPath(Node.EMPTY, this)).isNull();
+    }
+
+    @Test
     void testLogicalViewProviderGetActions() {
         Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
         assertThat(node.getActions(true)).hasSize(5);
