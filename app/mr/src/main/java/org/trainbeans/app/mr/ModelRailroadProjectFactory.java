@@ -20,6 +20,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -36,7 +37,7 @@ public class ModelRailroadProjectFactory implements ProjectFactory {
 
     @Override
     public Project loadProject(FileObject fo, ProjectState ps) throws IOException {
-        return isProject(fo) ? new ModelRailroadProject(fo) : null;
+        return isProject(fo) ? new ModelRailroadProject(fo, Lookup.EMPTY) : null;
     }
 
     @Override

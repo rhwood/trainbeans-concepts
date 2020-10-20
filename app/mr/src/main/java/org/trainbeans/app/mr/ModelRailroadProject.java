@@ -50,11 +50,21 @@ import org.trainbeans.app.mr.customizer.ModelRailroadCustomizerProvider;
 public class ModelRailroadProject implements Project {
 
     private final FileObject projectDir;
-    private Lookup lookup;
+    private Lookup projectLookup;
+    private final Lookup additionalLookup;
 
-    public ModelRailroadProject(FileObject fo) {
+    /**
+     * Create a project.
+     *
+     * @param fo the path to the project
+     * @param lookup a lookup containing additional items to add to the
+     * project's lookup; use {@link Lookup#EMPTY} if not passing anything
+     */
+    public ModelRailroadProject(FileObject fo, Lookup lookup) {
         Objects.requireNonNull(fo, "Project directory must exist");
+        Objects.requireNonNull(lookup, "Project must have a lookup");
         projectDir = fo;
+        additionalLookup = lookup;
     }
 
     @Override
@@ -64,14 +74,22 @@ public class ModelRailroadProject implements Project {
 
     @Override
     public Lookup getLookup() {
-        if (lookup == null) {
-            lookup = Lookups.fixed( // add Project features/requirements here
+        if (projectLookup == null) {
+            additionalLookup.lookupAll(NeedsProject.class)
+                    .forEach(i -> i.setProject(this));
+            projectLookup = new ProxyLookup(Lookups.fixed( // add Project features/requirements here
                     this,
                     new Info(),
                     new ModelRailroadProjectLogicalView(this),
-                    new ModelRailroadCustomizerProvider(this));
+                    new ModelRailroadCustomizerProvider(this)),
+                    additionalLookup);
         }
-        return lookup;
+        return projectLookup;
+    }
+
+    public interface NeedsProject {
+
+        public void setProject(ModelRailroadProject project);
     }
 
     private final class Info implements ProjectInformation {

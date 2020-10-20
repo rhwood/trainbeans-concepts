@@ -43,7 +43,7 @@ class ModelRailroadProjectTest {
     @BeforeEach
     void setUp(@TempDir File projectDir) {
         testDir = projectDir;
-        project = new ModelRailroadProject(FileUtil.toFileObject(projectDir));
+        project = new ModelRailroadProject(FileUtil.toFileObject(projectDir), Lookup.EMPTY);
         MockLookup.setLookup(Lookups.fixed(project.getLookup()));
         MockLookup.setInstances(new TestUtil.MockProjectManager(),
                 new ProjectInformationProviderImpl());
@@ -51,7 +51,8 @@ class ModelRailroadProjectTest {
 
     @Test
     void testConstructor() {
-        assertThatCode(() -> new ModelRailroadProject(null)).isExactlyInstanceOf(NullPointerException.class);
+        assertThatCode(() -> new ModelRailroadProject(null, Lookup.EMPTY)).isExactlyInstanceOf(NullPointerException.class);
+        assertThatCode(() -> new ModelRailroadProject(FileUtil.toFileObject(testDir), null)).isExactlyInstanceOf(NullPointerException.class);
     }
 
     @Test
