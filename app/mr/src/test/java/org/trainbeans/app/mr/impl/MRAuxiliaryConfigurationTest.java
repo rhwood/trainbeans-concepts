@@ -189,6 +189,8 @@ class MRAuxiliaryConfigurationTest {
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     void testPutConfigurationFragment_Unwritable(boolean arg) throws IOException {
+        // skip on Windows because of file permissions
+        assumeThat(Utilities.isWindows()).isFalse();
         assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
                 .isNull();
         Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
