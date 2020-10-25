@@ -20,6 +20,8 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,6 +40,13 @@ import org.w3c.dom.Element;
  * @author rhwood
  */
 class MRAuxiliaryConfigurationTest {
+
+    private final String PROJECT_XML = "trainbeans/project.xml";
+    private final String PRIVATE_XML = "trainbeans/private.xml";
+    private final String ELEMENT_NAME1 = "element1";
+    private final String ELEMENT_NAME2 = "element2";
+    private final String XML_NS1 = "ns1";
+    private final String XML_NS2 = "ns2";
 
     private Document document;
     private ModelRailroadProject project;
@@ -63,67 +72,66 @@ class MRAuxiliaryConfigurationTest {
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     void testGetConfigurationFragment(boolean arg) throws IOException {
-        String PROJECT_XML = "trainbeans/project.xml";
-        String PRIVATE_XML = "trainbeans/private.xml";
-        String elementName = "testElement";
-        String namespace = "test";
         // test "normal" conditions (read / write capable)
-        assertThat(config.getConfigurationFragment(elementName, namespace, arg))
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
                 .isNull();
-        Element e = document.createElementNS(namespace, elementName);
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
         e.setAttribute("foo", "bar");
         config.putConfigurationFragment(e, arg);
         assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
         assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
-        e = config.getConfigurationFragment(elementName, namespace, arg);
-        assertThat(e).isNotNull();
-        assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        // test unreadable conditions (not expected in normal operations)
-        File file = FileUtil.toFile(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML));
-        file.setReadable(false);
-        e = config.getConfigurationFragment(elementName, namespace, arg);
-        if (!Utilities.isWindows()) {
-            // unable to make file unreadable by owner in Windows?
-            assertThat(e).isNull();
-        }
-        file.setReadable(true);
-        e = config.getConfigurationFragment(elementName, namespace, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
     }
 
-
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    void testPutConfigurationFragment(boolean arg) throws IOException {
-        String PROJECT_XML = "trainbeans/project.xml";
-        String PRIVATE_XML = "trainbeans/private.xml";
-        String elementName1 = "testElement1";
-        String elementName2 = "testElement2";
-        String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName1, namespace, arg))
-                .isNull();
-        Element e = document.createElementNS(namespace, elementName1);
+    void testGetConfigurationFragmentUnreadable(boolean arg) throws IOException {
+        // test unreadable conditions (not expected in normal operations)
+        // unable to set file unreadable by owner in Windows?
+        assumeThat(Utilities.isWindows()).isFalse();
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
         e.setAttribute("foo", "bar");
         config.putConfigurationFragment(e, arg);
         assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
         assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
-        e = config.getConfigurationFragment(elementName1, namespace, arg);
+        File file = FileUtil.toFile(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML));
+        file.setReadable(false);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        assertThat(e).isNull();
+        file.setReadable(true);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        e = document.createElementNS(namespace, elementName2);
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testPutConfigurationFragment(boolean arg) throws IOException {
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
+                .isNull();
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
         e.setAttribute("foo", "bar");
         config.putConfigurationFragment(e, arg);
-        e = config.getConfigurationFragment(elementName1, namespace, arg);
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        e = config.getConfigurationFragment(elementName2, namespace, arg);
+        e = document.createElementNS(XML_NS1, ELEMENT_NAME2);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        e = document.createElementNS(namespace, elementName2);
+        e = config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        e = document.createElementNS(XML_NS1, ELEMENT_NAME2);
         e.setAttribute("bar", "foo");
         config.putConfigurationFragment(e, arg);
-        e = config.getConfigurationFragment(elementName2, namespace, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
@@ -132,22 +140,40 @@ class MRAuxiliaryConfigurationTest {
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     void testRemoveConfigurationFragment(boolean arg) throws IOException {
-        String PROJECT_XML = "trainbeans/project.xml";
-        String PRIVATE_XML = "trainbeans/private.xml";
-        String elementName = "testElement";
-        String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName, namespace, arg))
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
                 .isNull();
-        Element e = document.createElementNS(namespace, elementName);
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
         e.setAttribute("foo", "bar");
         config.putConfigurationFragment(e, arg);
         assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
         assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
-        e = config.getConfigurationFragment(elementName, namespace, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        config.removeConfigurationFragment(elementName, namespace, arg);
-        assertThat(config.getConfigurationFragment(elementName, namespace, arg)).isNull();
+        config.removeConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg)).isNull();
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testRemoveConfigurationFragment_NonExistant(boolean arg) throws IOException {
+        // first create a fragment to generate XML to remove fragement from
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
+                .isNull();
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        // remove that fragment and remove it again
+        config.removeConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg)).isNull();
+        assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
+                .doesNotThrowAnyException();
+        // remove a different fragment
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
+        assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg))
+                .doesNotThrowAnyException();
+    }
 }
