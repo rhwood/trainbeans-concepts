@@ -51,22 +51,23 @@ class MRAuxiliaryConfigurationTest {
     private Document document;
     private ModelRailroadProject project;
     private AuxiliaryConfiguration config;
+    private ProjectState state = new ProjectState() {
+        @Override
+        public void markModified() {
+            // empty implementation
+        }
+
+        @Override
+        public void notifyDeleted() {
+            // empty implementation
+        }
+    };
 
     @BeforeEach
     void setUp(@TempDir File testDir) throws ParserConfigurationException {
         document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         project = new ModelRailroadProject(FileUtil.toFileObject(testDir), Lookup.EMPTY);
-        config = new MRAuxiliaryConfiguration(project, new ProjectState() {
-            @Override
-            public void markModified() {
-                // empty implementation
-            }
-
-            @Override
-            public void notifyDeleted() {
-                // empty implementation
-            }
-        });
+        config = new MRAuxiliaryConfiguration(project, state);
     }
 
     @ParameterizedTest
@@ -135,6 +136,31 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testPutConfigurationFragment_Unwritable(boolean arg) throws IOException {
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
+                .isNull();
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, arg);
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        // make file unwritable
+        File file = FileUtil.toFile(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML));
+        file.setWritable(false);
+        // add a fragment and fail
+        Element e2 = document.createElementNS(XML_NS1, ELEMENT_NAME2);
+        e2.setAttribute("foo", "bar");
+        assertThatCode(() -> config.putConfigurationFragment(e2, arg)).doesNotThrowAnyException();
+        config = new MRAuxiliaryConfiguration(project, state);
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
+        assertThat(e).isNotNull();
     }
 
     @ParameterizedTest
