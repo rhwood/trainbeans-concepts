@@ -17,14 +17,12 @@ package org.trainbeans.app.mr.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Date;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.openide.filesystems.FileUtil;
@@ -53,7 +51,43 @@ class MRAuxiliaryConfigurationTest {
     }
 
     @Test
-    void testHandleConfigurationFragment(TestInfo info) throws IOException {
+    void testGetConfigurationFragment() throws IOException {
+        String id = Long.toString((new Date()).getTime());
+        String elementName = "testElement";
+        String namespace = "test";
+        assertThat(config.getConfigurationFragment(elementName, namespace, true))
+                .isNull();
+        Element e = document.createElementNS(namespace, elementName);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, true);
+        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNotNull();
+        e = config.getConfigurationFragment(elementName, namespace, true);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        config.removeConfigurationFragment(elementName, namespace, true);
+        assertThat(config.getConfigurationFragment(elementName, namespace, true)).isNull();
+    }
+
+    @Test
+    void testPutConfigurationFragment() throws IOException {
+        String id = Long.toString((new Date()).getTime());
+        String elementName = "testElement";
+        String namespace = "test";
+        assertThat(config.getConfigurationFragment(elementName, namespace, true))
+                .isNull();
+        Element e = document.createElementNS(namespace, elementName);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, true);
+        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNotNull();
+        e = config.getConfigurationFragment(elementName, namespace, true);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        config.removeConfigurationFragment(elementName, namespace, true);
+        assertThat(config.getConfigurationFragment(elementName, namespace, true)).isNull();
+    }
+
+    @Test
+    void testRemoveConfigurationFragment() throws IOException {
         String id = Long.toString((new Date()).getTime());
         String elementName = "testElement";
         String namespace = "test";
