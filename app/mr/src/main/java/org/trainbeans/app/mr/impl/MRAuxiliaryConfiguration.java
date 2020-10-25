@@ -133,7 +133,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                     }
                 }
                 root.insertBefore(root.getOwnerDocument().importNode(fragment, true), ref);
-                write(projectXml, getConfigurationFile(shared, true));
+                write(shared ? projectXml : privateXml, getConfigurationFile(shared, true));
                 state.markModified();
             }
         });
