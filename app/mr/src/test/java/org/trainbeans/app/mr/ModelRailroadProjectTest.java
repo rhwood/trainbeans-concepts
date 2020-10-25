@@ -17,8 +17,10 @@ package org.trainbeans.app.mr;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -48,6 +50,12 @@ class ModelRailroadProjectTest {
         MockLookup.setLookup(Lookups.fixed(project.getLookup()));
         MockLookup.setInstances(new TestUtil.MockProjectManager(),
                 new ProjectInformationProviderImpl());
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        projectDir.setWritable(true);
+        Files.walk(projectDir.toPath()).forEach(path -> path.toFile().setWritable(true));
     }
 
     @Test
