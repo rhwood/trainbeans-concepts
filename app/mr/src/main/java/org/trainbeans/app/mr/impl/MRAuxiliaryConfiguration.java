@@ -140,8 +140,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                 }
                 root.insertBefore(root.getOwnerDocument()
                         .importNode(fragment, true), ref);
-                write(shared ? projectXml : privateXml,
-                        getConfigurationFile(shared, true));
+                write(shared);
                 state.markModified();
             }
         });
@@ -163,7 +162,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                     if (toRemove != null) {
                         root.removeChild(toRemove);
                         // this.backup(shared); // should we backup?
-                        write(doc, file);
+                        write(shared);
                         return true;
                     }
                 } catch (DOMException ex) {
@@ -206,7 +205,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     /**
      * Retrieve project.xml or private.xml, loading from disk as needed.
      * private.xml is created as a skeleton on demand.
-     * 
+     *
      * @param shared true if using shared configuration; false otherwise
      * @return the XML document
      */
@@ -243,9 +242,11 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
         return null;
     }
 
-    private void write(final Document document, final FileObject file) {
-        try (OutputStream out = file.getOutputStream()) {
-            XMLUtil.write(document, out, StandardCharsets.UTF_8.name());
+    private void write(final boolean shared) {
+        try (OutputStream out = getConfigurationFile(shared, true)
+                .getOutputStream()) {
+            XMLUtil.write(shared ? projectXml : privateXml, out,
+                    StandardCharsets.UTF_8.name());
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
