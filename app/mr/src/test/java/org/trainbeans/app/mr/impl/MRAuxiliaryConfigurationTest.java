@@ -152,6 +152,8 @@ class MRAuxiliaryConfigurationTest {
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     void testPutConfigurationFragment_ComplexDocument(boolean arg) throws IOException, InterruptedException {
+        // skip on Windows because of file permissions?
+        assumeThat(Utilities.isWindows()).isFalse();
         assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
                 .isNull();
         // create a document to read
