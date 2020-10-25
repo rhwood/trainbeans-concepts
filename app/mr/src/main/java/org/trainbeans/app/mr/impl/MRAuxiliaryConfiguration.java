@@ -45,32 +45,60 @@ import org.xml.sax.SAXException;
  */
 public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
 
-    public static final String NAMESPACE = "http://www.netbeans.org/ns/auxiliary-configuration/1"; // NOI18N
+    /**
+     * XML name space of the root element. Note the URL does not actually exist,
+     * but only serves as a unique identifier for the name space.
+     */
+    public static final String ROOT_XML_NS
+            = "http://www.netbeans.org/ns/auxiliary-configuration/1"; // NOI18N
+    /**
+     * The project this class instance is supporting.
+     */
     private final ModelRailroadProject project;
+    /**
+     * The project state listener.
+     */
     private final ProjectState state;
+    /**
+     * The standard (shared) XML document. This is expected to contain project
+     * configuration that can be used in multiple computers.
+     */
     private Document projectXml;
+    /**
+     * The private (not shared) XML document. This is expected to contain
+     * project configuration that is specific to a single computer.
+     */
     private Document privateXml;
+    /**
+     * Write locks for XML documents.
+     */
     private final Set<String> modifiedMetadataPaths = new HashSet<>();
+    /**
+     * Shared XML path relative to project root.
+     */
     private static final String PROJECT_XML_PATH = "trainbeans/project.xml";
+    /**
+     * Not shared XML path relative to project root.
+     */
     private static final String PRIVATE_XML_PATH = "trainbeans/private.xml";
 
-    public MRAuxiliaryConfiguration(ModelRailroadProject aProject) {
-        Objects.requireNonNull(aProject, "Cannot get configuration of null project");
+    /**
+     * Create an {@link AuxiliaryConfiguration} for a
+     * {@link ModelRailroadProject}.
+     *
+     * @param aProject the project this configuration is for
+     * @param aProjectState the project state to notify of changes
+     */
+    public MRAuxiliaryConfiguration(final ModelRailroadProject aProject,
+            final ProjectState aProjectState) {
+        Objects.requireNonNull(aProject);
         project = aProject;
-        // need real implementation
-        state = new ProjectState() {
-            @Override
-            public void markModified() {
-                /* empty */ }
-
-            @Override
-            public void notifyDeleted() {
-                /* empty */ }
-        };
+        state = aProjectState;
     }
 
     @Override
-    public Element getConfigurationFragment(String elementName, String namespace, boolean shared) {
+    public Element getConfigurationFragment(final String elementName,
+            final String namespace, final boolean shared) {
         return ProjectManager.mutex().readAccess(() -> {
             FileObject file = this.getConfigurationFile(shared, false);
             if (file != null && file.canRead()) {
@@ -82,24 +110,27 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     }
 
     @Override
-    public void putConfigurationFragment(Element fragment, boolean shared) {
+    public void putConfigurationFragment(final Element fragment,
+            final boolean shared) {
         ProjectManager.mutex().writeAccess(() -> {
             synchronized (modifiedMetadataPaths) {
                 Element root = getConfigurationDataRoot(shared);
-                Element existing = XMLUtil.findElement(root, fragment.getLocalName(), fragment.getNamespaceURI());
-                // XXX first compare to existing and return if the same
+                Element existing = XMLUtil.findElement(root,
+                        fragment.getLocalName(), fragment.getNamespaceURI());
                 if (existing != null) {
                     root.removeChild(existing);
                 }
-                // the children are alphabetize: find correct place to insert new node
+                // nodes are alphabetized, so find correct place to insert node
                 Node ref = null;
                 NodeList list = root.getChildNodes();
                 for (int i = 0; i < list.getLength(); i++) {
                     Node node = list.item(i);
                     if (node.getNodeType() == Node.ELEMENT_NODE) {
-                        int comparison = node.getNodeName().compareTo(fragment.getNodeName());
+                        int comparison = node.getNodeName()
+                                .compareTo(fragment.getNodeName());
                         if (comparison == 0) {
-                            comparison = node.getNamespaceURI().compareTo(fragment.getNamespaceURI());
+                            comparison = node.getNamespaceURI()
+                                    .compareTo(fragment.getNamespaceURI());
                         }
                         if (comparison > 0) {
                             ref = node;
@@ -107,25 +138,31 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                         }
                     }
                 }
-                root.insertBefore(root.getOwnerDocument().importNode(fragment, true), ref);
-                write(shared ? projectXml : privateXml, getConfigurationFile(shared, true));
+                root.insertBefore(root.getOwnerDocument()
+                        .importNode(fragment, true), ref);
+                write(shared ? projectXml : privateXml,
+                        getConfigurationFile(shared, true));
                 state.markModified();
             }
         });
     }
 
     @Override
-    public boolean removeConfigurationFragment(String elementName, String namespace, boolean shared) {
+    public boolean removeConfigurationFragment(final String elementName,
+            final String namespace,
+            final boolean shared) {
         return ProjectManager.mutex().writeAccess(() -> {
             FileObject file = this.getConfigurationFile(shared, false);
             if (file != null && file.canWrite()) {
                 try {
                     Document doc = getConfigurationXml(shared);
                     Element root = doc.getDocumentElement();
-                    Element toRemove = XMLUtil.findElement(root, elementName, namespace);
+                    Element toRemove = XMLUtil.findElement(root,
+                            elementName,
+                            namespace);
                     if (toRemove != null) {
                         root.removeChild(toRemove);
-                        // this.backup(shared); // should we backup the configuration?
+                        // this.backup(shared); // should we backup?
                         write(doc, file);
                         return true;
                     }
@@ -138,7 +175,8 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
         });
     }
 
-    private FileObject getConfigurationFile(boolean shared, boolean create) {
+    private FileObject getConfigurationFile(final boolean shared,
+            final boolean create) {
         // non-shared location should be in different directory
         String path = shared ? PROJECT_XML_PATH : PRIVATE_XML_PATH;
         if (create) {
@@ -161,39 +199,51 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
      * @param shared if true, use project.xml, else private.xml
      * @return the data root
      */
-    private Element getConfigurationDataRoot(boolean shared) {
+    private Element getConfigurationDataRoot(final boolean shared) {
         return getConfigurationXml(shared).getDocumentElement();
     }
 
     /**
      * Retrieve project.xml or private.xml, loading from disk as needed.
      * private.xml is created as a skeleton on demand.
+     * 
+     * @param shared true if using shared configuration; false otherwise
+     * @return the XML document
      */
-    private Document getConfigurationXml(boolean shared) {
+    private Document getConfigurationXml(final boolean shared) {
+        if (shared && projectXml != null) {
+            return projectXml;
+        } else if (!shared && privateXml != null) {
+            return privateXml;
+        }
         Document doc = loadXml(shared);
         if (shared) {
-            projectXml = doc != null ? doc : XMLUtil.createDocument("config", NAMESPACE, null, null);
+            projectXml = doc != null ? doc
+                    : XMLUtil.createDocument("config", ROOT_XML_NS, null, null);
         } else {
-            privateXml = doc != null ? doc : XMLUtil.createDocument("config", NAMESPACE, null, null);
+            privateXml = doc != null ? doc
+                    : XMLUtil.createDocument("config", ROOT_XML_NS, null, null);
         }
         return shared ? projectXml : privateXml;
     }
 
-    private Document loadXml(boolean shared) {
+    private Document loadXml(final boolean shared) {
         FileObject xml = getConfigurationFile(shared, false);
         if (xml == null || !xml.isData()) {
             return null;
         }
         try {
-            // validate before returning?
-            return XMLUtil.parse(new InputSource(xml.getInputStream()), false, true, XMLUtil.defaultErrorHandler(), null);
+            // change first boolean to true to validate XML
+            return XMLUtil.parse(new InputSource(xml.getInputStream()),
+                    false, true, XMLUtil.defaultErrorHandler(), null);
         } catch (IOException | SAXException e) {
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, null, e);
+            Logger.getLogger(this.getClass().getName())
+                    .log(Level.INFO, null, e);
         }
         return null;
     }
 
-    private void write(Document document, FileObject file) {
+    private void write(final Document document, final FileObject file) {
         try (OutputStream out = file.getOutputStream()) {
             XMLUtil.write(document, out, StandardCharsets.UTF_8.name());
         } catch (IOException ex) {

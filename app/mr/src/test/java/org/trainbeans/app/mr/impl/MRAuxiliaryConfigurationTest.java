@@ -25,6 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
+import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.trainbeans.app.mr.ModelRailroadProject;
@@ -47,7 +48,17 @@ class MRAuxiliaryConfigurationTest {
         workspace = testDir;
         document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         project = new ModelRailroadProject(FileUtil.toFileObject(testDir), Lookup.EMPTY);
-        config = new MRAuxiliaryConfiguration(project);
+        config = new MRAuxiliaryConfiguration(project, new ProjectState() {
+            @Override
+            public void markModified() {
+                // empty implementation
+            }
+
+            @Override
+            public void notifyDeleted() {
+                // empty implementation
+            }
+        });
     }
 
     @Test
