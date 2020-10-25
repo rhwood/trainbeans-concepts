@@ -16,8 +16,9 @@
 package org.trainbeans.app.mr.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -31,6 +32,7 @@ import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.xml.XMLUtil;
 import org.trainbeans.app.mr.ModelRailroadProject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,7 +53,7 @@ class MRAuxiliaryConfigurationTest {
     private Document document;
     private ModelRailroadProject project;
     private AuxiliaryConfiguration config;
-    private ProjectState state = new ProjectState() {
+    private final ProjectState state = new ProjectState() {
         @Override
         public void markModified() {
             // empty implementation
@@ -65,7 +67,7 @@ class MRAuxiliaryConfigurationTest {
 
     @BeforeEach
     void setUp(@TempDir File testDir) throws ParserConfigurationException {
-        document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        document = XMLUtil.createDocument("config", "http://www.netbeans.org/ns/auxiliary-configuration/1", null, null);
         project = new ModelRailroadProject(FileUtil.toFileObject(testDir), Lookup.EMPTY);
         config = new MRAuxiliaryConfiguration(project, state);
     }
@@ -136,6 +138,43 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testPutConfigurationFragment_ComplexDocument(boolean arg) throws IOException, InterruptedException {
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
+                .isNull();
+        // create a document to read
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
+        e.setAttribute("foo", "bar");
+        Element de = document.getDocumentElement();
+        de.setAttribute("foo", "bar");
+        de.setTextContent("some text");
+        de.appendChild(e);
+        File file = new File(FileUtil.toFile(project.getProjectDirectory()), arg ? PROJECT_XML : PRIVATE_XML);
+        file.getParentFile().mkdirs();
+        XMLUtil.write(document, new FileOutputStream(file), StandardCharsets.UTF_8.name());
+        // read the document into MRAuxiliaryConfiguration
+        config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        // test that put handles everything in document correctly
+        e = document.createElementNS(XML_NS2, ELEMENT_NAME1);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS2, arg);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        e = document.createElementNS(XML_NS2, ELEMENT_NAME1);
+        e.setAttribute("bar", "foo");
+        config.putConfigurationFragment(e, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS2, arg);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("bar")).isEqualTo("foo");
+        assertThat(e.getAttribute("foo")).isEmpty();
+        assertThat(FileUtil.toFileObject(file).asText()).contains("some text");
     }
 
     @ParameterizedTest
