@@ -176,4 +176,29 @@ class MRAuxiliaryConfigurationTest {
         assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg))
                 .doesNotThrowAnyException();
     }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testRemoveConfigurationFragment_Unwritable(boolean arg) throws IOException {
+        // first create a fragment to generate XML to remove fragement from
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
+                .isNull();
+        Element e = document.createElementNS(XML_NS1, ELEMENT_NAME1);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, arg);
+        e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
+        assertThat(e).isNotNull();
+        assertThat(e.getAttribute("foo")).isEqualTo("bar");
+        // make file unwritable
+        File file = FileUtil.toFile(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML));
+        file.setWritable(false);
+        // remove that fragment (and fail)
+        assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg))
+                .doesNotThrowAnyException();
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg)).isNotNull();
+        // remove a different fragment
+        assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
+        assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg))
+                .doesNotThrowAnyException();
+    }
 }
