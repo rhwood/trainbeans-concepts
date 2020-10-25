@@ -200,6 +200,8 @@ class MRAuxiliaryConfigurationTest {
         config = new MRAuxiliaryConfiguration(project, state);
         assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
         assertThat(e).isNotNull();
+        // allow cleanup
+        file.setWritable(true);
     }
 
     @ParameterizedTest
