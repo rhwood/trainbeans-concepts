@@ -237,14 +237,19 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                     false, true, XMLUtil.defaultErrorHandler(), null);
         } catch (IOException | SAXException e) {
             Logger.getLogger(this.getClass().getName())
-                    .log(Level.INFO, null, e);
+                    .log(Level.WARNING, null, e);
         }
         return null;
     }
 
     private void write(final boolean shared) {
-        try (OutputStream out = getConfigurationFile(shared, true)
-                .getOutputStream()) {
+        FileObject file = getConfigurationFile(shared, true);
+        if (file == null) {
+            Logger.getLogger(this.getClass().getName())
+                    .log(Level.WARNING, "Unable to get file to write");
+            return;
+        }
+        try (OutputStream out = file.getOutputStream()) {
             XMLUtil.write(shared ? projectXml : privateXml, out,
                     StandardCharsets.UTF_8.name());
         } catch (IOException ex) {
