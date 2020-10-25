@@ -49,6 +49,7 @@ class MRAuxiliaryConfigurationTest {
     private final String PRIVATE_XML = "trainbeans/private.xml";
     private final String ELEMENT_NAME1 = "element1";
     private final String ELEMENT_NAME2 = "element2";
+    private final String ELEMENT_NAME3 = "element3";
     private final String XML_NS1 = "ns1";
     private final String XML_NS2 = "ns2";
 
@@ -170,6 +171,12 @@ class MRAuxiliaryConfigurationTest {
         config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         // test that put handles everything in document correctly
         e = document.createElementNS(XML_NS2, ELEMENT_NAME1);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, arg);
+        e = document.createElementNS(XML_NS2, ELEMENT_NAME2);
+        e.setAttribute("foo", "bar");
+        config.putConfigurationFragment(e, arg);
+        e = document.createElementNS(XML_NS2, ELEMENT_NAME3);
         e.setAttribute("foo", "bar");
         config.putConfigurationFragment(e, arg);
         e = config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
