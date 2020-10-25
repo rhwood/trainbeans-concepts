@@ -24,6 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileUtil;
@@ -61,118 +63,71 @@ class MRAuxiliaryConfigurationTest {
         });
     }
 
-    @Test
-    void testGetConfigurationFragment_Shared() throws IOException {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testGetConfigurationFragment(boolean arg) throws IOException {
+        String PROJECT_XML = "trainbeans/project.xml";
+        String PRIVATE_XML = "trainbeans/private.xml";
         String id = Long.toString((new Date()).getTime());
         String elementName = "testElement";
         String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName, namespace, true))
+        assertThat(config.getConfigurationFragment(elementName, namespace, arg))
                 .isNull();
         Element e = document.createElementNS(namespace, elementName);
         e.setAttribute("foo", "bar");
-        config.putConfigurationFragment(e, true);
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNotNull();
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/private.xml")).isNull();
-        e = config.getConfigurationFragment(elementName, namespace, true);
+        config.putConfigurationFragment(e, arg);
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
+        e = config.getConfigurationFragment(elementName, namespace, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        config.removeConfigurationFragment(elementName, namespace, true);
-        assertThat(config.getConfigurationFragment(elementName, namespace, true)).isNull();
+        config.removeConfigurationFragment(elementName, namespace, arg);
+        assertThat(config.getConfigurationFragment(elementName, namespace, arg)).isNull();
     }
 
-    @Test
-    void testGetConfigurationFragment_Private() throws IOException {
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testPutConfigurationFragment(boolean arg) throws IOException {
+        String PROJECT_XML = "trainbeans/project.xml";
+        String PRIVATE_XML = "trainbeans/private.xml";
         String id = Long.toString((new Date()).getTime());
         String elementName = "testElement";
         String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName, namespace, false))
+        assertThat(config.getConfigurationFragment(elementName, namespace, arg))
                 .isNull();
         Element e = document.createElementNS(namespace, elementName);
         e.setAttribute("foo", "bar");
-        config.putConfigurationFragment(e, false);
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNull();
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/private.xml")).isNotNull();
-        e = config.getConfigurationFragment(elementName, namespace, false);
+        config.putConfigurationFragment(e, arg);
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
+        e = config.getConfigurationFragment(elementName, namespace, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        config.removeConfigurationFragment(elementName, namespace, false);
-        assertThat(config.getConfigurationFragment(elementName, namespace, false)).isNull();
+        config.removeConfigurationFragment(elementName, namespace, arg);
+        assertThat(config.getConfigurationFragment(elementName, namespace, arg)).isNull();
     }
 
-    @Test
-    void testPutConfigurationFragment_Shared() throws IOException {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testRemoveConfigurationFragment(boolean arg) throws IOException {
+        String PROJECT_XML = "trainbeans/project.xml";
+        String PRIVATE_XML = "trainbeans/private.xml";
         String id = Long.toString((new Date()).getTime());
         String elementName = "testElement";
         String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName, namespace, true))
+        assertThat(config.getConfigurationFragment(elementName, namespace, arg))
                 .isNull();
         Element e = document.createElementNS(namespace, elementName);
         e.setAttribute("foo", "bar");
-        config.putConfigurationFragment(e, true);
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNotNull();
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/private.xml")).isNull();
-        e = config.getConfigurationFragment(elementName, namespace, true);
+        config.putConfigurationFragment(e, arg);
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML)).isNotNull();
+        assertThat(project.getProjectDirectory().getFileObject(arg ? PRIVATE_XML : PROJECT_XML)).isNull();
+        e = config.getConfigurationFragment(elementName, namespace, arg);
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        config.removeConfigurationFragment(elementName, namespace, true);
-        assertThat(config.getConfigurationFragment(elementName, namespace, true)).isNull();
-    }
-
-    @Test
-    void testPutConfigurationFragment_Private() throws IOException {
-        String id = Long.toString((new Date()).getTime());
-        String elementName = "testElement";
-        String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName, namespace, false))
-                .isNull();
-        Element e = document.createElementNS(namespace, elementName);
-        e.setAttribute("foo", "bar");
-        config.putConfigurationFragment(e, false);
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNull();
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/private.xml")).isNotNull();
-        e = config.getConfigurationFragment(elementName, namespace, false);
-        assertThat(e).isNotNull();
-        assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        config.removeConfigurationFragment(elementName, namespace, false);
-        assertThat(config.getConfigurationFragment(elementName, namespace, true)).isNull();
-    }
-
-    @Test
-    void testRemoveConfigurationFragment_Shared() throws IOException {
-        String id = Long.toString((new Date()).getTime());
-        String elementName = "testElement";
-        String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName, namespace, true))
-                .isNull();
-        Element e = document.createElementNS(namespace, elementName);
-        e.setAttribute("foo", "bar");
-        config.putConfigurationFragment(e, true);
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNotNull();
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/private.xml")).isNull();
-        e = config.getConfigurationFragment(elementName, namespace, true);
-        assertThat(e).isNotNull();
-        assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        config.removeConfigurationFragment(elementName, namespace, true);
-        assertThat(config.getConfigurationFragment(elementName, namespace, true)).isNull();
-    }
-
-    @Test
-    void testRemoveConfigurationFragment_Private() throws IOException {
-        String id = Long.toString((new Date()).getTime());
-        String elementName = "testElement";
-        String namespace = "test";
-        assertThat(config.getConfigurationFragment(elementName, namespace, false))
-                .isNull();
-        Element e = document.createElementNS(namespace, elementName);
-        e.setAttribute("foo", "bar");
-        config.putConfigurationFragment(e, false);
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/project.xml")).isNull();
-        assertThat(project.getProjectDirectory().getFileObject("trainbeans/private.xml")).isNotNull();
-        e = config.getConfigurationFragment(elementName, namespace, false);
-        assertThat(e).isNotNull();
-        assertThat(e.getAttribute("foo")).isEqualTo("bar");
-        config.removeConfigurationFragment(elementName, namespace, false);
-        assertThat(config.getConfigurationFragment(elementName, namespace, false)).isNull();
+        config.removeConfigurationFragment(elementName, namespace, arg);
+        assertThat(config.getConfigurationFragment(elementName, namespace, arg)).isNull();
     }
 
 }
