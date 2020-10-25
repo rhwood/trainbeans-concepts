@@ -16,6 +16,7 @@
 package org.trainbeans.app.mr;
 
 import java.io.File;
+import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,11 +39,11 @@ import org.openide.util.lookup.Lookups;
 class ModelRailroadProjectTest {
 
     private ModelRailroadProject project;
-    private File testDir;
+    private File projectDir;
 
     @BeforeEach
-    void setUp(@TempDir File projectDir) {
-        testDir = projectDir;
+    void setUp(@TempDir File testDir) throws IOException {
+        projectDir = testDir.getCanonicalFile();
         project = new ModelRailroadProject(FileUtil.toFileObject(projectDir), Lookup.EMPTY);
         MockLookup.setLookup(Lookups.fixed(project.getLookup()));
         MockLookup.setInstances(new TestUtil.MockProjectManager(),
@@ -52,14 +53,14 @@ class ModelRailroadProjectTest {
     @Test
     void testConstructor() {
         assertThatCode(() -> new ModelRailroadProject(null, Lookup.EMPTY)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatCode(() -> new ModelRailroadProject(FileUtil.toFileObject(testDir), null)).isExactlyInstanceOf(NullPointerException.class);
+        assertThatCode(() -> new ModelRailroadProject(FileUtil.toFileObject(projectDir), null)).isExactlyInstanceOf(NullPointerException.class);
     }
 
     @Test
     void testGetProjectDirectory() {
         assertThat(project.getProjectDirectory())
                 .isNotNull()
-                .isEqualTo(FileUtil.toFileObject(testDir));
+                .isEqualTo(FileUtil.toFileObject(projectDir));
     }
 
     @Test
@@ -74,7 +75,7 @@ class ModelRailroadProjectTest {
     @Test
     void testProjectInformationGetName() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
-        assertThat(pi.getName()).isEqualTo(testDir.getName());
+        assertThat(pi.getName()).isEqualTo(projectDir.getName());
         assertThat(pi.getDisplayName()).isEqualTo(pi.getName());
     }
 
@@ -111,7 +112,7 @@ class ModelRailroadProjectTest {
     @Test
     void testLogicalViewProviderGetDisplayName() {
         Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-        assertThat(node.getDisplayName()).isEqualTo(testDir.getName());
+        assertThat(node.getDisplayName()).isEqualTo(projectDir.getName());
     }
 
     @Test
