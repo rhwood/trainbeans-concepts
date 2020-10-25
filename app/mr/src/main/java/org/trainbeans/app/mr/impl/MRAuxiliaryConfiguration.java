@@ -32,7 +32,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
-import org.openide.util.Mutex;
 import org.openide.xml.XMLUtil;
 import org.trainbeans.app.mr.ModelRailroadProject;
 import org.w3c.dom.DOMException;
@@ -100,7 +99,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                     return XMLUtil.findElement(root, elementName, namespace);
                 } catch (IOException | SAXException | IllegalArgumentException ex) {
                     // log parsing warning
-                    ex.printStackTrace();
+                    Exceptions.printStackTrace(ex);
                 }
             }
             return null;
@@ -122,16 +121,15 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                 NodeList list = root.getChildNodes();
                 for (int i = 0; i < list.getLength(); i++) {
                     Node node = list.item(i);
-                    if (node.getNodeType() != Node.ELEMENT_NODE) {
-                        continue;
-                    }
-                    int comparison = node.getNodeName().compareTo(fragment.getNodeName());
-                    if (comparison == 0) {
-                        comparison = node.getNamespaceURI().compareTo(fragment.getNamespaceURI());
-                    }
-                    if (comparison > 0) {
-                        ref = node;
-                        break;
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        int comparison = node.getNodeName().compareTo(fragment.getNodeName());
+                        if (comparison == 0) {
+                            comparison = node.getNamespaceURI().compareTo(fragment.getNamespaceURI());
+                        }
+                        if (comparison > 0) {
+                            ref = node;
+                            break;
+                        }
                     }
                 }
                 root.insertBefore(root.getOwnerDocument().importNode(fragment, true), ref);
@@ -191,11 +189,11 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     private Document getConfigurationXml(boolean shared) {
         assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
         assert Thread.holdsLock(modifiedMetadataPaths);
-        Document _xml = loadXml(shared);
+        Document doc = loadXml(shared);
         if (shared) {
-            projectXml = _xml != null ? _xml : XMLUtil.createDocument("config", NAMESPACE, null, null);
+            projectXml = doc != null ? doc : XMLUtil.createDocument("config", NAMESPACE, null, null);
         } else {
-            privateXml = _xml != null ? _xml : XMLUtil.createDocument("config", NAMESPACE, null, null);
+            privateXml = doc != null ? doc : XMLUtil.createDocument("config", NAMESPACE, null, null);
         }
         return shared ? projectXml : privateXml;
     }
