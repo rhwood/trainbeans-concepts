@@ -28,6 +28,7 @@ import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
+import org.openide.util.Utilities;
 import org.trainbeans.app.mr.ModelRailroadProject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -81,7 +82,10 @@ class MRAuxiliaryConfigurationTest {
         File file = FileUtil.toFile(project.getProjectDirectory().getFileObject(arg ? PROJECT_XML : PRIVATE_XML));
         file.setReadable(false);
         e = config.getConfigurationFragment(elementName, namespace, arg);
-        assertThat(e).isNull();
+        if (!Utilities.isWindows()) {
+            // unable to make file unreadable by owner in Windows?
+            assertThat(e).isNull();
+        }
         file.setReadable(true);
         e = config.getConfigurationFragment(elementName, namespace, arg);
         assertThat(e).isNotNull();
