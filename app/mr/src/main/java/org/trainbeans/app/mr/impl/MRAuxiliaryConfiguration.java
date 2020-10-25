@@ -15,12 +15,24 @@
  */
 package org.trainbeans.app.mr.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
+import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
+import org.openide.util.Exceptions;
+import org.openide.util.Mutex;
 import org.openide.xml.XMLUtil;
 import org.trainbeans.app.mr.ModelRailroadProject;
 import org.w3c.dom.DOMException;
@@ -39,124 +51,179 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
 
     public static final String NAMESPACE = "http://www.netbeans.org/ns/auxiliary-configuration/1"; // NOI18N
     private final ModelRailroadProject project;
+    private final ProjectState state;
+    private Document projectXml;
+    private Document privateXml;
+    private final Set<String> modifiedMetadataPaths = new HashSet<>();
+    private static final String PROJECT_XML_PATH = "trainbeans/project.xml";
+    private static final String PRIVATE_XML_PATH = "trainbeans/private.xml";
 
     public MRAuxiliaryConfiguration(ModelRailroadProject aProject) {
+        Objects.requireNonNull(aProject, "Cannot get configuration of null project");
         project = aProject;
+        // need real implementation
+        state = new ProjectState() {
+            @Override
+            public void markModified() {
+                /* empty */ }
+
+            @Override
+            public void notifyDeleted() {
+                /* empty */ }
+        };
     }
 
-    private FileObject getConfigurationFile(boolean shared) {
+    private FileObject getConfigurationFile(boolean shared, boolean create) {
         // non-shared location should be in different directory
-        return project.getProjectDirectory().getFileObject(shared
-                ? "trainbeans/project.xml"
-                : "trainbeans/private.xml");
+        String path = shared ? PROJECT_XML_PATH : PRIVATE_XML_PATH;
+        if (create) {
+            try {
+                return FileUtil.createData(project.getProjectDirectory(), path);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
+        } else {
+            return project.getProjectDirectory().getFileObject(path);
+        }
     }
 
     @Override
     public Element getConfigurationFragment(String elementName, String namespace, boolean shared) {
-        // Should use NetBeans Mutex to lock file
-        FileObject file = this.getConfigurationFile(shared);
-        if (file != null && file.canRead()) {
-            try {
+        return ProjectManager.mutex().readAccess(() -> {
+            FileObject file = this.getConfigurationFile(shared, false);
+            if (file != null && file.canRead()) {
                 try (final InputStream is = file.getInputStream()) {
                     InputSource input = new InputSource(is);
                     input.setSystemId(file.toURI().toURL().toString());
                     Element root = XMLUtil.parse(input, false, true, null, null).getDocumentElement();
                     return XMLUtil.findElement(root, elementName, namespace);
+                } catch (IOException | SAXException | IllegalArgumentException ex) {
+                    // log parsing warning
+                    ex.printStackTrace();
                 }
-            } catch (IOException | SAXException | IllegalArgumentException ex) {
-                // log parsing warning
             }
-        }
-        return null;
+            return null;
+        });
     }
 
     @Override
     public void putConfigurationFragment(Element fragment, boolean shared) {
-        // Should use NetBeans Mutex to lock file
-        String elementName = fragment.getLocalName();
-        String namespace = fragment.getNamespaceURI();
-        if (namespace == null) {
-            throw new IllegalArgumentException();
-        }
-        FileObject file = this.getConfigurationFile(shared);
-        Document doc = null;
-        if (file != null && file.canRead()) {
-            try {
-                try (final InputStream is = file.getInputStream()) {
-                    InputSource input = new InputSource(is);
-                    input.setSystemId(file.toURI().toURL().toString());
-                    doc = XMLUtil.parse(input, false, true, null, null);
+        ProjectManager.mutex().writeAccess(() -> {
+            synchronized (modifiedMetadataPaths) {
+                Element root = getConfigurationDataRoot(shared);
+                Element existing = XMLUtil.findElement(root, fragment.getLocalName(), fragment.getNamespaceURI());
+                // XXX first compare to existing and return if the same
+                if (existing != null) {
+                    root.removeChild(existing);
                 }
-            } catch (IOException | SAXException ex) {
-                // log parsing warning
+                // the children are alphabetize: find correct place to insert new node
+                Node ref = null;
+                NodeList list = root.getChildNodes();
+                for (int i = 0; i < list.getLength(); i++) {
+                    Node node = list.item(i);
+                    if (node.getNodeType() != Node.ELEMENT_NODE) {
+                        continue;
+                    }
+                    int comparison = node.getNodeName().compareTo(fragment.getNodeName());
+                    if (comparison == 0) {
+                        comparison = node.getNamespaceURI().compareTo(fragment.getNamespaceURI());
+                    }
+                    if (comparison > 0) {
+                        ref = node;
+                        break;
+                    }
+                }
+                root.insertBefore(root.getOwnerDocument().importNode(fragment, true), ref);
+                write(projectXml, getConfigurationFile(shared, true));
+                state.markModified();
             }
-        }
-        if (doc == null) {
-            doc = XMLUtil.createDocument("auxiliary-configuration", NAMESPACE, null, null); // NOI18N
-        }
-        Element root = doc.getDocumentElement();
-        Element oldFragment = XMLUtil.findElement(root, elementName, namespace);
-        if (oldFragment != null) {
-            root.removeChild(oldFragment);
-        }
-        Node ref = null;
-        NodeList list = root.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++) {
-            Node node = list.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                int comparison = node.getNodeName().compareTo(elementName);
-                if (comparison == 0) {
-                    comparison = node.getNamespaceURI().compareTo(namespace);
-                }
-                if (comparison > 0) {
-                    ref = node;
-                    break;
-                }
-            }
-        }
-        root.insertBefore(root.getOwnerDocument().importNode(fragment, true), ref);
-        if (file != null && file.canWrite()) {
-            try {
-                // this.backup(shared); // should we backup the configuration?
-                try (final OutputStream os = file.getOutputStream()) {
-                    XMLUtil.write(doc, os, StandardCharsets.UTF_8.name());
-                }
-            } catch (IOException ex) {
-                // log write warning
-            }
-        }
+        });
     }
 
     @Override
     public boolean removeConfigurationFragment(String elementName, String namespace, boolean shared) {
-        // Should use NetBeans Mutex to lock file
-        FileObject file = this.getConfigurationFile(shared);
-        if (file.canWrite()) {
-            try {
-                Document doc;
-                try (final InputStream is = file.getInputStream()) {
-                    InputSource input = new InputSource(is);
-                    input.setSystemId(file.toURI().toURL().toString());
-                    doc = XMLUtil.parse(input, false, true, null, null);
-                }
-                Element root = doc.getDocumentElement();
-                Element toRemove = XMLUtil.findElement(root, elementName, namespace);
-                if (toRemove != null) {
-                    root.removeChild(toRemove);
-                    // this.backup(shared); // should we backup the configuration?
-                    if (root.getElementsByTagName("*").getLength() > 0) {
-                        // NOI18N
-                        try (final OutputStream os = file.getOutputStream()) {
-                            XMLUtil.write(doc, os, StandardCharsets.UTF_8.name());
-                        }
+        return ProjectManager.mutex().writeAccess(() -> {
+            FileObject file = this.getConfigurationFile(shared, false);
+            if (file != null && file.canWrite()) {
+                try {
+                    Document doc;
+                    try (final InputStream is = file.getInputStream()) {
+                        InputSource input = new InputSource(is);
+                        input.setSystemId(file.toURI().toURL().toString());
+                        doc = XMLUtil.parse(input, false, true, null, null);
                     }
-                    return true;
+                    Element root = doc.getDocumentElement();
+                    Element toRemove = XMLUtil.findElement(root, elementName, namespace);
+                    if (toRemove != null) {
+                        root.removeChild(toRemove);
+                        // this.backup(shared); // should we backup the configuration?
+                        write(doc, file);
+                        return true;
+                    }
+                } catch (IOException | SAXException | DOMException ex) {
+                    // log removal error
+                    Exceptions.printStackTrace(ex);
                 }
-            } catch (IOException | SAXException | DOMException ex) {
-                // log removal error
             }
+            return false;
+        });
+    }
+
+    /**
+     * Get the <code>&lt;configuration&gt;</code> element of project.xml or the
+     * document element of private.xml. Beneath this point you can load and
+     * store configuration fragments.
+     *
+     * @param shared if true, use project.xml, else private.xml
+     * @return the data root
+     */
+    private Element getConfigurationDataRoot(boolean shared) {
+        assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
+        assert Thread.holdsLock(modifiedMetadataPaths);
+        return getConfigurationXml(shared).getDocumentElement();
+    }
+
+    /**
+     * Retrieve project.xml or private.xml, loading from disk as needed.
+     * private.xml is created as a skeleton on demand.
+     */
+    private Document getConfigurationXml(boolean shared) {
+        assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
+        assert Thread.holdsLock(modifiedMetadataPaths);
+        Document _xml = loadXml(shared);
+        if (shared) {
+            projectXml = _xml != null ? _xml : XMLUtil.createDocument("config", NAMESPACE, null, null);
+        } else {
+            privateXml = _xml != null ? _xml : XMLUtil.createDocument("config", NAMESPACE, null, null);
         }
-        return false;
+        return shared ? projectXml : privateXml;
+    }
+
+    private Document loadXml(boolean shared) {
+        assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
+        assert Thread.holdsLock(modifiedMetadataPaths);
+        FileObject xml = getConfigurationFile(shared, false);
+        if (xml == null || !xml.isData()) {
+            return null;
+        }
+        File f = FileUtil.toFile(xml);
+        assert f != null;
+        try {
+            // validate before returning?
+            return XMLUtil.parse(new InputSource(BaseUtilities.toURI(f).toString()), false, true, XMLUtil.defaultErrorHandler(), null);
+        } catch (IOException | SAXException e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.INFO, null, e);
+        }
+        return null;
+    }
+
+    private void write(Document document, FileObject file) {
+        try (OutputStream out = file.getOutputStream()) {
+            XMLUtil.write(document, out, StandardCharsets.UTF_8.name());
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
 }
