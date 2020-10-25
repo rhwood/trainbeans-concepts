@@ -19,10 +19,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -70,6 +72,13 @@ class MRAuxiliaryConfigurationTest {
         document = XMLUtil.createDocument("config", "http://www.netbeans.org/ns/auxiliary-configuration/1", null, null);
         project = new ModelRailroadProject(FileUtil.toFileObject(testDir.getCanonicalFile()), Lookup.EMPTY);
         config = new MRAuxiliaryConfiguration(project, state);
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        File projectDir = FileUtil.toFile(project.getProjectDirectory());
+        projectDir.setWritable(true);
+        Files.walk(projectDir.toPath()).forEach(path -> path.toFile().setWritable(true));
     }
 
     @ParameterizedTest
