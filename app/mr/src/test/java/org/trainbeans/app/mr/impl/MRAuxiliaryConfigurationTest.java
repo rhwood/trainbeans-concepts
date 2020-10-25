@@ -183,7 +183,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
-        assertThat(FileUtil.toFileObject(file.getCanonicalFile()).asText()).contains("some text");
+        assertThat(Files.readString(file.toPath())).contains("some text");
     }
 
     @ParameterizedTest
