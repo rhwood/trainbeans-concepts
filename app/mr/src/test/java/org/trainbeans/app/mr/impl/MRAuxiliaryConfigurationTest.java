@@ -66,9 +66,9 @@ class MRAuxiliaryConfigurationTest {
     };
 
     @BeforeEach
-    void setUp(@TempDir File testDir) throws ParserConfigurationException {
+    void setUp(@TempDir File testDir) throws ParserConfigurationException, IOException {
         document = XMLUtil.createDocument("config", "http://www.netbeans.org/ns/auxiliary-configuration/1", null, null);
-        project = new ModelRailroadProject(FileUtil.toFileObject(testDir), Lookup.EMPTY);
+        project = new ModelRailroadProject(FileUtil.toFileObject(testDir.getCanonicalFile()), Lookup.EMPTY);
         config = new MRAuxiliaryConfiguration(project, state);
     }
 
