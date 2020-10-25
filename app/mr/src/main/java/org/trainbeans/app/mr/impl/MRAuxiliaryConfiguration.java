@@ -177,8 +177,6 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
      * @return the data root
      */
     private Element getConfigurationDataRoot(boolean shared) {
-        assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
-        assert Thread.holdsLock(modifiedMetadataPaths);
         return getConfigurationXml(shared).getDocumentElement();
     }
 
@@ -187,8 +185,6 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
      * private.xml is created as a skeleton on demand.
      */
     private Document getConfigurationXml(boolean shared) {
-        assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
-        assert Thread.holdsLock(modifiedMetadataPaths);
         Document doc = loadXml(shared);
         if (shared) {
             projectXml = doc != null ? doc : XMLUtil.createDocument("config", NAMESPACE, null, null);
@@ -199,14 +195,11 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     }
 
     private Document loadXml(boolean shared) {
-        assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
-        assert Thread.holdsLock(modifiedMetadataPaths);
         FileObject xml = getConfigurationFile(shared, false);
         if (xml == null || !xml.isData()) {
             return null;
         }
         File f = FileUtil.toFile(xml);
-        assert f != null;
         try {
             // validate before returning?
             return XMLUtil.parse(new InputSource(BaseUtilities.toURI(f).toString()), false, true, XMLUtil.defaultErrorHandler(), null);
