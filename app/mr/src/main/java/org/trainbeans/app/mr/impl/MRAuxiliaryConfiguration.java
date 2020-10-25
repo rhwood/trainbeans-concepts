@@ -31,6 +31,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.xml.XMLUtil;
 import org.trainbeans.app.mr.ModelRailroadProject;
+import static org.trainbeans.app.mr.impl.MRConstants.PROJECT_XML_PATH;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -73,10 +74,6 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
      * Write locks for XML documents.
      */
     private final Set<String> modifiedMetadataPaths = new HashSet<>();
-    /**
-     * Shared XML path relative to project root.
-     */
-    private static final String PROJECT_XML_PATH = "trainbeans/project.xml";
     /**
      * Not shared XML path relative to project root.
      */

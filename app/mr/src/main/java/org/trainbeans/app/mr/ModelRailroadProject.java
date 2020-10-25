@@ -31,12 +31,8 @@ import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -85,6 +81,19 @@ public class ModelRailroadProject implements Project {
                     additionalLookup);
         }
         return projectLookup;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof ModelRailroadProject) {
+            return ((Project) object).getProjectDirectory().equals(this.getProjectDirectory());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getProjectDirectory().hashCode();
     }
 
     public interface NeedsProject {
@@ -144,16 +153,10 @@ public class ModelRailroadProject implements Project {
 
         @Override
         public Node createLogicalView() {
-            try {
-                FileObject projectDirectory = project.getProjectDirectory();
-                DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
-                Node projectFolderNode = projectFolder.getNodeDelegate();
-                return new ProjectNode(projectFolderNode, project);
-            } catch (DataObjectNotFoundException ex) {
-                // the directory could not be created; likely read-only filesystem
-                Exceptions.printStackTrace(ex);
-                return new AbstractNode(Children.LEAF);
-            }
+            FileObject projectDirectory = project.getProjectDirectory();
+            DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
+            Node projectFolderNode = projectFolder.getNodeDelegate();
+            return new ProjectNode(projectFolderNode, project);
         }
 
         @Override
@@ -166,8 +169,7 @@ public class ModelRailroadProject implements Project {
 
             final ModelRailroadProject project;
 
-            public ProjectNode(Node node, ModelRailroadProject aProject)
-                    throws DataObjectNotFoundException {
+            public ProjectNode(Node node, ModelRailroadProject aProject) {
                 super(node,
                         NodeFactorySupport.createCompositeChildren(aProject,
                                 "Projects/org-trainbeans-app-mr/Nodes"),

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.app.mr;
+package org.trainbeans.app.mr.impl;
 
 import java.io.IOException;
 import org.netbeans.api.project.Project;
@@ -22,6 +22,7 @@ import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
+import org.trainbeans.app.mr.ModelRailroadProject;
 
 /**
  *
@@ -32,7 +33,7 @@ public class ModelRailroadProjectFactory implements ProjectFactory {
 
     @Override
     public boolean isProject(FileObject fo) {
-        return fo.getFileObject("config/project.xml") != null;
+        return fo.getFileObject(MRConstants.PROJECT_XML_PATH) != null;
     }
 
     @Override
