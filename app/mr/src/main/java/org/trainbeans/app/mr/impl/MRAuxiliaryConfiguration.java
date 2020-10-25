@@ -15,9 +15,7 @@
  */
 package org.trainbeans.app.mr.impl;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
@@ -30,7 +28,6 @@ import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.xml.XMLUtil;
 import org.trainbeans.app.mr.ModelRailroadProject;
@@ -72,35 +69,13 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
         };
     }
 
-    private FileObject getConfigurationFile(boolean shared, boolean create) {
-        // non-shared location should be in different directory
-        String path = shared ? PROJECT_XML_PATH : PRIVATE_XML_PATH;
-        if (create) {
-            try {
-                return FileUtil.createData(project.getProjectDirectory(), path);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                return null;
-            }
-        } else {
-            return project.getProjectDirectory().getFileObject(path);
-        }
-    }
-
     @Override
     public Element getConfigurationFragment(String elementName, String namespace, boolean shared) {
         return ProjectManager.mutex().readAccess(() -> {
             FileObject file = this.getConfigurationFile(shared, false);
             if (file != null && file.canRead()) {
-                try (final InputStream is = file.getInputStream()) {
-                    InputSource input = new InputSource(is);
-                    input.setSystemId(file.toURI().toURL().toString());
-                    Element root = XMLUtil.parse(input, false, true, null, null).getDocumentElement();
-                    return XMLUtil.findElement(root, elementName, namespace);
-                } catch (IOException | SAXException | IllegalArgumentException ex) {
-                    // log parsing warning
-                    Exceptions.printStackTrace(ex);
-                }
+                Element root = getConfigurationDataRoot(shared);
+                return XMLUtil.findElement(root, elementName, namespace);
             }
             return null;
         });
@@ -145,12 +120,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
             FileObject file = this.getConfigurationFile(shared, false);
             if (file != null && file.canWrite()) {
                 try {
-                    Document doc;
-                    try (final InputStream is = file.getInputStream()) {
-                        InputSource input = new InputSource(is);
-                        input.setSystemId(file.toURI().toURL().toString());
-                        doc = XMLUtil.parse(input, false, true, null, null);
-                    }
+                    Document doc = getConfigurationXml(shared);
                     Element root = doc.getDocumentElement();
                     Element toRemove = XMLUtil.findElement(root, elementName, namespace);
                     if (toRemove != null) {
@@ -159,13 +129,28 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                         write(doc, file);
                         return true;
                     }
-                } catch (IOException | SAXException | DOMException ex) {
+                } catch (DOMException ex) {
                     // log removal error
                     Exceptions.printStackTrace(ex);
                 }
             }
             return false;
         });
+    }
+
+    private FileObject getConfigurationFile(boolean shared, boolean create) {
+        // non-shared location should be in different directory
+        String path = shared ? PROJECT_XML_PATH : PRIVATE_XML_PATH;
+        if (create) {
+            try {
+                return FileUtil.createData(project.getProjectDirectory(), path);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
+        } else {
+            return project.getProjectDirectory().getFileObject(path);
+        }
     }
 
     /**
@@ -199,10 +184,9 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
         if (xml == null || !xml.isData()) {
             return null;
         }
-        File f = FileUtil.toFile(xml);
         try {
             // validate before returning?
-            return XMLUtil.parse(new InputSource(BaseUtilities.toURI(f).toString()), false, true, XMLUtil.defaultErrorHandler(), null);
+            return XMLUtil.parse(new InputSource(xml.getInputStream()), false, true, XMLUtil.defaultErrorHandler(), null);
         } catch (IOException | SAXException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, null, e);
         }
