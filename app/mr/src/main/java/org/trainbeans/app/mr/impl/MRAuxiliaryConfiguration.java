@@ -249,6 +249,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
         try (OutputStream out = file.getOutputStream()) {
             XMLUtil.write(shared ? projectXml : privateXml, out,
                     StandardCharsets.UTF_8.name());
+            state.markModified();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
