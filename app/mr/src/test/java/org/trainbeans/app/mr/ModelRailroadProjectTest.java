@@ -99,6 +99,20 @@ class ModelRailroadProjectTest {
     }
 
     @Test
+    void testProjectInformationAddPropertyChangeListener() {
+        ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
+        assertThatCode(() -> pi.addPropertyChangeListener(event -> {
+        })).doesNotThrowAnyException();
+    }
+
+    @Test
+    void testProjectInformationRemovePropertyChangeListener() {
+        ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
+        assertThatCode(() -> pi.removePropertyChangeListener(event -> {
+        })).doesNotThrowAnyException();
+    }
+
+    @Test
     void testLogicalViewProviderFindPath() {
         assertThat(project.getLookup().lookup(LogicalViewProvider.class).findPath(Node.EMPTY, this)).isNull();
     }
@@ -140,10 +154,12 @@ class ModelRailroadProjectTest {
         assertThat(project).isNotEqualTo(new Object());
     }
 
-//    @Test
-//    void testHashCode() {
-//        assertThat(project.hashCode()).isEqualTo(projectDir.hashCode());
-//    }
+    @Test
+    void testHashCode() {
+        int projHC = project.hashCode();
+        int dirHC = projectDir.hashCode();
+        assertThat(projHC).isEqualTo(dirHC);
+    }
 
     private static class ProjectInformationProviderImpl implements ProjectInformationProvider {
 
