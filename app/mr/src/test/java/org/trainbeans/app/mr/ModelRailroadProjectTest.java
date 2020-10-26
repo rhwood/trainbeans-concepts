@@ -17,10 +17,8 @@ package org.trainbeans.app.mr;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -28,6 +26,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ProjectInformationProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
@@ -41,34 +40,28 @@ import org.openide.util.lookup.Lookups;
 class ModelRailroadProjectTest {
 
     private ModelRailroadProject project;
-    private File projectDir;
+    private FileObject projectDir;
 
     @BeforeEach
     void setUp(@TempDir File testDir) throws IOException {
-        projectDir = testDir.getCanonicalFile();
-        project = new ModelRailroadProject(FileUtil.toFileObject(projectDir), Lookup.EMPTY);
+        projectDir = FileUtil.toFileObject(testDir.getCanonicalFile());
+        project = new ModelRailroadProject(projectDir, Lookup.EMPTY);
         MockLookup.setLookup(Lookups.fixed(project.getLookup()));
         MockLookup.setInstances(new TestUtil.MockProjectManager(),
                 new ProjectInformationProviderImpl());
     }
 
-    @AfterEach
-    void tearDown() throws IOException {
-        projectDir.setWritable(true);
-        Files.walk(projectDir.toPath()).forEach(path -> path.toFile().setWritable(true));
-    }
-
     @Test
     void testConstructor() {
         assertThatCode(() -> new ModelRailroadProject(null, Lookup.EMPTY)).isExactlyInstanceOf(NullPointerException.class);
-        assertThatCode(() -> new ModelRailroadProject(FileUtil.toFileObject(projectDir), null)).isExactlyInstanceOf(NullPointerException.class);
+        assertThatCode(() -> new ModelRailroadProject(projectDir, null)).isExactlyInstanceOf(NullPointerException.class);
     }
 
     @Test
     void testGetProjectDirectory() {
         assertThat(project.getProjectDirectory())
                 .isNotNull()
-                .isEqualTo(FileUtil.toFileObject(projectDir));
+                .isEqualTo(projectDir);
     }
 
     @Test
@@ -137,6 +130,19 @@ class ModelRailroadProjectTest {
         for (int i = 0; i < 10; i++) {
             assertThat(node.getOpenedIcon(i)).isEqualTo(node.getIcon(i));
         }
+    }
+
+    @Test
+    void testEquals() {
+        assertThat(project.equals(project)).isTrue();
+        assertThat(project.equals(new ModelRailroadProject(projectDir, Lookup.EMPTY))).isTrue();
+        assertThat(project.equals(projectDir)).isFalse();
+        assertThat(project.equals(new Object())).isFalse();
+    }
+
+    @Test
+    void testHashCode() {
+        assertThat(project.hashCode()).isEqualTo(projectDir.hashCode());
     }
 
     private static class ProjectInformationProviderImpl implements ProjectInformationProvider {
