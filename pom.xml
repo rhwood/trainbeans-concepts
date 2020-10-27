@@ -30,6 +30,7 @@
         <module>beans</module>
         <module>connection-api</module>
         <module>opt/jmri-json-client</module>
+        <module>app/mr</module>
     </modules>
 
     <build>
