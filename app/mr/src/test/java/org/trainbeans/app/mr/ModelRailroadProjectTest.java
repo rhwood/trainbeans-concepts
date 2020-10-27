@@ -148,10 +148,11 @@ class ModelRailroadProjectTest {
 
     @Test
     void testEquals() {
-        assertThat(project).isEqualTo(project);
-        assertThat(project).isEqualTo(new ModelRailroadProject(projectDir, Lookup.EMPTY));
-        assertThat(project).isNotEqualTo(projectDir);
-        assertThat(project).isNotEqualTo(new Object());
+        assertThat(project)
+                .isEqualTo(project)
+                .isEqualTo(new ModelRailroadProject(projectDir, Lookup.EMPTY))
+                .isNotEqualTo(projectDir)
+                .isNotEqualTo(new Object());
     }
 
     @Test

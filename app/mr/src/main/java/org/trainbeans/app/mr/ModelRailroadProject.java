@@ -156,7 +156,7 @@ public class ModelRailroadProject implements Project {
             FileObject projectDirectory = project.getProjectDirectory();
             DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
             Node projectFolderNode = projectFolder.getNodeDelegate();
-            return new ProjectNode(projectFolderNode, project);
+            return new ProjectNode(projectFolderNode);
         }
 
         @Override
@@ -167,15 +167,12 @@ public class ModelRailroadProject implements Project {
 
         private final class ProjectNode extends FilterNode {
 
-            final ModelRailroadProject project;
-
-            public ProjectNode(Node node, ModelRailroadProject aProject) {
+            public ProjectNode(Node node) {
                 super(node,
-                        NodeFactorySupport.createCompositeChildren(aProject,
+                        NodeFactorySupport.createCompositeChildren(project,
                                 "Projects/org-trainbeans-app-mr/Nodes"),
-                        new ProxyLookup(Lookups.singleton(aProject),
+                        new ProxyLookup(Lookups.singleton(project),
                                 node.getLookup()));
-                project = aProject;
             }
 
             @Override
