@@ -16,6 +16,7 @@
 package org.trainbeans.connection.api;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import org.trainbeans.beans.Bean;
 
@@ -47,6 +48,7 @@ public abstract class AbstractConnection extends Bean implements Connection {
     // because this is protected, and not public, is not fluent
     // if changing to public, make fluent
     protected void setState(final State newState, final Throwable cause) {
+        Objects.requireNonNull(newState);
         State oldState = state;
         state = newState;
         Set<Listener> toNotify = new HashSet<>(listeners);

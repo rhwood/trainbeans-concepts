@@ -120,7 +120,7 @@ public final class JmriJsonSocket {
                 String name = node.path("data").path("name").asText();
                 turnouts.getOrDefault(name,
                         new JmriJsonTurnout(name, session, mapper)
-                                // trigger updated from JMRI for new turnouts
+                                // trigger updates from JMRI for new turnouts
                                 .setState(Turnout.State.UNKNOWN))
                         // set the turnout to the reported state
                         .setState(node.path("data").path("state").asInt(0));

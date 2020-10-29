@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -154,6 +155,14 @@ class AbstractConnectionTest extends AbstractConnectionTestBase<AbstractConnecti
         assertThat(connection.isStopped()).isFalse();
         assertThat(connection.isStopping()).isFalse();
     }
+
+    /* How do I mock a non-existant state?
+    @Test
+    void testSetInvalidState() {
+        Connection.State mock = mock(Connection.State.class);
+        assertThatCode(() -> connection.setState(mock, null)).isExactlyInstanceOf(IllegalArgumentException.class);
+    }
+    */
 
     @Test
     void testSetStateToNull() {
