@@ -33,12 +33,12 @@ public class ModelRailroadProjectFactory implements ProjectFactory {
 
     @Override
     public boolean isProject(FileObject fo) {
-        return fo.getFileObject(MRConstants.PROJECT_XML_PATH) != null;
+        return fo.getFileObject(MRConstants.PROJECT_PROPERTIES) != null;
     }
 
     @Override
     public Project loadProject(FileObject fo, ProjectState ps) throws IOException {
-        return isProject(fo) ? new ModelRailroadProject(fo, Lookup.EMPTY) : null;
+        return isProject(fo) ? new ModelRailroadProject(fo, Lookup.getDefault()) : null;
     }
 
     @Override

@@ -23,9 +23,17 @@ package org.trainbeans.app.mr.impl;
 final class MRConstants {
 
     /**
+     * Folder in a project that contains configuration.
+     */
+    static final String PROJECT_CONFIG_DIR = "trainbeans";
+    /**
      * Shared XML path relative to project root.
      */
-    static final String PROJECT_XML_PATH = "trainbeans/project.xml";
+    static final String PROJECT_XML_PATH = PROJECT_CONFIG_DIR + "/project.xml";
+    /**
+     * Shared properties file in project.
+     */
+    static final String PROJECT_PROPERTIES = PROJECT_CONFIG_DIR + "/project.properties";
 
     private MRConstants() {
         // prevent instantiation
