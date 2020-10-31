@@ -43,10 +43,19 @@ import org.trainbeans.app.mr.customizer.ModelRailroadCustomizerProvider;
  *
  * @author rhwood
  */
-public class ModelRailroadProject implements Project {
+public final class ModelRailroadProject implements Project {
 
+    /**
+     * The project directory.
+     */
     private final FileObject projectDir;
+    /**
+     * The lookup for the project; generated as needed and cached here.
+     */
     private Lookup projectLookup;
+    /**
+     * Lookup items passed in during construction.
+     */
     private final Lookup additionalLookup;
 
     /**
@@ -56,7 +65,7 @@ public class ModelRailroadProject implements Project {
      * @param lookup a lookup containing additional items to add to the
      * project's lookup; use {@link Lookup#EMPTY} if not passing anything
      */
-    public ModelRailroadProject(FileObject fo, Lookup lookup) {
+    public ModelRailroadProject(final FileObject fo, final Lookup lookup) {
         Objects.requireNonNull(fo, "Project directory must exist");
         Objects.requireNonNull(lookup, "Project must have a lookup");
         projectDir = fo;
@@ -73,7 +82,7 @@ public class ModelRailroadProject implements Project {
         if (projectLookup == null) {
             additionalLookup.lookupAll(NeedsProject.class)
                     .forEach(i -> i.setProject(this));
-            projectLookup = new ProxyLookup(Lookups.fixed( // add Project features/requirements here
+            projectLookup = new ProxyLookup(Lookups.fixed(
                     this,
                     new Info(),
                     new ModelRailroadProjectLogicalView(this),
@@ -83,28 +92,57 @@ public class ModelRailroadProject implements Project {
         return projectLookup;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return true if the projects are in the same directory; false otherwise
+     */
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof ModelRailroadProject) {
-            return ((Project) object).getProjectDirectory().equals(this.getProjectDirectory());
+            return ((Project) object).getProjectDirectory()
+                    .equals(this.getProjectDirectory());
         }
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return the hashCode of the project directory
+     */
     @Override
     public int hashCode() {
         return getProjectDirectory().hashCode();
     }
 
+    /**
+     * Interface for services that need to be included in the Lookup for a
+     * ModelRailroadProject. Implementing classes need to have a usable default
+     * constructor and be listed in the results of
+     * {@link Lookup#lookup(java.lang.Class)} for this interface in the Lookup
+     * returned by {@link Lookup#getDefault()}.
+     */
     public interface NeedsProject {
 
-        public void setProject(ModelRailroadProject project);
+        /**
+         * Set the project.
+         *
+         * @param project the project
+         */
+        void setProject(ModelRailroadProject project);
     }
 
     private final class Info implements ProjectInformation {
 
+        /**
+         * The path for the icon resource.
+         */
         @StaticResource()
         public static final String MR_ICON = "org/trainbeans/app/mr/icon.png";
+        /**
+         * Property change support.
+         */
         private final PropertyChangeSupport propertyChangeSupport
                 = new PropertyChangeSupport(this);
 
@@ -130,24 +168,41 @@ public class ModelRailroadProject implements Project {
         }
 
         @Override
-        public void addPropertyChangeListener(PropertyChangeListener pl) {
+        public void addPropertyChangeListener(final PropertyChangeListener pl) {
             propertyChangeSupport.addPropertyChangeListener(pl);
         }
 
         @Override
-        public void removePropertyChangeListener(PropertyChangeListener pl) {
+        public void removePropertyChangeListener(
+                final PropertyChangeListener pl) {
             propertyChangeSupport.removePropertyChangeListener(pl);
         }
 
     }
 
-    public class ModelRailroadProjectLogicalView implements LogicalViewProvider {
+    /**
+     * The logical view for a ModelRailroadProject.
+     */
+    public final class ModelRailroadProjectLogicalView
+            implements LogicalViewProvider {
 
+        /**
+         * The path for the icon resource.
+         */
         @StaticResource()
         public static final String MR_ICON = "org/trainbeans/app/mr/icon.png";
+        /**
+         * The project this is the logical view of.
+         */
         private final ModelRailroadProject project;
 
-        public ModelRailroadProjectLogicalView(ModelRailroadProject aProject) {
+        /**
+         * Create a logical view.
+         *
+         * @param aProject the project for this view
+         */
+        public ModelRailroadProjectLogicalView(
+                final ModelRailroadProject aProject) {
             project = aProject;
         }
 
@@ -160,14 +215,14 @@ public class ModelRailroadProject implements Project {
         }
 
         @Override
-        public Node findPath(Node root, Object target) {
+        public Node findPath(final Node root, final Object target) {
             // not implemented for now
             return null;
         }
 
         private final class ProjectNode extends FilterNode {
 
-            public ProjectNode(Node node) {
+            ProjectNode(final Node node) {
                 super(node,
                         NodeFactorySupport.createCompositeChildren(project,
                                 "Projects/org-trainbeans-app-mr/Nodes"),
@@ -176,7 +231,7 @@ public class ModelRailroadProject implements Project {
             }
 
             @Override
-            public Action[] getActions(boolean arg0) {
+            public Action[] getActions(final boolean arg0) {
                 return new Action[]{
                     CommonProjectActions.newFileAction(),
                     CommonProjectActions.copyProjectAction(),
@@ -187,12 +242,12 @@ public class ModelRailroadProject implements Project {
             }
 
             @Override
-            public Image getIcon(int type) {
+            public Image getIcon(final int type) {
                 return ImageUtilities.loadImage(MR_ICON);
             }
 
             @Override
-            public Image getOpenedIcon(int type) {
+            public Image getOpenedIcon(final int type) {
                 return getIcon(type);
             }
 
