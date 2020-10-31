@@ -28,22 +28,34 @@ import org.trainbeans.app.mr.ModelRailroadProject;
  *
  * @author rhwood
  */
-@ServiceProvider(service=ProjectFactory.class)
+@ServiceProvider(service = ProjectFactory.class)
 public class ModelRailroadProjectFactory implements ProjectFactory {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean isProject(FileObject fo) {
+    public boolean isProject(final FileObject fo) {
         return fo.getFileObject(MRConstants.PROJECT_PROPERTIES) != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Project loadProject(FileObject fo, ProjectState ps) throws IOException {
-        return isProject(fo) ? new ModelRailroadProject(fo, Lookup.getDefault()) : null;
+    public Project loadProject(final FileObject fo, final ProjectState ps)
+            throws IOException {
+        return isProject(fo)
+                ? new ModelRailroadProject(fo, Lookup.getDefault())
+                : null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void saveProject(Project prjct) throws IOException {
+    public void saveProject(final Project prjct) throws IOException {
         // nothing to do
     }
-    
+
 }
