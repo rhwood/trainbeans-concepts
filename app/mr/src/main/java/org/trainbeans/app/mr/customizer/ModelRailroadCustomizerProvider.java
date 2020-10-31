@@ -31,15 +31,33 @@ import org.trainbeans.app.mr.ModelRailroadProject;
  */
 public class ModelRailroadCustomizerProvider implements CustomizerProvider {
 
+    /**
+     * The logical path for this customizer in the NetBeans path structure.
+     */
     public static final String CUSTOMIZER_FOLDER_PATH
             = "Projects/org-trainbeans-app-mr/Customizer";
+    /**
+     * The project this customizer is for.
+     */
     private final ModelRailroadProject project;
+    /**
+     * The dialog containing the customizer.
+     */
     private Dialog dialog;
 
-    public ModelRailroadCustomizerProvider(ModelRailroadProject aProject) {
+    /**
+     * Create a customizer provider.
+     *
+     * @param aProject the customizable project
+     */
+    public ModelRailroadCustomizerProvider(
+            final ModelRailroadProject aProject) {
         project = aProject;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void showCustomizer() {
         dialog = ProjectCustomizer.createCustomizerDialog(
@@ -59,6 +77,12 @@ public class ModelRailroadCustomizerProvider implements CustomizerProvider {
         dialog.setVisible(true);
     }
 
+    /**
+     * Get the dialog.
+     *
+     * @return the last dialog shown or null if {@link #showCustomizer()} has
+     * not been called
+     */
     // package protected for testing
     Dialog getDialog() {
         return dialog;
@@ -67,7 +91,7 @@ public class ModelRailroadCustomizerProvider implements CustomizerProvider {
     private class OKOptionListener implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(final ActionEvent e) {
             StatusDisplayer.getDefault().setStatusText("OK button clicked for "
                     + project.getProjectDirectory().getName() + " customizer!");
             // release dialog for eventual garbage collection

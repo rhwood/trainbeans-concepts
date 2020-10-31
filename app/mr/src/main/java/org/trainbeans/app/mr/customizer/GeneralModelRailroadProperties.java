@@ -29,25 +29,37 @@ import org.openide.util.NbBundle;
 public final class GeneralModelRailroadProperties
         implements ProjectCustomizer.CompositeCategoryProvider {
 
+    /**
+     * The keyword for grouping these properties in the customizer.
+     */
     private static final String GENERAL = "General";
+    /**
+     * The position of the properties in the customizer menu.
+     */
+    private static final int POSITION = 10;
 
+    /**
+     * Create the properties.
+     *
+     * @return a new instance of this class
+     */
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
-            projectType = "org-trainbeans-app-mr", position = 10)
+            projectType = "org-trainbeans-app-mr", position = POSITION)
     public static GeneralModelRailroadProperties createGeneral() {
         return new GeneralModelRailroadProperties();
     }
 
     @NbBundle.Messages("LBL_Config_General=General")
     @Override
-    public ProjectCustomizer.Category createCategory(Lookup context) {
+    public ProjectCustomizer.Category createCategory(final Lookup context) {
         return ProjectCustomizer.Category.create(GENERAL,
                 Bundle.LBL_Config_General(),
                 null);
     }
 
     @Override
-    public JComponent createComponent(ProjectCustomizer.Category category,
-            Lookup context) {
+    public JComponent createComponent(final ProjectCustomizer.Category category,
+            final Lookup context) {
         return new JPanel();
     }
 
