@@ -56,15 +56,17 @@ class MRAuxiliaryConfigurationTest {
     private Document document;
     private ModelRailroadProject project;
     private AuxiliaryConfiguration config;
+    private int modified;
+    private int deleted;
     private final ProjectState state = new ProjectState() {
         @Override
         public void markModified() {
-            // empty implementation
+            modified++;
         }
 
         @Override
         public void notifyDeleted() {
-            // empty implementation
+            deleted++;
         }
     };
 
@@ -73,6 +75,8 @@ class MRAuxiliaryConfigurationTest {
         document = XMLUtil.createDocument("config", "http://www.netbeans.org/ns/auxiliary-configuration/1", null, null);
         project = new ModelRailroadProject(FileUtil.toFileObject(testDir.getCanonicalFile()), Lookup.EMPTY);
         config = new MRAuxiliaryConfiguration(project, state);
+        modified = 0;
+        deleted = 0;
     }
 
     @AfterEach
@@ -148,6 +152,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
+        assertThat(modified).isEqualTo(6);
     }
 
     @ParameterizedTest
@@ -193,6 +198,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
         assertThat(new String(Files.readAllBytes(file.toPath()))).contains("some text");
+        assertThat(modified).isEqualTo(8);
     }
 
     @ParameterizedTest
@@ -222,6 +228,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e).isNotNull();
         // allow cleanup
         file.setWritable(true);
+        assertThat(modified).isEqualTo(3);
     }
 
     @ParameterizedTest
@@ -239,6 +246,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
         config.removeConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg)).isNull();
+        assertThat(modified).isEqualTo(3);
     }
 
     @ParameterizedTest
@@ -262,6 +270,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
         assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg))
                 .doesNotThrowAnyException();
+        assertThat(modified).isEqualTo(3);
     }
 
     @ParameterizedTest
@@ -287,5 +296,6 @@ class MRAuxiliaryConfigurationTest {
         assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
         assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg))
                 .doesNotThrowAnyException();
+        assertThat(modified).isEqualTo(2);
     }
 }
