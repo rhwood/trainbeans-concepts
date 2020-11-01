@@ -18,8 +18,10 @@ package org.trainbeans.model.ui.explorer;
 import java.beans.IntrospectionException;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
+import org.openide.util.Lookup;
 import org.trainbeans.model.api.Element;
 import org.trainbeans.model.api.Model;
+import org.trainbeans.model.ui.ClassDescriptor;
 
 /**
  *
@@ -33,8 +35,12 @@ public class ElementClassNode extends BeanNode<Class<? extends Element>> {
         super(elementClass,
                 Children.create(new ElementChildFactory(model, elementClass),
                         true));
-        // TODO: create mechanism for getting "nice" names for elementClasses
-        setName(elementClass.getSimpleName());
+        Lookup.getDefault().lookupAll(ClassDescriptor.class)
+                .stream()
+                .filter(cd -> cd.getElementClass().equals(elementClass))
+                .findFirst()
+                .ifPresentOrElse(cd -> setName(cd.getPluralName()),
+                        () -> setName(elementClass.getSimpleName()));
     }
 
 }

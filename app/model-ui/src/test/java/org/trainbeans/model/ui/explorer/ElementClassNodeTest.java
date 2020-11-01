@@ -15,7 +15,6 @@
  */
 package org.trainbeans.model.ui.explorer;
 
-import org.trainbeans.model.ui.explorer.ElementClassNode;
 import java.beans.IntrospectionException;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +23,7 @@ import org.openide.util.lookup.Lookups;
 import org.trainbeans.model.api.Turnout;
 import org.trainbeans.model.impl.DefaultModel;
 import org.trainbeans.model.impl.TurnoutFactory;
+import org.trainbeans.model.ui.TurnoutClassDescriptor;
 
 /**
  *
@@ -44,7 +44,7 @@ class ElementClassNodeTest {
     void testConstructor() throws IntrospectionException {
         ElementClassNode node = new ElementClassNode(model, Turnout.class);
         assertThat(node).isNotNull();
-        assertThat(node.getName()).isEqualTo(Turnout.class.getSimpleName());
+        assertThat(node.getName()).isEqualTo(new TurnoutClassDescriptor().getPluralName());
     }
     
 }
