@@ -19,11 +19,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import org.openide.util.Lookup;
 import org.trainbeans.beans.Bean;
 import org.trainbeans.model.api.Element;
@@ -43,7 +43,8 @@ public final class DefaultModel extends Bean implements Model,
      * factory can create.
      */
     @SuppressWarnings("checkstyle:linelength") // generic defintion on one line
-    private final Map<Class<? extends Element>, ElementFactory<? extends Element>> factories = new HashMap<>();
+    private final Map<Class<? extends Element>, ElementFactory<? extends Element>> factories
+            = new HashMap<>();
     /**
      * Map of elements, keyed by name.
      */
@@ -53,8 +54,8 @@ public final class DefaultModel extends Bean implements Model,
      * Cache of sets of all elements by requested interface. All caches are
      * invalidated by adding or removing an element.
      */
-    @SuppressWarnings("checkstyle:linelength") // generic defintion on one line
-    private final Map<Class<? extends Element>, Set<? extends Element>> cache = new HashMap<>();
+    private final Map<Class<? extends Element>, Set<? extends Element>> cache
+            = new HashMap<>();
 
     /**
      * Create a model.
@@ -88,7 +89,7 @@ public final class DefaultModel extends Bean implements Model,
         if (cache.containsKey(type)) {
             return (Set<T>) cache.get(type);
         } else {
-            Set<T> set = new HashSet<>();
+            Set<T> set = new TreeSet<>();
             elements.values().stream()
                     .filter(type::isInstance)
                     .forEach(e -> set.add((T) e));
@@ -133,6 +134,11 @@ public final class DefaultModel extends Bean implements Model,
         element.removePropertyChangeListener("name", this);
         cache.clear();
         return getSelf();
+    }
+
+    @Override
+    public Set<Class<? extends Element>> getCreatableClasses() {
+        return factories.keySet();
     }
 
     @Override

@@ -21,14 +21,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>trainbeans-branding</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.netbeans.cluster</groupId>
+            <artifactId>platform</artifactId>
+            <version>${netbeans.version}</version>
+            <type>pom</type>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>model</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.trainbeans</groupId>
+            <artifactId>trainbeans-branding</artifactId>
+            <version>${trainbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trainbeans</groupId>
+            <artifactId>model-ui</artifactId>
+            <version>${trainbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.trainbeans.app</groupId>
@@ -90,10 +97,11 @@
                 <configuration>
                     <ignoredUnusedDeclaredDependencies>
                         <ignoredUnusedDeclaredDependency>org.trainbeans:trainbeans-branding</ignoredUnusedDeclaredDependency>
-                        <ignoredUnusedDeclaredDependency>org.trainbeans:model</ignoredUnusedDeclaredDependency>
+                        <ignoredUnusedDeclaredDependency>org.trainbeans:model-ui</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.trainbeans.app:mr-ui</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.netbeans.modules:org-netbeans-modules-projectapi-nb</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.netbeans.modules:org-netbeans-modules-projectui</ignoredUnusedDeclaredDependency>
+                        <ignoredUnusedDeclaredDependency>org.netbeans.cluster:platform</ignoredUnusedDeclaredDependency>
                     </ignoredUnusedDeclaredDependencies>
                 </configuration>
             </plugin>

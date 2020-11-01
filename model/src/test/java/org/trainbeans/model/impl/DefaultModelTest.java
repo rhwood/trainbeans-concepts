@@ -34,10 +34,12 @@ import org.trainbeans.model.api.Turnout;
 class DefaultModelTest {
 
     DefaultModel model;
+    TurnoutFactory turnoutFactory;
 
     @BeforeEach
     void setUp() {
-        model = new DefaultModel(Lookups.fixed(new TurnoutFactory()));
+        turnoutFactory = new TurnoutFactory();
+        model = new DefaultModel(Lookups.fixed(turnoutFactory));
     }
 
     @AfterEach
@@ -64,12 +66,13 @@ class DefaultModelTest {
         assertThat(model.getCache(Turnout.class)).isNull();
         assertThat(model.getAll(Turnout.class)).isEmpty();
         assertThat(model.getCache(Turnout.class)).isEmpty();
-        Turnout turnout = model.create(Turnout.class, "foo");
-        // assert that set is gotten and cache is populated
-        assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
-        assertThat(model.getCache(Turnout.class)).containsExactly(turnout);
+        Turnout turnout1 = model.create(Turnout.class, "foo");
+        Turnout turnout2 = model.create(Turnout.class, "bar");
+        // assert that set is gotten, is sorted by name, and cache is populated
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout2, turnout1);
+        assertThat(model.getCache(Turnout.class)).containsExactly(turnout2, turnout1);
         // assert that using cache works
-        assertThat(model.getAll(Turnout.class)).containsExactly(turnout);
+        assertThat(model.getAll(Turnout.class)).containsExactly(turnout2, turnout1);
     }
 
     @Test
@@ -80,10 +83,16 @@ class DefaultModelTest {
             public String getName() {
                 return "bar";
             }
-            
+
             @Override
             public AbstractDelegatingDiscreteStateElement getSelf() {
                 return this;
+            }
+
+            // TODO: this should not be needed, so why is it needed?
+            @Override
+            public int compareTo(Object o) {
+                return getName().compareTo(((Element) o).getName());
             }
         });
         assertThat(model.get(Turnout.class, "bar")).isNull();
@@ -154,4 +163,8 @@ class DefaultModelTest {
         assertThat(model.get(Element.class, "bar")).isEqualTo(turnout);
     }
 
+    @Test
+    void testGetCreatableClasses() {
+        assertThat(model.getCreatableClasses()).containsExactly(Turnout.class);
+    }
 }

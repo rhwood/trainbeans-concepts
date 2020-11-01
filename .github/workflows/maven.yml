@@ -17,7 +17,9 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-        java: [8, 11, 14]
+        java: [11, 14]
+# AssertJ Swing + Jacoco + Java 8 do not seem to mix well
+#       java: [8, 11, 14]
 
     steps:
     - uses: actions/checkout@v2

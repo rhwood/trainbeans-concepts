@@ -68,12 +68,13 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
     <T extends Element> T create(Class<T> type, String name, Lookup lookup);
 
     /**
-     * Get all elements of a specific type from the model.
+     * Get all elements of a specific type from the model, sorted by the
+     * Element's default sort order.
      *
      * @param <T> the type of element
      * @param type the type of element
-     * @return a set of elements; this set is empty if there are no matching
-     * elements
+     * @return a sorted set of elements; this set is empty if there are no
+     * matching elements
      */
     <T extends Element> Set<T> getAll(Class<T> type);
 
@@ -145,6 +146,14 @@ public interface Model extends PropertyChangeProvider, VetoableChangeListener {
      * @return this object
      */
     <T extends Element, M extends Model> M remove(T element);
+
+    /**
+     * Get the set of element classes that have factories allowing them to be
+     * created.
+     *
+     * @return the set of all creatable element classes
+     */
+    Set<Class<? extends Element>> getCreatableClasses();
 
     @Override
     default void vetoableChange(PropertyChangeEvent evt)

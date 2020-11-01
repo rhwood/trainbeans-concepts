@@ -54,7 +54,7 @@ public abstract class AbstractDelegatingDiscreteStateElement<S extends DiscreteS
     }
 
     @Override
-    public final <T extends DelegatingElement<E, D>> T
+    public final <T extends DelegatingElement<E, D> & Element> T
             setDelegate(final D newDelegate) {
         D oldDelegate = delegate;
         if (oldDelegate != null) {
