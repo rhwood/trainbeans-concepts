@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assumptions.assumeThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -152,7 +153,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e).isNotNull();
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
-        assertThat(modified).isEqualTo(6);
+        assertThat(modified).isEqualTo(3);
     }
 
     @ParameterizedTest
@@ -198,7 +199,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e.getAttribute("bar")).isEqualTo("foo");
         assertThat(e.getAttribute("foo")).isEmpty();
         assertThat(new String(Files.readAllBytes(file.toPath()))).contains("some text");
-        assertThat(modified).isEqualTo(8);
+        assertThat(modified).isEqualTo(4);
     }
 
     @ParameterizedTest
@@ -228,7 +229,13 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e).isNotNull();
         // allow cleanup
         file.setWritable(true);
-        assertThat(modified).isEqualTo(3);
+        assertThat(modified).isEqualTo(1);
+    }
+
+    @Test
+    void testConstructor() throws IOException {
+        assertThatCode(() -> new MRAuxiliaryConfiguration(project, null)).isExactlyInstanceOf(NullPointerException.class);
+        assertThatCode(() -> new MRAuxiliaryConfiguration(null, state)).isExactlyInstanceOf(NullPointerException.class);
     }
 
     @ParameterizedTest
@@ -246,7 +253,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(e.getAttribute("foo")).isEqualTo("bar");
         config.removeConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg);
         assertThat(config.getConfigurationFragment(ELEMENT_NAME1, XML_NS1, arg)).isNull();
-        assertThat(modified).isEqualTo(3);
+        assertThat(modified).isEqualTo(2);
     }
 
     @ParameterizedTest
@@ -270,7 +277,7 @@ class MRAuxiliaryConfigurationTest {
         assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
         assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg))
                 .doesNotThrowAnyException();
-        assertThat(modified).isEqualTo(3);
+        assertThat(modified).isEqualTo(2);
     }
 
     @ParameterizedTest
@@ -296,6 +303,6 @@ class MRAuxiliaryConfigurationTest {
         assertThat(config.getConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg)).isNull();
         assertThatCode(() -> config.removeConfigurationFragment(ELEMENT_NAME2, XML_NS1, arg))
                 .doesNotThrowAnyException();
-        assertThat(modified).isEqualTo(2);
+        assertThat(modified).isEqualTo(1);
     }
 }

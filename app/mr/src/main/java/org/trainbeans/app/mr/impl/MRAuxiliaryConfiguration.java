@@ -89,6 +89,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     public MRAuxiliaryConfiguration(final ModelRailroadProject aProject,
             final ProjectState aProjectState) {
         Objects.requireNonNull(aProject);
+        Objects.requireNonNull(aProjectState);
         project = aProject;
         state = aProjectState;
     }
@@ -138,7 +139,6 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                 root.insertBefore(root.getOwnerDocument()
                         .importNode(fragment, true), ref);
                 write(shared);
-                state.markModified();
             }
         });
     }
@@ -249,9 +249,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
         try (OutputStream out = file.getOutputStream()) {
             XMLUtil.write(shared ? projectXml : privateXml, out,
                     StandardCharsets.UTF_8.name());
-            if (state != null) {
-                state.markModified();
-            }
+            state.markModified();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
