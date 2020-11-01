@@ -27,6 +27,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.trainbeans.app.mr.ModelRailroadProject;
+import org.trainbeans.app.mr.MRConstants;
 
 /**
  *
@@ -42,7 +43,7 @@ class ModelRailroadProjectFactoryTest {
     void setUp(@TempDir File testDir) {
         factory = new ModelRailroadProjectFactory();
         projectDir = FileUtil.toFileObject(testDir);
-        project = new ModelRailroadProject(FileUtil.toFileObject(testDir), Lookup.EMPTY);
+        project = new ModelRailroadProject(projectDir, Lookup.EMPTY);
     }
 
     @Test
@@ -50,7 +51,7 @@ class ModelRailroadProjectFactoryTest {
         // test with empty directory
         assertThat(factory.isProject(projectDir)).isFalse();
         // populate minimal project
-        FileUtil.createData(projectDir, MRConstants.PROJECT_XML_PATH);
+        FileUtil.createData(projectDir, MRConstants.PROJECT_PROPERTIES);
         // test with populated directory
         assertThat(factory.isProject(projectDir)).isTrue();
     }
@@ -71,7 +72,7 @@ class ModelRailroadProjectFactoryTest {
         // test with empty directory
         assertThat(factory.loadProject(projectDir, state)).isNull();
         // populate minimal project
-        FileUtil.createData(projectDir, MRConstants.PROJECT_XML_PATH);
+        FileUtil.createData(projectDir, MRConstants.PROJECT_PROPERTIES);
         // test with populated directory
         assertThat(factory.loadProject(projectDir, state))
                 .isNotNull()

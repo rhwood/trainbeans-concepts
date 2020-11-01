@@ -13,27 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.app.mr.impl;
+package org.trainbeans.app.mr;
+
+import org.apiguardian.api.API;
 
 /**
  *
  * @author rhwood
  */
 // package protected
-final class MRConstants {
+@API(status = API.Status.INTERNAL)
+public final class MRConstants {
 
     /**
      * Folder in a project that contains configuration.
      */
-    static final String PROJECT_CONFIG_DIR = "trainbeans";
+    public static final String PROJECT_CONFIG_DIR = "trainbeans";
     /**
      * Shared XML path relative to project root.
      */
-    static final String PROJECT_XML_PATH = PROJECT_CONFIG_DIR + "/project.xml";
+    public static final String PROJECT_XML_PATH
+            = PROJECT_CONFIG_DIR + "/project.xml";
     /**
      * Shared properties file in project.
      */
-    static final String PROJECT_PROPERTIES = PROJECT_CONFIG_DIR + "/project.properties";
+    public static final String PROJECT_PROPERTIES
+            = PROJECT_CONFIG_DIR + "/project.properties";
 
     private MRConstants() {
         // prevent instantiation

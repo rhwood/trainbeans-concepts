@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.app.mr;
+package org.trainbeans.app.mr.ui;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,23 +30,43 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.trainbeans.app.mr.newproject.ModelRailroadNameAndLocationPanel;
-import static org.trainbeans.app.mr.newproject.ModelRailroadNameAndLocationPanel.PROP_PROJECT_FOLDER;
-import static org.trainbeans.app.mr.newproject.ModelRailroadNameAndLocationPanel.PROP_PROJECT_NAME;
+import org.trainbeans.app.mr.ModelRailroadHelper;
+import org.trainbeans.app.mr.ModelRailroadProject;
+import static org.trainbeans.app.mr.ui.ModelRailroadNewProject.POSITION;
+import org.trainbeans.app.mr.ui.newproject.ModelRailroadNameAndLocationPanel;
+import static org.trainbeans.app.mr.ui.newproject.ModelRailroadNameAndLocationPanel.PROP_PROJECT_FOLDER;
+import static org.trainbeans.app.mr.ui.newproject.ModelRailroadNameAndLocationPanel.PROP_PROJECT_NAME;
 
 @NbBundle.Messages("New_MR_Title=New Model Railroad")
 @TemplateRegistration(folder = "Project/Standard",
         displayName = "Model Railroad",
-        description = "wizard/description.html",
+        description = "newproject/description.html",
         iconBase = "org/trainbeans/app/mr/icon.png",
-        position = 10,
-        content = "wizard/trainbeans/project.xml"
+        position = POSITION,
+        content = "newproject/trainbeans/project.xml"
 )
-public final class ModelRailroadNewProject implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
+public final class ModelRailroadNewProject
+        implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
+    /**
+     * The position of this project in the new project selector.
+     */
+    static final int POSITION = 10;
+    /**
+     * Change support helper for this class.
+     */
     private final ChangeSupport changeSupport = new ChangeSupport(this);
+    /**
+     * Index of the current wizard panel.
+     */
     private int index;
+    /**
+     * The wizard descriptor used when creating a new project.
+     */
     private WizardDescriptor descriptor;
+    /**
+     * The set of wizard panels.
+     */
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
@@ -58,11 +78,16 @@ public final class ModelRailroadNewProject implements WizardDescriptor.Instantia
                 // assume all components are JComponents
                 JComponent jc = (JComponent) panels.get(i).getComponent();
                 steps[i] = jc.getName();
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
-                jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, true);
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
+                jc.putClientProperty(
+                        WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
+                jc.putClientProperty(
+                        WizardDescriptor.PROP_CONTENT_DATA, steps);
+                jc.putClientProperty(
+                        WizardDescriptor.PROP_AUTO_WIZARD_STYLE, true);
+                jc.putClientProperty(
+                        WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
+                jc.putClientProperty(
+                        WizardDescriptor.PROP_CONTENT_NUMBERED, true);
             }
         }
         return panels;
@@ -105,36 +130,40 @@ public final class ModelRailroadNewProject implements WizardDescriptor.Instantia
     }
 
     @Override
-    public void addChangeListener(ChangeListener l) {
+    public void addChangeListener(final ChangeListener l) {
         changeSupport.addChangeListener(l);
     }
 
     @Override
-    public void removeChangeListener(ChangeListener l) {
+    public void removeChangeListener(final ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
 
     @Override
     public Set<?> instantiate() throws IOException {
-        File dir = new File((String) descriptor.getProperty(PROP_PROJECT_FOLDER));
+        File dir = new File(
+                (String) descriptor.getProperty(PROP_PROJECT_FOLDER));
         dir.mkdirs();
-        ModelRailroadProject project = new ModelRailroadProject(FileUtil.toFileObject(dir), Lookup.EMPTY);
+        ModelRailroadProject project = new ModelRailroadProject(
+                FileUtil.toFileObject(dir), Lookup.EMPTY);
         ModelRailroadHelper helper = new ModelRailroadHelper(project);
-        helper.getProperties().setProperty("project.name", (String) descriptor.getProperty(PROP_PROJECT_NAME));
+        helper.getProperties().setProperty("project.name",
+                (String) descriptor.getProperty(PROP_PROJECT_NAME));
         helper.storeProperties();
         return new HashSet<>();
     }
 
     @Override
-    public void initialize(WizardDescriptor wizard) {
+    public void initialize(final WizardDescriptor wizard) {
         index = 0;
         descriptor = wizard;
-        wizard.putProperty("NewProjectWizard_Title", Bundle.New_MR_Title()); // NOI18N
+        wizard.putProperty("NewProjectWizard_Title", // NOI18N
+                Bundle.New_MR_Title());
         getPanels();
     }
 
     @Override
-    public void uninitialize(WizardDescriptor wizard) {
+    public void uninitialize(final WizardDescriptor wizard) {
         panels = null;
     }
 

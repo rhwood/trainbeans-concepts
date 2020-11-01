@@ -23,6 +23,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.trainbeans.app.mr.ModelRailroadProject;
+import org.trainbeans.app.mr.MRConstants;
 
 /**
  *

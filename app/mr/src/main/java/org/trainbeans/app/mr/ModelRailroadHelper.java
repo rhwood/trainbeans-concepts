@@ -27,36 +27,68 @@ import org.w3c.dom.Element;
  */
 public final class ModelRailroadHelper implements AuxiliaryConfiguration {
 
+    /**
+     * Delegate for the helper.
+     */
     private final ModelRailroadHelperImpl delegate;
 
-    public ModelRailroadHelper(ModelRailroadProject project) {
+    /**
+     * Create a helper.
+     *
+     * @param project the associated project
+     */
+    public ModelRailroadHelper(final ModelRailroadProject project) {
         delegate = new ModelRailroadHelperImpl(project);
     }
 
+    /**
+     * Get the properties associated with the project.
+     *
+     * @return the properties
+     */
     public EditableProperties getProperties() {
         return delegate.getProperties();
     }
 
+    /**
+     * Retrieve properties associated with the project.
+     *
+     * @throws IOException if unable to read the properties
+     */
     public void loadProperties() throws IOException {
         delegate.loadProperties();
     }
 
+    /**
+     * Save (store) any properties associated with the project.
+     *
+     * @throws IOException if unable to write the properties
+     */
     public void storeProperties() throws IOException {
         delegate.storeProperties();
     }
 
     @Override
-    public Element getConfigurationFragment(String elementName, String namespace, boolean shared) {
-        return delegate.getConfigurationFragment(elementName, namespace, shared);
+    public Element getConfigurationFragment(final String elementName,
+            final String namespace,
+            final boolean shared) {
+        return delegate.getConfigurationFragment(elementName,
+                namespace,
+                shared);
     }
 
     @Override
-    public void putConfigurationFragment(Element fragment, boolean shared) throws IllegalArgumentException {
+    public void putConfigurationFragment(final Element fragment,
+            final boolean shared) {
         delegate.putConfigurationFragment(fragment, shared);
     }
 
     @Override
-    public boolean removeConfigurationFragment(String elementName, String namespace, boolean shared) throws IllegalArgumentException {
-        return delegate.removeConfigurationFragment(elementName, namespace, shared);
+    public boolean removeConfigurationFragment(final String elementName,
+            final String namespace,
+            final boolean shared) {
+        return delegate.removeConfigurationFragment(elementName,
+                namespace,
+                shared);
     }
 }

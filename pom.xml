@@ -30,6 +30,7 @@
         <module>model</module>
         <module>beans</module>
         <module>app/mr</module>
+        <module>app/mr-ui</module>
     </modules>
 
     <build>

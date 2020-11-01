@@ -31,7 +31,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.xml.XMLUtil;
 import org.trainbeans.app.mr.ModelRailroadProject;
-import static org.trainbeans.app.mr.impl.MRConstants.PROJECT_XML_PATH;
+import static org.trainbeans.app.mr.MRConstants.PROJECT_XML_PATH;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

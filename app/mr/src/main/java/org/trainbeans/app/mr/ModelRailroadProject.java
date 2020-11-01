@@ -89,7 +89,8 @@ public final class ModelRailroadProject implements Project {
                     new Info(),
                     new ModelRailroadProjectLogicalView(this),
                     new ModelRailroadCustomizerProvider(this),
-                    new MRAuxiliaryConfiguration(this, Lookup.getDefault().lookup(ProjectState.class)),
+                    new MRAuxiliaryConfiguration(this,
+                            Lookup.getDefault().lookup(ProjectState.class)),
                     new ModelRailroadHelper(this)),
                     additionalLookup);
         }
