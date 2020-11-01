@@ -5,8 +5,9 @@
         <groupId>org.trainbeans</groupId>
         <artifactId>trainbeans-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>model</artifactId>
+    <artifactId>model-ui</artifactId>
     <packaging>nbm</packaging>
     <build>
         <plugins>
@@ -16,7 +17,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>org.trainbeans.model.impl</publicPackage>
+                        <publicPackage>org.trainbeans.model.ui</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>
@@ -29,38 +30,49 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <ignoredUnusedDeclaredDependencies>
-                        <ignoredUnusedDeclaredDependency>org.netbeans.modules:org-netbeans-modules-masterfs</ignoredUnusedDeclaredDependency>
-                    </ignoredUnusedDeclaredDependencies>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+    <name>TrainBeans Layout Model UI</name>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-windows</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-explorer</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-nodes</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.trainbeans</groupId>
             <artifactId>model-api</artifactId>
-            <version>${project.version}</version>
+            <version>${trainbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.trainbeans</groupId>
+            <artifactId>model</artifactId>
+            <version>${trainbeans.version}</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
             <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>beans</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-            <type>jar</type>
+            <type>nbm</type>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -69,14 +81,16 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.netbeans.modules</groupId>
-            <artifactId>org-netbeans-modules-masterfs</artifactId>
-            <version>${netbeans.version}</version>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-swing</artifactId>
             <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    <name>TrainBeans Layout Model Implementation</name>
 </project>
