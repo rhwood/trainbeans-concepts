@@ -30,7 +30,7 @@ class ModelNode extends BeanNode<Model> {
     @NbBundle.Messages("MSG_DESC=A model")
     ModelNode(final Model bean) throws IntrospectionException {
         super(bean, Children.create(new ElementClassChildFactory(bean), true));
-        // TODO: determine how Models should be named and use that here
+        // determine how Models should be named and use that here
         setDisplayName("A model");
         setShortDescription(Bundle.MSG_DESC());
     }

@@ -25,6 +25,7 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
+import static org.trainbeans.model.ui.explorer.ModelTopComponent.POSITION;
 
 /**
  * Top component which displays something.
@@ -36,7 +37,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = "org.trainbeans.model.ui.ModelTopComponent")
-@ActionReference(path = "Menu/Window", position = 333)
+@ActionReference(path = "Menu/Window", position = POSITION)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_ModelAction",
         preferredID = "ModelTopComponent"
@@ -49,6 +50,10 @@ import org.openide.util.NbBundle.Messages;
 public final class ModelTopComponent extends TopComponent
         implements ExplorerManager.Provider {
 
+    /**
+     * Position in Window menu for this TopComponent.
+     */
+    static final int POSITION = 333;
     /**
      * The manager for the tree view within this component.
      */

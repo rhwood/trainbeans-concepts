@@ -15,8 +15,6 @@
  */
 package org.trainbeans.model.ui.explorer;
 
-import org.trainbeans.model.ui.explorer.ElementChildFactory;
-import org.trainbeans.model.ui.explorer.ElementNode;
 import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;

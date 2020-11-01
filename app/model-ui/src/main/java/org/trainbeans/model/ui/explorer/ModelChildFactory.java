@@ -40,8 +40,8 @@ public final class ModelChildFactory extends ChildFactory<Model> {
 
     @Override
     protected boolean createKeys(final List<Model> list) {
-        // TODO: dynamically get list of Models
-        //       for now, generate a new Model
+        // dynamically get list of Models
+        // for now, generate a new Model
         Model model = new DefaultModel(Lookup.getDefault());
         model.create(Turnout.class, "North Boylan Siding");
         model.create(Turnout.class, "South Boylan Siding");

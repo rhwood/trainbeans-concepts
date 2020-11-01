@@ -46,7 +46,7 @@ public final class ElementClassChildFactory
 
     @Override
     protected boolean createKeys(final List<Class<? extends Element>> list) {
-        // TODO: sort getCreatableClasses() results before adding
+        // sort getCreatableClasses() results before adding
         list.addAll(model.getCreatableClasses());
         return true;
     }
