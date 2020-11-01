@@ -16,6 +16,7 @@
 package org.trainbeans.model.ui.explorer;
 
 import java.beans.IntrospectionException;
+import java.util.Optional;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 import org.openide.util.Lookup;
@@ -33,14 +34,15 @@ public class ElementClassNode extends BeanNode<Class<? extends Element>> {
             final Class<? extends Element> elementClass)
             throws IntrospectionException {
         super(elementClass,
-                Children.create(new ElementChildFactory(model, elementClass),
-                        true));
-        Lookup.getDefault().lookupAll(ClassDescriptor.class)
+                Children.create(
+                        new ElementChildFactory(model, elementClass), true));
+        Optional<? extends ClassDescriptor> descriptor = Lookup.getDefault()
+                .lookupAll(ClassDescriptor.class)
                 .stream()
                 .filter(cd -> cd.getElementClass().equals(elementClass))
-                .findFirst()
-                .ifPresentOrElse(cd -> setName(cd.getPluralName()),
-                        () -> setName(elementClass.getSimpleName()));
+                .findFirst();
+        setName(descriptor.isPresent()
+                ? descriptor.get().getPluralName()
+                : elementClass.getSimpleName());
     }
-
 }
