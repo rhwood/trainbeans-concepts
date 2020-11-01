@@ -15,6 +15,6 @@
  */
 /**
  * {@link org.netbeans.spi.project.ui.support.NodeFactory}s for
- * {@link org.trainbeans.app.mr.ModelRailroadProject}.
+ * the logical view of a {@link org.trainbeans.app.mr.ModelRailroadProject}.
  */
-package org.trainbeans.app.mr.nodes;
+package org.trainbeans.app.mr.ui.nodes;
