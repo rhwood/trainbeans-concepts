@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.api;
-
 /**
- *
- * @author rhwood
+ * Customizer and general properties for a
+ * {@link org.trainbeans.app.mr.ModelRailroadProject}.
  */
-@SuppressWarnings("linelength") // generic definitions on single line
-public interface TurnoutDelegate extends DiscreteStateDelegate<Turnout.State, Turnout> {
-
-}
+package org.trainbeans.app.mr.customizer;

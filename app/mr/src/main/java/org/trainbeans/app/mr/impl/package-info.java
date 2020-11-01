@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.api;
-
 /**
- *
- * @author rhwood
+ * Implementations of externally defined API and SPI needed to support the
+ * project. There should be no public methods in an class in this package that
+ * are not defined elsewhere and no extendable classes nor interfaces in this
+ * package.
  */
-@SuppressWarnings("linelength") // generic definitions on single line
-public interface TurnoutDelegate extends DiscreteStateDelegate<Turnout.State, Turnout> {
-
-}
+package org.trainbeans.app.mr.impl;

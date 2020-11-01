@@ -22,18 +22,19 @@ import org.trainbeans.beans.VetoableBean;
 /**
  *
  * @author rhwood
+ * @param <S> type of state
  * @param <E> type of element
  * @param <D> type of delegate
  */
 @SuppressWarnings("linelength") // generic definitions on single line
-public abstract class AbstractDelegatingDiscreteStateElement<E extends DelegatingElement & DiscreteStateElement & Element, D extends DiscreteStateDelegate<E>>
+public abstract class AbstractDelegatingDiscreteStateElement<S extends DiscreteState, E extends DelegatingElement & DiscreteStateElement<S>, D extends DiscreteStateDelegate<S, E>>
         extends VetoableBean
-        implements DelegatingElement<E, D>, DiscreteStateElement, Element {
+        implements DelegatingElement<E, D>, DiscreteStateElement<S> {
 
     /**
      * The state if not handled by a delegate.
      */
-    private DiscreteState state;
+    private S state;
     /**
      * The delegate; if not null, most property access defers to the delegate.
      */
@@ -100,7 +101,7 @@ public abstract class AbstractDelegatingDiscreteStateElement<E extends Delegatin
      * {@inheritDoc}
      */
     @Override
-    public DiscreteState getState() {
+    public S getState() {
         return delegate != null ? delegate.getState() : state;
     }
 
@@ -108,7 +109,7 @@ public abstract class AbstractDelegatingDiscreteStateElement<E extends Delegatin
      * {@inheritDoc}
      */
     @Override
-    public DiscreteState getRequestedState() {
+    public S getRequestedState() {
         return delegate != null ? delegate.getRequestedState() : state;
     }
 
@@ -116,9 +117,9 @@ public abstract class AbstractDelegatingDiscreteStateElement<E extends Delegatin
      * {@inheritDoc}
      */
     @Override
-    public <T extends DiscreteStateElement & Element> T
-            setState(final DiscreteState newState) {
-        DiscreteState oldState = state;
+    public <T extends DiscreteStateElement> T
+            setState(final S newState) {
+        S oldState = state;
         state = newState;
         if (delegate != null) {
             delegate.setState(newState);
@@ -163,7 +164,7 @@ public abstract class AbstractDelegatingDiscreteStateElement<E extends Delegatin
      * @param newState the new state
      */
     // package protected for unit testing
-    void setNonDelegatedState(final DiscreteState newState) {
+    void setNonDelegatedState(final S newState) {
         this.state = newState;
     }
 }

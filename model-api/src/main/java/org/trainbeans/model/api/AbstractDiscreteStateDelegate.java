@@ -19,15 +19,16 @@ import org.trainbeans.beans.VetoableBean;
 
 /**
  * This is a simplistic abstract delegate for {@link DiscreteStateElement}s that
- * is primarily useful for simulation and unit testing. Other implementations of
- * {@link DiscreteStateDelegate} can use this as a template.
+ * is primarily useful for simulation and unit testing.Other implementations of
+ {@link DiscreteStateDelegate} can use this as a template.
  *
  * @author rhwood
+ * @param <S> the type of supported state
  * @param <E> the type of supported element
  */
 @SuppressWarnings("checkstyle:linelength") // generic definition on one line
-public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement & DiscreteStateElement & Element>
-        extends VetoableBean implements DiscreteStateDelegate<E> {
+public abstract class AbstractDiscreteStateDelegate<S extends DiscreteState, E extends DelegatingElement & DiscreteStateElement<S>>
+        extends VetoableBean implements DiscreteStateDelegate<S, E> {
 
     /**
      * The delegating element.
@@ -41,7 +42,7 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement 
     /**
      * The current state.
      */
-    private DiscreteState state;
+    private S state;
 
     /**
      * Test if the provided name is valid in this context.
@@ -79,22 +80,22 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement 
      * {@inheritDoc}
      */
     @Override
-    public AbstractDiscreteStateDelegate<E> setName(final String name) {
-        String oldName = this.name;
-        if (isValidName(name)) {
-            this.name = name;
+    public <D extends Element> D setName(final String newName) {
+        String oldName = name;
+        if (isValidName(newName)) {
+            name = newName;
         } else {
             throw new IllegalArgumentException();
         }
-        firePropertyChange("name", oldName, name);
-        return this;
+        firePropertyChange("name", oldName, newName);
+        return getSelf();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DiscreteState getState() {
+    public S getState() {
         return state;
     }
 
@@ -102,19 +103,19 @@ public abstract class AbstractDiscreteStateDelegate<E extends DelegatingElement 
      * {@inheritDoc}
      */
     @Override
-    public AbstractDiscreteStateDelegate<E>
-            setState(final DiscreteState newState) {
+    public <D extends DiscreteStateElement> D
+            setState(final S newState) {
         DiscreteState oldState = state;
         state = newState;
         firePropertyChange("state", oldState, newState);
-        return this;
+        return getSelf();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public DiscreteState getRequestedState() {
+    public S getRequestedState() {
         return getState();
     }
 

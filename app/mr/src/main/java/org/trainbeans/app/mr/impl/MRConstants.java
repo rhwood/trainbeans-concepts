@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.api;
+package org.trainbeans.app.mr.impl;
 
 /**
  *
  * @author rhwood
  */
-@SuppressWarnings("linelength") // generic definitions on single line
-public interface TurnoutDelegate extends DiscreteStateDelegate<Turnout.State, Turnout> {
+// package protected
+final class MRConstants {
 
+    /**
+     * Shared XML path relative to project root.
+     */
+    static final String PROJECT_XML_PATH = "trainbeans/project.xml";
+
+    private MRConstants() {
+        // prevent instantiation
+    }
 }

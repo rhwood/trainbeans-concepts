@@ -91,7 +91,7 @@ class TurnoutTest extends AbstractDelegatingDiscreteStateElementTest<Turnout, Tu
         assertThat(lastEvent.getNewValue()).isEqualTo(Turnout.State.THROWN);
     }
 
-    private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
+    private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout.State, Turnout> implements TurnoutDelegate {
 
         TestTurnoutDelegate() {
             setState(Turnout.State.UNKNOWN);

@@ -64,8 +64,8 @@ class TurnoutFactoryTest {
         assertThat(factory.create(null, lookup).getName()).isEqualTo("delegate");
         assertThat(factory.create("test", lookup).getName()).isEqualTo("test");
     }
-
-    private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout> implements TurnoutDelegate {
+    
+    private static class TestTurnoutDelegate extends AbstractDiscreteStateDelegate<Turnout.State, Turnout> implements TurnoutDelegate {
 
         @Override
         protected boolean isValidName(String name) {

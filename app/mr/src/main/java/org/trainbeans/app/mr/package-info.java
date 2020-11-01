@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.trainbeans.model.api;
-
 /**
- *
- * @author rhwood
+ * A Model Railroad Project. This is the basic persistence mechanism for the
+ * TrainBeans application.
  */
-@SuppressWarnings("linelength") // generic definitions on single line
-public interface TurnoutDelegate extends DiscreteStateDelegate<Turnout.State, Turnout> {
-
-}
+package org.trainbeans.app.mr;
