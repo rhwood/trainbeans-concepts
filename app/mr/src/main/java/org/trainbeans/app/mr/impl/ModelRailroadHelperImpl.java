@@ -92,7 +92,7 @@ public class ModelRailroadHelperImpl {
      * @throws IOException if unable to read the properties
      */
     public void loadProperties() throws IOException {
-        properties.load(getPropertiesFile().getInputStream());
+        getProperties().load(getPropertiesFile().getInputStream());
     }
 
     /**
@@ -101,7 +101,7 @@ public class ModelRailroadHelperImpl {
      * @throws IOException if unable to write the properties
      */
     public void storeProperties() throws IOException {
-        properties.store(getPropertiesFile().getOutputStream());
+        getProperties().store(getPropertiesFile().getOutputStream());
     }
 
     /**
