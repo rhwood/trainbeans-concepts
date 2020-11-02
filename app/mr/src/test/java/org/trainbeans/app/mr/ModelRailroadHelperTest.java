@@ -63,6 +63,8 @@ class ModelRailroadHelperTest {
         assertThat(helper.getProperties())
                 .isNotNull()
                 .isExactlyInstanceOf(EditableProperties.class);
+        EditableProperties properties = helper.getProperties();
+        assertThat(helper.getProperties()).isEqualTo(properties);
     }
 
     @Test

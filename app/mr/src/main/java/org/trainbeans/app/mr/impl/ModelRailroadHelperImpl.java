@@ -18,6 +18,8 @@ package org.trainbeans.app.mr.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
@@ -92,7 +94,9 @@ public class ModelRailroadHelperImpl {
      * @throws IOException if unable to read the properties
      */
     public void loadProperties() throws IOException {
-        getProperties().load(getPropertiesFile().getInputStream());
+        try (InputStream stream = getPropertiesFile().getInputStream()) {
+            getProperties().load(stream);
+        }
     }
 
     /**
@@ -101,7 +105,9 @@ public class ModelRailroadHelperImpl {
      * @throws IOException if unable to write the properties
      */
     public void storeProperties() throws IOException {
-        getProperties().store(getPropertiesFile().getOutputStream());
+        try (OutputStream stream = getPropertiesFile().getOutputStream()) {
+            getProperties().store(stream);
+        }
     }
 
     /**
