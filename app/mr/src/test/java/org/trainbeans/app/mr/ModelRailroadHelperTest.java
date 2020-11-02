@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -84,8 +85,11 @@ class ModelRailroadHelperTest {
 
     @Test
     void testPutConfigurationFragment() {
-        Element e = XMLUtil.createDocument("config", "http://www.netbeans.org/ns/auxiliary-configuration/1", null, null).createElementNS("test", "test");
+        Element e = XMLUtil
+                .createDocument("config", "http://www.netbeans.org/ns/auxiliary-configuration/1", null, null)
+                .createElementNS("test", "test");
         assertThatCode(() -> helper.putConfigurationFragment(e, true)).doesNotThrowAnyException();
+        assertThat(helper.getConfigurationFragment("test", "test", true)).isNotNull();
     }
 
     @Test

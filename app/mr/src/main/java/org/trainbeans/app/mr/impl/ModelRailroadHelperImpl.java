@@ -15,8 +15,6 @@
  */
 package org.trainbeans.app.mr.impl;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,7 +25,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.EditableProperties;
 import org.openide.util.Lookup;
 import org.trainbeans.app.mr.ModelRailroadProject;
-import static org.trainbeans.app.mr.MRConstants.PROJECT_CONFIG_DIR;
+import static org.trainbeans.app.mr.MRConstants.PROJECT_PROPERTIES;
 import org.w3c.dom.Element;
 
 /**
@@ -74,18 +72,11 @@ public class ModelRailroadHelperImpl {
      * Get the properties file.
      *
      * @return the file
-     * @throws FileNotFoundException if the properties file is missing
+     * @throws IOException if the properties file could not be read or created
      */
-    public FileObject getPropertiesFile() throws FileNotFoundException {
-        File file = new File(new File(
-                FileUtil.toFile(project.getProjectDirectory()),
-                PROJECT_CONFIG_DIR),
-                "project.properties");
-        try {
-            return FileUtil.createData(file);
-        } catch (IOException ex) {
-            throw new FileNotFoundException(file.getPath());
-        }
+    public FileObject getPropertiesFile() throws IOException {
+        return FileUtil.createData(project.getProjectDirectory(),
+                PROJECT_PROPERTIES);
     }
 
     /**
