@@ -31,7 +31,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.xml.XMLUtil;
 import org.trainbeans.app.mr.ModelRailroadProject;
-import static org.trainbeans.app.mr.impl.MRConstants.PROJECT_XML_PATH;
+import static org.trainbeans.app.mr.MRConstants.PROJECT_XML_PATH;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -89,6 +89,7 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
     public MRAuxiliaryConfiguration(final ModelRailroadProject aProject,
             final ProjectState aProjectState) {
         Objects.requireNonNull(aProject);
+        Objects.requireNonNull(aProjectState);
         project = aProject;
         state = aProjectState;
     }
@@ -138,7 +139,6 @@ public final class MRAuxiliaryConfiguration implements AuxiliaryConfiguration {
                 root.insertBefore(root.getOwnerDocument()
                         .importNode(fragment, true), ref);
                 write(shared);
-                state.markModified();
             }
         });
     }

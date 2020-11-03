@@ -25,6 +25,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.spi.project.ProjectInformationProvider;
+import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -38,32 +39,43 @@ import org.openide.util.lookup.Lookups;
  * @author rhwood
  */
 class ModelRailroadProjectTest {
-
+    
     private ModelRailroadProject project;
     private FileObject projectDir;
-
+    
     @BeforeEach
     void setUp(@TempDir File testDir) throws IOException {
         projectDir = FileUtil.toFileObject(testDir.getCanonicalFile());
+        MockLookup.setInstances(new ProjectState() {
+            @Override
+            public void markModified() {
+                // nothing to do
+            }
+            
+            @Override
+            public void notifyDeleted() {
+                // nothing to do
+            }
+        });
         project = new ModelRailroadProject(projectDir, Lookup.EMPTY);
         MockLookup.setLookup(Lookups.fixed(project.getLookup()));
         MockLookup.setInstances(new TestUtil.MockProjectManager(),
                 new ProjectInformationProviderImpl());
     }
-
+    
     @Test
     void testConstructor() {
         assertThatCode(() -> new ModelRailroadProject(null, Lookup.EMPTY)).isExactlyInstanceOf(NullPointerException.class);
         assertThatCode(() -> new ModelRailroadProject(projectDir, null)).isExactlyInstanceOf(NullPointerException.class);
     }
-
+    
     @Test
     void testGetProjectDirectory() {
         assertThat(project.getProjectDirectory())
                 .isNotNull()
                 .isEqualTo(projectDir);
     }
-
+    
     @Test
     void testGetLookup() {
         assertThat(project.getLookup()).isNotNull();
@@ -72,64 +84,64 @@ class ModelRailroadProjectTest {
         assertThat(lookup.lookup(ProjectInformation.class)).isNotNull();
         assertThat(lookup.lookup(LogicalViewProvider.class)).isNotNull();
     }
-
+    
     @Test
     void testProjectInformationGetName() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
         assertThat(pi.getName()).isEqualTo(projectDir.getName());
         assertThat(pi.getDisplayName()).isEqualTo(pi.getName());
     }
-
+    
     @Test
     void testProjectInformationGetDisplayName() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
         assertThat(pi.getDisplayName()).isEqualTo(pi.getName());
     }
-
+    
     @Test
     void testProjectInformationGetIcon() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
         assertThat(pi.getIcon()).isNotNull();
     }
-
+    
     @Test
     void testProjectInformationGetProject() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
         assertThat(pi.getProject()).isEqualTo(project);
     }
-
+    
     @Test
     void testProjectInformationAddPropertyChangeListener() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
         assertThatCode(() -> pi.addPropertyChangeListener(event -> {
         })).doesNotThrowAnyException();
     }
-
+    
     @Test
     void testProjectInformationRemovePropertyChangeListener() {
         ProjectInformation pi = project.getLookup().lookup(ProjectInformation.class);
         assertThatCode(() -> pi.removePropertyChangeListener(event -> {
         })).doesNotThrowAnyException();
     }
-
+    
     @Test
     void testLogicalViewProviderFindPath() {
         assertThat(project.getLookup().lookup(LogicalViewProvider.class).findPath(Node.EMPTY, this)).isNull();
     }
-
+    
     @Test
     void testLogicalViewProviderGetActions() {
         Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
         assertThat(node.getActions(true)).hasSize(5);
         assertThat(node.getActions(false)).hasSize(5);
     }
-
+    
     @Test
     void testLogicalViewProviderGetDisplayName() {
         Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
         assertThat(node.getDisplayName()).isEqualTo(projectDir.getName());
     }
-
+    
     @Test
     void testLogicalViewProviderGetIcon() {
         Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
@@ -137,7 +149,7 @@ class ModelRailroadProjectTest {
             assertThat(node.getIcon(i)).isEqualTo(ImageUtilities.loadImage("org/trainbeans/app/mr/icon.png"));
         }
     }
-
+    
     @Test
     void testLogicalViewProviderOpenedIcon() {
         Node node = project.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
@@ -145,7 +157,7 @@ class ModelRailroadProjectTest {
             assertThat(node.getOpenedIcon(i)).isEqualTo(node.getIcon(i));
         }
     }
-
+    
     @Test
     void testEquals() {
         assertThat(project)
@@ -154,16 +166,16 @@ class ModelRailroadProjectTest {
                 .isNotEqualTo(projectDir)
                 .isNotEqualTo(new Object());
     }
-
+    
     @Test
     void testHashCode() {
         int projHC = project.hashCode();
         int dirHC = projectDir.hashCode();
         assertThat(projHC).isEqualTo(dirHC);
     }
-
+    
     private static class ProjectInformationProviderImpl implements ProjectInformationProvider {
-
+        
         @Override
         public ProjectInformation getProjectInformation(final Project project) {
             // DO NOT use the recommended method

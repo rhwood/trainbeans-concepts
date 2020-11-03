@@ -32,6 +32,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.modules.openide.util.NbMutexEventProvider;
 import org.netbeans.spi.project.ProjectInformationProvider;
+import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -53,6 +54,17 @@ class ModelRailroadCustomizerProviderTest {
 
     @BeforeEach
     void setUp(@TempDir File projectDir) {
+        MockLookup.setInstances(new ProjectState() {
+            @Override
+            public void markModified() {
+                // nothing to do
+            }
+
+            @Override
+            public void notifyDeleted() {
+                // nothing to do
+            }
+        });
         project = new ModelRailroadProject(FileUtil.toFileObject(projectDir), Lookup.EMPTY);
         MockLookup.setLookup(Lookups.fixed(project.getLookup()));
         MockLookup.setInstances(new TestUtil.MockProjectManager(),

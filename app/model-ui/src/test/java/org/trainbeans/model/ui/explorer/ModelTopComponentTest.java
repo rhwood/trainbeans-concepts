@@ -15,7 +15,6 @@
  */
 package org.trainbeans.model.ui.explorer;
 
-import org.trainbeans.model.ui.explorer.ModelTopComponent;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.junit.jupiter.api.BeforeEach;

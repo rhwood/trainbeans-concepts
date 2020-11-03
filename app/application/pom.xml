@@ -30,16 +30,16 @@
         <dependency>
             <groupId>org.trainbeans</groupId>
             <artifactId>trainbeans-branding</artifactId>
-            <version>${project.version}</version>
+            <version>${trainbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.trainbeans</groupId>
             <artifactId>model-ui</artifactId>
-            <version>${project.version}</version>
+            <version>${trainbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.trainbeans.app</groupId>
-            <artifactId>mr</artifactId>
+            <artifactId>mr-ui</artifactId>
             <version>${trainbeans.version}</version>
         </dependency>
         <dependency>
@@ -98,7 +98,7 @@
                     <ignoredUnusedDeclaredDependencies>
                         <ignoredUnusedDeclaredDependency>org.trainbeans:trainbeans-branding</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.trainbeans:model-ui</ignoredUnusedDeclaredDependency>
-                        <ignoredUnusedDeclaredDependency>org.trainbeans.app:mr</ignoredUnusedDeclaredDependency>
+                        <ignoredUnusedDeclaredDependency>org.trainbeans.app:mr-ui</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.netbeans.modules:org-netbeans-modules-projectapi-nb</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.netbeans.modules:org-netbeans-modules-projectui</ignoredUnusedDeclaredDependency>
                         <ignoredUnusedDeclaredDependency>org.netbeans.cluster:platform</ignoredUnusedDeclaredDependency>

@@ -23,6 +23,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.trainbeans.app.mr.ModelRailroadProject;
+import org.trainbeans.app.mr.MRConstants;
 
 /**
  *
@@ -36,7 +37,7 @@ public class ModelRailroadProjectFactory implements ProjectFactory {
      */
     @Override
     public boolean isProject(final FileObject fo) {
-        return fo.getFileObject(MRConstants.PROJECT_XML_PATH) != null;
+        return fo.getFileObject(MRConstants.PROJECT_PROPERTIES) != null;
     }
 
     /**

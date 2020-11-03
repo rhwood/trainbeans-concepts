@@ -26,6 +26,7 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
@@ -38,6 +39,7 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.trainbeans.app.mr.customizer.ModelRailroadCustomizerProvider;
+import org.trainbeans.app.mr.impl.MRAuxiliaryConfiguration;
 
 /**
  *
@@ -86,7 +88,10 @@ public final class ModelRailroadProject implements Project {
                     this,
                     new Info(),
                     new ModelRailroadProjectLogicalView(this),
-                    new ModelRailroadCustomizerProvider(this)),
+                    new ModelRailroadCustomizerProvider(this),
+                    new MRAuxiliaryConfiguration(this,
+                            Lookup.getDefault().lookup(ProjectState.class)),
+                    new ModelRailroadHelper(this)),
                     additionalLookup);
         }
         return projectLookup;
